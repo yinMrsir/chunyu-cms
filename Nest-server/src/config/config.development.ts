@@ -20,6 +20,8 @@ function getIPAddress() {
   }
 }
 
+console.log(process.env);
+
 export default defineConfig({
   jwt: {
     secret: process.env.JWT_SECRET || '123456',
@@ -39,13 +41,13 @@ export default defineConfig({
   // redis 配置
   redis: {
     config: {
-      url: 'redis://127.0.0.1:6379/0',
+      url: `redis://${process.env.REDIS_HOST || '127.0.0.1'}:6379/0`,
     },
   },
 
   // 队列reids 配置
   bullRedis: {
-    host: '127.0.0.1',
+    host: process.env.REDIS_HOST || '127.0.0.1',
     port: '6379',
     password: '',
   },

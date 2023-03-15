@@ -22,7 +22,9 @@ export class CountryController {
     @Body() reqCreateCountryDto: ReqCreateCountryDto,
     @User(UserEnum.userName, UserInfoPipe) userName: string,
   ) {
-    const country = await this.countryService.findByCountryName(reqCreateCountryDto.name);
+    const country = await this.countryService.findByCountryName(
+      reqCreateCountryDto.name,
+    );
     if (country) throw new ApiException('该用户简称已存在');
     reqCreateCountryDto.createBy = reqCreateCountryDto.updateBy = userName;
     if (!reqCreateCountryDto.flag) {

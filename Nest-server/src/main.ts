@@ -11,14 +11,14 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   /* 设置请求实体大小 */
-  app.use(bodyParser.json({limit: '50mb'}));
-  app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
   /* 设置 HTTP 标头来帮助保护应用免受一些众所周知的 Web 漏洞的影响 */
   app.use(
     helmet({
       contentSecurityPolicy: false, //取消https强制转换
-      crossOriginResourcePolicy: { policy: "cross-origin" },
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
     }),
   );
 
