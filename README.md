@@ -33,3 +33,17 @@
    - swagger-ui-express @4.2.0
    - typeorm @0.2.41
    - ioredis @4.28.2
+
+## 部署
+
+### 服务端
+
+全局安装nest-cli
+
+```shell
+npm install -g @nestjs/cli
+```
+
+```shell
+yarn build
+```
