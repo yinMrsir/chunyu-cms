@@ -1,0 +1,108 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    font-family: "Microsoft YaHei", "微软雅黑", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;
+    font-size: 14px;
+    line-height: 140%;
+}
+
+ul, li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #333333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+}
+
+.flex {
+    display: flex;
+}
+
+.container {
+    width: 1380px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px){
+    .container {
+        width: auto;
+        margin: 0 auto;
+        padding: 0 10px;
+        overflow: hidden;
+    }
+}
+
+.between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.items-center {
+    display: flex;
+    align-items: center;
+}
+
+.text-overflow {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mr-20 {
+    margin-right: 20px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.clearfix:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.grey {
+    color: grey;
+}
+
+.qr_code {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 45px 0;
+}
