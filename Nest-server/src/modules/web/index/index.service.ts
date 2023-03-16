@@ -60,7 +60,9 @@ export class IndexService {
         'actor.name',
       ]);
 
-    const queryData: any[] = await queryBuilder.getMany();
+    const queryData: any[] = await queryBuilder
+      .cache('web_index_data', 60000 * 30)
+      .getMany();
 
     // 查询排名
     const rankIds = queryData.map((value) => value.value);
@@ -124,6 +126,7 @@ export class IndexService {
 
     const queryData: any[] = await queryBuilder
       .where({ columnValue })
+      .cache('web_type_data', 60000 * 30)
       .getMany();
 
     const rankNames = queryData.map((value) => value.name);
