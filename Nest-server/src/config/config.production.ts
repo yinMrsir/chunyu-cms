@@ -34,5 +34,5 @@ export default defineConfig({
   uploadPath: '',
 
   // 是否演示环境
-  isDemoEnvironment: false,
+  isDemoEnvironment: true,
 });

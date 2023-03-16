@@ -21,4 +21,3 @@ selenium-debug.log
 
 package-lock.json
 yarn.lock
-Nest-server/src/config/config.development.ts
