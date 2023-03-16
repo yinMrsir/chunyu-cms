@@ -26,7 +26,7 @@
       <div class="mobile-nav hidden-sm-only hidden-sm-and-up">
         <ul>
           <li :class="route.params.column === item.value ? 'active' : ''" :key="index" v-for="(item, index) in navigation">
-            <nuxt-link :to="`/type-${item.value}`">{{ item.name }}</nuxt-link>
+            <nuxt-link :to="`/${item.value}`">{{ item.name }}</nuxt-link>
           </li>
         </ul>
       </div>
