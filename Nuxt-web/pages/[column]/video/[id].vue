@@ -10,7 +10,7 @@
     </div>
     <el-row :gutter="40" class="mt-20">
       <el-col :span="18" :xs="24">
-        <video style="width: 100%" :src="`/static/common/stream/${detail.videoInfo?.name}`" controls></video>
+        <video style="width: 100%" :src="`/server/common/stream/${detail.videoInfo?.name}`" controls></video>
         <div>
           <h1 class="mb-10 mt-10">{{ detail.movie.title }} - {{ detail.title }}</h1>
           <el-form :inline="true">

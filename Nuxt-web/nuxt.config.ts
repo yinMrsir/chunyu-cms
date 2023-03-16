@@ -29,7 +29,7 @@ export default defineNuxtConfig({
     },
     nitro: {
         devProxy: {
-            '/static': {
+            '/server': {
                 target: process.env.BASE_URL,
                 changeOrigin: true
             }
