@@ -5,6 +5,14 @@ module.exports = {
       exec_mode: 'cluster',
       instances: 1,
       script: 'Nest-server/dist/main.js',
+      env: {
+        NODE_ENV: 'production',
+        MYSQL_HOST: '',
+        MYSQL_USERNAME: '',
+        MYSQL_PASSWORD: '',
+        MYSQL_DATABASE: '',
+        REDIS_HOST: ''
+      }
     },
     {
       name: 'nuxt-web',

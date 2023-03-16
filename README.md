@@ -3,7 +3,8 @@
 
 
 ## 在线体验
-  - [演示地址](http://cms.yinchunyu.com)
+  - [用户端演示地址](http://cms.yinchunyu.com)
+  - [管理端演示地址](http://cms.yinchunyu.com/admin/)
   - [文档地址](https://yinMrsir.github.io/#/)
   - [码源地址](https://github.com/yinMrsir/chunyu-cms)
 
