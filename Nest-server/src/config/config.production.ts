@@ -19,19 +19,25 @@ export default defineConfig({
   // redis 配置
   redis: {
     config: {
-      url: 'redis://127.0.0.1:6379/0',
+      url: `redis://${process.env.REDIS_HOST || '127.0.0.1'}:6379/0`,
     },
   },
 
   // 队列reids 配置
   bullRedis: {
-    host: '127.0.0.1',
+    host: process.env.REDIS_HOST || '127.0.0.1',
     port: '6379',
     password: '',
   },
 
   //文件上传地址  例如： E:/upload/test
   uploadPath: '',
+
+  //静态文件前缀地址
+  publicPath: `http://cms.yinchunyu.com/server`,
+
+  // 默认图片地址
+  defaultImg: `http://cms.yinchunyu.com/server/default.jpg`,
 
   // 是否演示环境
   isDemoEnvironment: true,

@@ -37,14 +37,43 @@
 
 ## 部署
 
-### 服务端
+如未安装`mysql`数据库和`redis`请先自行安装。
 
-全局安装nest-cli
+如果没有安装nest-cli，先执行`npm install -g @nestjs/cli`命令全局安装
+
+### 构建服务端：
+
+先修改`Nest-server/src/config/config.production.ts`中的数据库连接配置信息后执行：
 
 ```shell
-npm install -g @nestjs/cli
+cd Nest-server
+yarn
+yarn build
 ```
 
+### 构建用户端：
+
+在Nuxt-web目录中创建`.env`文件并写入`BASE_URL=服务端请求地址`
+
 ```shell
+cd Nuxt-web
+yarn
 yarn build
+```
+
+构建完成后，可通过pm2进行部署，未安装的可执行`npm install -g pm2`安装
+
+执行以下命令启动服务：
+```shell
+pm2 start pm2.config.cjs
+```
+
+### 构建管理端
+
+执行以下命令会生成`dist`目录，可通过`nginx`指定到目录。
+
+```shell
+cd Vue3-admin
+yarn
+yarn build:prod
 ```
