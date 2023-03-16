@@ -1,5 +1,0 @@
-{
-  "scripts": {
-    "serve": "pm2 start pm2.config.cjs --node-args=\"--experimental-modules\""
-  }
-}
