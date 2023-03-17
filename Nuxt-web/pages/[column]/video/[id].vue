@@ -87,7 +87,7 @@
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
               </div>
-              <span class="text-muted">已完结</span>
+              <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
             </nuxt-link>
           </li>
         </ul>
@@ -104,7 +104,7 @@
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
               </div>
-              <span class="text-muted">已完结</span>
+              <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
             </nuxt-link>
           </li>
         </ul>
@@ -128,7 +128,13 @@ onMounted(() => {
 })
 
 const { detail, likeRows, weekList, monthList } = await useHttp('/video', { query: { id } })
-
+if (!detail) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page Not Found',
+    fatal: true
+  })
+}
 </script>
 
 <style lang="scss" scoped>

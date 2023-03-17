@@ -70,6 +70,15 @@ const route = useRoute()
 const list = ref([])
 
 const res = await useHttp('/type', { query: { columnValue: route.params.column } })
+if (res.length === 0) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page Not Found',
+    fatal: true
+  })
+}
 list.value = res
+
+
 
 </script>

@@ -10,14 +10,24 @@ export default defineEventHandler(async (event) => {
   const mouthStartTime = dayjs().subtract(30, 'day').format('YYYY-MM-DD')
 
   const [
-    detailRes,
+    detailRes
+  ] = await Promise.all([
+    $fetch<IResData<any>>(`${runtimeConfig.baseUrl}/movie/videos/${query.id}`)
+  ])
+
+  const [
+    likeRowsRes,
     weekList,
     monthList
   ] = await Promise.all([
-    $fetch<IResData<any>>(`${runtimeConfig.baseUrl}/movie/videos/${query.id}`),
+    $fetch<IResPage<any[]>>(`${runtimeConfig.baseUrl}/movie/list`, {
+      query: {
+        genres: detailRes.data.movie.genres.split(',')[0],
+      }
+    }),
     $fetch<IResPage<any[]>>(runtimeConfig.baseUrl + '/movie/list', {
       query: {
-        categoryId: query.id,
+        columnValue: detailRes.data.movie.columnValue,
         pageNum: 1,
         pageSize: 20,
         orderBy: 'pv',
@@ -26,7 +36,7 @@ export default defineEventHandler(async (event) => {
     }),
     $fetch<IResPage<any[]>>(runtimeConfig.baseUrl + '/movie/list', {
       query: {
-        categoryId: query.id,
+        columnValue: detailRes.data.movie.columnValue,
         pageNum: 1,
         pageSize: 20,
         orderBy: 'pv',
@@ -34,12 +44,6 @@ export default defineEventHandler(async (event) => {
       }
     })
   ])
-
-  const likeRowsRes = await $fetch<IResPage<any[]>>(`${runtimeConfig.baseUrl}/movie/list`, {
-    query: {
-      genres: detailRes.data.movie.genres.split(',')[0],
-    }
-  })
 
   return {
     detail: detailRes.data,

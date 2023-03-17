@@ -15,15 +15,16 @@ export default defineEventHandler(async (event) => {
     detailRes,
     roleRes,
     castRes,
-    weekList,
-    monthList
   ] = await Promise.all([
     $fetch<IResData<any>>(`${runtimeConfig.baseUrl}/movie/${query.id}`),
     $fetch<IResPage<any[]>>(`${runtimeConfig.baseUrl}/movie/role-actor/list?movieId=${query.id}&pageNum=1&pageSize=50`),
     $fetch<IResPage<any[]>>(`${runtimeConfig.baseUrl}/movie/cast/list?movieId=${query.id}&pageNum=1&pageSize=50`),
+  ])
+
+  const [weekList, monthList] = await Promise.all([
     $fetch<IResPage<any[]>>(runtimeConfig.baseUrl + '/movie/list', {
       query: {
-        categoryId: query.id,
+        columnValue: detailRes.data.columnValue,
         pageNum: 1,
         pageSize: 20,
         orderBy: 'pv',
@@ -32,7 +33,7 @@ export default defineEventHandler(async (event) => {
     }),
     $fetch<IResPage<any[]>>(runtimeConfig.baseUrl + '/movie/list', {
       query: {
-        categoryId: query.id,
+        columnValue: detailRes.data.columnValue,
         pageNum: 1,
         pageSize: 20,
         orderBy: 'pv',

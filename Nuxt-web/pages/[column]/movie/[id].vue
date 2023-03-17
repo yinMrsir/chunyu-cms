@@ -127,13 +127,13 @@
           </h3>
         </div>
         <ul class="col-pd mb-20">
-          <li v-for="(item, index) in []">
+          <li v-for="(item, index) in weekList">
             <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
-                聊斋艳谭
+                {{ item.title }}
               </div>
-              <span class="text-muted">已完结</span>
+              <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
             </nuxt-link>
           </li>
         </ul>
@@ -144,13 +144,13 @@
           </h3>
         </div>
         <ul class="col-pd">
-          <li v-for="(item, index) in []">
+          <li v-for="(item, index) in monthList">
             <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
-                聊斋艳谭
+                {{ item.title }}
               </div>
-              <span class="text-muted">已完结</span>
+              <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
             </nuxt-link>
           </li>
         </ul>
@@ -172,7 +172,7 @@ onMounted(() => {
   qrcodeUrl.value = window.location.href
 })
 
-const [detail, roles, casts] = await useHttp('/movie', { query: { id } })
+const [detail, roles, casts, weekList, monthList] = await useHttp('/movie', { query: { id } })
 if (!detail) {
   throw createError({
     statusCode: 404,
@@ -242,6 +242,9 @@ if (!detail) {
   overflow-x: auto;
   width: 100%;
   overflow-y: hidden;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   ul {
     white-space: nowrap;
     li {

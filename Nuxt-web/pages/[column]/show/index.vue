@@ -199,6 +199,9 @@ async function handleCurrentChange(page) {
       white-space: nowrap;
       width: 300px;
       overflow-x: auto;
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
   .pagination {
