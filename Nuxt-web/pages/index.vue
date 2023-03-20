@@ -17,11 +17,35 @@
       <img src="../assets/images/icon_26.png">
       友情链接
     </div>
+    <div class="friendly-link__content">
+      <a href="http://cms.yinchunyu.com" target="_blank">淳渔CMS</a>
+      <a href="http://admin-cms.yinchunyu.com" target="_blank">后台管理</a>
+      <a href="http://www.yinchunyu.com" target="_blank">老鹰博客</a>
+    </div>
+    <ClientOnly>
+      <el-dialog title="温馨提示" width="30%" v-model="visible">
+        <div style="line-height: 2.5">
+          <p>本站点为淳渔CMS演示站点，并不提供相关视频播放！</p>
+          <p>淳渔CMS后台演示地址：<a href="http://cms-admin.yinchunyu.com" target="_blank">http://cms-admin.yinchunyu.com</a></p>
+        </div>
+        <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="visible = false">我知道了</el-button>
+      </span>
+        </template>
+      </el-dialog>
+    </ClientOnly>
   </div>
 </template>
 
 <script setup>
+const visible = ref(false)
 const [banner, list] = await useHttp('/home')
+
+onMounted(() => {
+  visible.value = true
+})
+
 </script>
 
 <style lang="scss">
@@ -48,13 +72,18 @@ const [banner, list] = await useHttp('/home')
     }
   }
 
-
   .friendly-link {
     border-bottom: #eee solid 1px;
     padding: 10px 0;
     font-size: 18px;
     > img {
       margin-right: 10px;
+    }
+    &__content {
+      padding: 20px 0;
+      a {
+        padding-right: 15px;
+      }
     }
   }
 }
