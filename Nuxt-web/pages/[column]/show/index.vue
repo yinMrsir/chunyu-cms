@@ -1,5 +1,10 @@
 <template>
   <div class="container mt-20 show">
+    <Head>
+      <Title>{{ info.name }} - {{ runtimeConfig.globalTitle }}</Title>
+      <Meta name="description" :content="`最新最全的${info.name}尽在淳渔影视。`" />
+    </Head>
+
     <el-row :gutter="40">
       <el-col :span="18" :xs="24">
         <div class="panel_hd between items-center">
@@ -149,7 +154,8 @@ const [
   movieList,
   total,
   weekList,
-  monthList
+  monthList,
+  info
 ] = await useHttp('/show', {
   query: {
     ...route.query,

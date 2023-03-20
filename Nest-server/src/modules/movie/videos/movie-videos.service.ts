@@ -89,6 +89,7 @@ export class MovieVideosService {
         'movieBasic.year',
         'movieBasic.genres',
         'movieBasic.columnValue',
+        'movieBasic.summary',
         'country.name',
         'videos.id',
         'videos.title',

@@ -16,7 +16,8 @@ export default defineEventHandler(async (event) => {
     languageRes,
     movieRes,
     weekList,
-    monthList
+    monthList,
+    info
   ] = await Promise.all([
     $fetch<IResData<{name: string; id: number}[]>>(runtimeConfig.baseUrl + '/basic/genre/all', {
       query: {
@@ -53,7 +54,8 @@ export default defineEventHandler(async (event) => {
         orderBy: 'pv',
         date: [mouthStartTime, currTime]
       }
-    })
+    }),
+    $fetch(`${runtimeConfig.baseUrl}/column?value=${query.columnValue}`)
   ])
 
   const countryList = countryRes.data.map(value => ({ name: value.name, id: value.id }))
@@ -66,6 +68,7 @@ export default defineEventHandler(async (event) => {
     movieRes.rows,
     movieRes.total,
     weekList.rows,
-    monthList.rows
+    monthList.rows,
+    info
   ]
 })

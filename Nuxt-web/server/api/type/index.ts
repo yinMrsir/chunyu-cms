@@ -1,11 +1,15 @@
 import {getQuery} from "h3";
-import {IResData} from "~/global";
-
-
 
 export default defineEventHandler(async (event) => {
     const runtimeConfig = useRuntimeConfig()
     const query = getQuery(event)
-    const res: IResData<any[]> = await $fetch( `${runtimeConfig.baseUrl}/web/type/${query.columnValue}`)
-    return res.data
+    const [res, info]: any = await Promise.all([
+        $fetch( `${runtimeConfig.baseUrl}/web/type/${query.columnValue}`),
+        $fetch(`${runtimeConfig.baseUrl}/column?value=${query.columnValue}`)
+    ])
+
+    return {
+        list: res.data,
+        info
+    }
 })

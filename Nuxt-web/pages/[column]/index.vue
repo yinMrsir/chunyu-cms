@@ -1,5 +1,10 @@
 <template>
   <div class="container">
+    <Head>
+      <Title>{{ info.name }} - {{ runtimeConfig.globalTitle }}</Title>
+      <Meta name="description" :content="`最新最全的${info.name}尽在淳渔影视。`" />
+    </Head>
+
     <el-row :gutter="20" class="mt-20" v-for="categoryItem in list">
       <el-col :sm="18">
         <div class="panel_hd between items-center">
@@ -69,16 +74,13 @@ const runtimeConfig = useRuntimeConfig()
 const route = useRoute()
 const list = ref([])
 
-const res = await useHttp('/type', { query: { columnValue: route.params.column } })
-if (res.length === 0) {
+const {list: resList, info} = await useHttp('/type', { query: { columnValue: route.params.column } })
+if (!info) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page Not Found',
     fatal: true
   })
 }
-list.value = res
-
-
-
+list.value = resList
 </script>

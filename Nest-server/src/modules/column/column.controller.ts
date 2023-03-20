@@ -42,6 +42,7 @@ export class ColumnController {
     return new DataObj(data);
   }
 
+  @Public()
   @Get()
   findOne(@Query() where) {
     return this.columnService.findOne(where);
