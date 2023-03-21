@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
         language: query.l,
         year: query.y,
         pageNum: query.page || 1,
-        pageSize: 20
+        pageSize: 30
       }
     }),
     $fetch<IResPage<any[]>>(runtimeConfig.baseUrl + '/movie/list', {

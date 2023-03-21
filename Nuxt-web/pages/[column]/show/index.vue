@@ -83,6 +83,8 @@
             <el-pagination
                 background
                 layout="prev, pager, next"
+                :current-page="currentPage"
+                :page-size="30"
                 :pager-count="5"
                 :total="total"
                 @current-change="handleCurrentChange"
@@ -132,7 +134,7 @@
 
 <script setup>
 import { VideoCamera } from '@element-plus/icons-vue'
-import {onMounted} from "../../../.nuxt/imports";
+import { onMounted } from "../../../.nuxt/imports";
 
 definePageMeta({
   key: route => route.fullPath
@@ -140,6 +142,7 @@ definePageMeta({
 
 const runtimeConfig = useRuntimeConfig()
 const route = useRoute()
+const currentPage = ref(+route.query.page || 1)
 const activeName = ref('first')
 const yearList = ref([])
 const y = new Date().getFullYear();

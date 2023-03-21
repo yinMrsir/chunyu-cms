@@ -27,46 +27,45 @@ export class IndexService {
         'genre',
         'genre.columnValue = columns.value',
       )
-      .leftJoinAndMapMany(
-        'columns.rows',
-        MovieBasic,
-        'movieBasic',
-        'movieBasic.columnValue = columns.value',
-      )
-      .leftJoinAndMapMany(
-        'movieBasic.casts',
-        Cast,
-        'cast',
-        'movieBasic.id = cast.movieId',
-      )
-      .leftJoinAndMapOne(
-        'cast.actor',
-        Actor,
-        'actor',
-        'cast.actorId = actor.id',
-      )
+      .select(['columns.name', 'columns.value', 'genre.id', 'genre.name'])
       .orderBy('columns.order', 'ASC')
-      .addOrderBy('genre.id', 'ASC')
-      .select([
-        'columns.name',
-        'columns.value',
-        'genre.id',
-        'genre.name',
-        'movieBasic.title',
-        'movieBasic.poster',
-        'movieBasic.id',
-        'movieBasic.columnValue',
-        'cast.id',
-        'actor.name',
-      ]);
+      .addOrderBy('genre.id', 'ASC');
 
-    const queryData: any[] = await queryBuilder
-      .cache('web_index_data', 60000 * 30)
-      .getMany();
+    const queryData: any[] = await queryBuilder.cache(60000 * 30).getMany();
+
+    const columnsIds = queryData.map((value) => value.value);
+    // 查询分类下的数据
+    const rowsPromises = columnsIds.map((columnValue) => {
+      return this.movieBasicRepository
+        .createQueryBuilder('movieBasic')
+        .leftJoinAndMapMany(
+          'movieBasic.casts',
+          Cast,
+          'cast',
+          'movieBasic.id = cast.movieId',
+        )
+        .leftJoinAndMapOne(
+          'cast.actor',
+          Actor,
+          'actor',
+          'cast.actorId = actor.id',
+        )
+        .where('movieBasic.columnValue = :columnValue', { columnValue })
+        .select([
+          'movieBasic.title',
+          'movieBasic.poster',
+          'movieBasic.id',
+          'movieBasic.columnValue',
+          'cast.id',
+          'actor.name',
+        ])
+        .take(12)
+        .cache(60000 * 30)
+        .getMany();
+    });
 
     // 查询排名
-    const rankIds = queryData.map((value) => value.value);
-    const rankPromises = rankIds.map((columnValue) => {
+    const rankPromises = columnsIds.map((columnValue) => {
       return this.movieBasicRepository
         .createQueryBuilder('movieBasic')
         .leftJoinAndSelect('movieBasic.moviePv', 'moviePv')
@@ -79,14 +78,16 @@ export class IndexService {
         ])
         .where('movieBasic.columnValue = :columnValue', { columnValue })
         .orderBy('moviePv.pv', 'DESC')
-        .take(10)
+        .take(14)
+        .cache(60000 * 30)
         .getMany();
     });
 
     const ranks = await Promise.all(rankPromises);
-
+    const columnsData = await Promise.all(rowsPromises);
     queryData.forEach((item, index) => {
       item.ranks = ranks[index];
+      item.rows = columnsData[index];
     });
 
     return queryData;
@@ -95,41 +96,44 @@ export class IndexService {
   async getTypeData(columnValue: string) {
     const queryBuilder = this.genreRepository
       .createQueryBuilder('genre')
-      .leftJoinAndMapMany(
-        'genre.rows',
-        MovieBasic,
-        'movieBasic',
-        'FIND_IN_SET(genre.name, movieBasic.genres)',
-      )
-      .leftJoinAndMapMany(
-        'movieBasic.casts',
-        Cast,
-        'cast',
-        'movieBasic.id = cast.movieId',
-      )
-      .leftJoinAndMapOne(
-        'cast.actor',
-        Actor,
-        'actor',
-        'cast.actorId = actor.id',
-      )
-      .select([
-        'genre.name',
-        'genre.id',
-        'movieBasic.title',
-        'movieBasic.poster',
-        'movieBasic.id',
-        'movieBasic.columnValue',
-        'cast.id',
-        'actor.name',
-      ]);
+      .select(['genre.name', 'genre.id']);
 
     const queryData: any[] = await queryBuilder
       .where({ columnValue })
-      .cache('web_type_data', 60000 * 30)
+      .cache(60000 * 30)
       .getMany();
 
     const rankNames = queryData.map((value) => value.name);
+
+    const rowsPromises = rankNames.map((name) => {
+      return this.movieBasicRepository
+        .createQueryBuilder('movieBasic')
+        .leftJoinAndMapMany(
+          'movieBasic.casts',
+          Cast,
+          'cast',
+          'movieBasic.id = cast.movieId',
+        )
+        .leftJoinAndMapOne(
+          'cast.actor',
+          Actor,
+          'actor',
+          'cast.actorId = actor.id',
+        )
+        .where('FIND_IN_SET(:name, movieBasic.genres)', { name })
+        .select([
+          'movieBasic.title',
+          'movieBasic.poster',
+          'movieBasic.id',
+          'movieBasic.columnValue',
+          'cast.id',
+          'actor.name',
+        ])
+        .take(12)
+        .cache(60000 * 30)
+        .getMany();
+    });
+
     const rankPromises = rankNames.map((name) => {
       return this.movieBasicRepository
         .createQueryBuilder('movieBasic')
@@ -147,13 +151,15 @@ export class IndexService {
           { columnValue, name },
         )
         .orderBy('moviePv.pv', 'DESC')
-        .take(10)
+        .take(14)
         .getMany();
     });
 
     const ranks = await Promise.all(rankPromises);
+    const rows = await Promise.all(rowsPromises);
     queryData.forEach((item, index) => {
       item.ranks = ranks[index];
+      item.rows = rows[index];
     });
 
     return queryData;

@@ -33,6 +33,10 @@ export default defineConfig(({ mode, command }) => {
           target: 'http://127.0.0.1:4000',
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/dev-api/, '')
+        },
+        '/external': {
+          target: 'http://cms.yinchunyu.com/external',
+          changeOrigin: true
         }
       }
     },

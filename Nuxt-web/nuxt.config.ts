@@ -32,6 +32,10 @@ export default defineNuxtConfig({
             '/server': {
                 target: process.env.BASE_URL,
                 changeOrigin: true
+            },
+            '/external': {
+                target: 'https://cms.yinchunyu.com/external',
+                changeOrigin: true
             }
         }
     }

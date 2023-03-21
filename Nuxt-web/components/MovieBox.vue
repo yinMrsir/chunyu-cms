@@ -24,7 +24,7 @@
           <el-col :sm="4" :xs="8" v-for="item in categoryItem.rows">
             <div class="video-list__block">
               <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`">
-                <el-image class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
+                <el-image lazy class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
               </nuxt-link>
               <div class="video-list__detail">
                 <h4 class="title">{{ item.title }}</h4>
