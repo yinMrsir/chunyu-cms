@@ -23,7 +23,7 @@
       <a href="http://www.yinchunyu.com" target="_blank">老鹰博客</a>
     </div>
     <ClientOnly>
-      <el-dialog title="温馨提示" width="30%" v-model="visible">
+      <el-dialog title="温馨提示" :width="dialogWidth" v-model="visible">
         <div style="line-height: 2.5">
           <p>本站点为淳渔CMS演示站点，并不提供相关视频播放！</p>
           <p>淳渔CMS后台演示地址：<a href="http://cms-admin.yinchunyu.com" target="_blank">http://cms-admin.yinchunyu.com</a></p>
@@ -41,9 +41,11 @@
 <script setup>
 const visible = ref(false)
 const [banner, list] = await useHttp('/home')
+const dialogWidth = ref('')
 
 onMounted(() => {
   visible.value = true
+  dialogWidth.value = window.innerWidth > 600 ? '30%' : '320px'
 })
 
 </script>
