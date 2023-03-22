@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-20">
     <Head>
-      <Title>{{ detail.movie.title }}_{{ detail.title }} - {{ runtimeConfig.globalTitle }}</Title>
+      <Title>{{ detail.movie.title }}_{{ detail.title }}在线观看 - {{ runtimeConfig.globalTitle }}</Title>
       <Meta name="description" :content="detail.movie.summary" />
     </Head>
 

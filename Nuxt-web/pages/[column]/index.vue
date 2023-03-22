@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <Head>
-      <Title>{{ info.name }} - {{ runtimeConfig.globalTitle }}</Title>
-      <Meta name="description" :content="`最新最全的${info.name}尽在淳渔影视。`" />
+      <Title>最新{{ info.name }}在线观看 - {{ runtimeConfig.globalTitle }}</Title>
+      <Meta name="description" :content="`最新最全的${info.name}在线观看尽在淳渔影视。`" />
     </Head>
 
     <el-row :gutter="20" class="mt-20" v-for="categoryItem in list">

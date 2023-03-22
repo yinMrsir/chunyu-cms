@@ -23,6 +23,8 @@ export default defineEventHandler(async (event) => {
     $fetch<IResPage<any[]>>(`${runtimeConfig.baseUrl}/movie/list`, {
       query: {
         genres: detailRes.data.movie.genres.split(',')[0],
+        pageNum: 1,
+        pageSize: 30,
       }
     }),
     $fetch<IResPage<any[]>>(runtimeConfig.baseUrl + '/movie/list', {

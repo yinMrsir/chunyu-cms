@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-20">
     <Head>
-      <Title>{{ detail.title }} - {{ globalTitle }}</Title>
+      <Title>{{ detail.title }}在线观看 - {{ globalTitle }}</Title>
       <Meta name="description" :content="detail.summary" />
     </Head>
 

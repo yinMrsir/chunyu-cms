@@ -106,7 +106,7 @@ export class MovieBasicService {
     if (reqListMovieListDto.orderBy === 'pv') {
       queryBuilder.orderBy('moviePv.pv', 'DESC');
     } else {
-      queryBuilder.orderBy('movieBasic.createTime', 'DESC');
+      queryBuilder.orderBy('movieBasic.updateTime', 'DESC');
     }
     const [rows, total] = await queryBuilder
       .skip(reqListMovieListDto.skip)

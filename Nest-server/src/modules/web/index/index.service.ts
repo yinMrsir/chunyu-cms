@@ -59,6 +59,7 @@ export class IndexService {
           'cast.id',
           'actor.name',
         ])
+        .orderBy('movieBasic.updateTime', 'DESC')
         .take(12)
         .cache(60000 * 30)
         .getMany();
@@ -129,6 +130,7 @@ export class IndexService {
           'cast.id',
           'actor.name',
         ])
+        .orderBy('movieBasic.updateTime', 'DESC')
         .take(12)
         .cache(60000 * 30)
         .getMany();
