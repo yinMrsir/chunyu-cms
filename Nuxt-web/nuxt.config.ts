@@ -34,7 +34,7 @@ export default defineNuxtConfig({
                 changeOrigin: true
             },
             '/external': {
-                target: 'https://cms.yinchunyu.com/external',
+                target: 'http://cms.yinchunyu.com/external',
                 changeOrigin: true
             }
         }

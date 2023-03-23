@@ -56,9 +56,11 @@ export class IndexService {
           'movieBasic.poster',
           'movieBasic.id',
           'movieBasic.columnValue',
+          'movieBasic.updateTime',
           'cast.id',
           'actor.name',
         ])
+        .orderBy('movieBasic.updateTime', 'DESC')
         .take(12)
         .cache(60000 * 30)
         .getMany();
@@ -126,9 +128,11 @@ export class IndexService {
           'movieBasic.poster',
           'movieBasic.id',
           'movieBasic.columnValue',
+          'movieBasic.updateTime',
           'cast.id',
           'actor.name',
         ])
+        .orderBy('movieBasic.updateTime', 'DESC')
         .take(12)
         .cache(60000 * 30)
         .getMany();

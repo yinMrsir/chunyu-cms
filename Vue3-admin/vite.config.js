@@ -36,7 +36,8 @@ export default defineConfig(({ mode, command }) => {
         },
         '/external': {
           target: 'http://cms.yinchunyu.com/external',
-          changeOrigin: true
+          changeOrigin: true,
+          rewrite: (p) => p.replace(/^\/external/, '')
         }
       }
     },
