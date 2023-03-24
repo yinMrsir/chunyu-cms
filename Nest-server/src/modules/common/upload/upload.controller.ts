@@ -22,6 +22,7 @@ import { Response } from 'express';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { Public } from '../../../common/decorators/public.decorator';
+import { Keep } from '../../../common/decorators/keep.decorator';
 
 @ApiTags('文件上传')
 @Controller('common')
@@ -70,6 +71,7 @@ export class UploadController {
   }
 
   @Public()
+  @Keep()
   @Get('stream/:fileName')
   async streamFile(@Param('fileName') fileName: string, @Res() res: Response) {
     const videoPath =
