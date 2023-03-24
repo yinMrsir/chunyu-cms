@@ -35,11 +35,13 @@
    - typeorm @0.2.41
    - ioredis @4.28.2
 
-## 部署
+## 开发前
 
 如未安装`mysql`数据库和`redis`请先自行安装。
 
 如果没有安装nest-cli，先执行`npm install -g @nestjs/cli`命令全局安装
+
+## 部署
 
 ### 构建服务端：
 

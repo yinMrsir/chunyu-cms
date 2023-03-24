@@ -140,7 +140,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="Movie-list">
 import { getMovieList, deleteMovie } from './services';
 import { getGenreAll } from "@/views/basic/genre/services";
 import {getCountryAll} from "@/views/basic/country/services";
