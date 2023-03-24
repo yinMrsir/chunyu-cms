@@ -44,6 +44,7 @@ export class ActorListController {
     return this.actorListService.findAll(queryActorAllDto);
   }
 
+  @RepeatSubmit()
   @Put()
   async update(
     @Body() updateActorListDto: UpdateActorListDto,

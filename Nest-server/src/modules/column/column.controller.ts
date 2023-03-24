@@ -15,16 +15,21 @@ import { User, UserEnum } from '../../common/decorators/user.decorator';
 import { UserInfoPipe } from '../../common/pipes/user-info.pipe';
 import { DataObj } from '../../common/class/data-obj.class';
 import { Public } from '../../common/decorators/public.decorator';
+import {ApiException} from "../../common/exceptions/api.exception";
 
 @Controller('column')
 export class ColumnController {
   constructor(private readonly columnService: ColumnService) {}
 
   @Post()
-  create(
+  async create(
     @Body() createColumnDto: CreateColumnDto,
     @User(UserEnum.userName, UserInfoPipe) userName: string,
   ) {
+    const column = await this.columnService.findOne({
+      value: createColumnDto.value,
+    });
+    if (column) throw new ApiException('目录名已存在');
     createColumnDto.createBy = createColumnDto.updateBy = userName;
     return this.columnService.create(createColumnDto);
   }

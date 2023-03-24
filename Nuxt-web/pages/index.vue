@@ -19,7 +19,7 @@
     </div>
     <div class="friendly-link__content">
       <a href="http://cms.yinchunyu.com" target="_blank">淳渔CMS</a>
-      <a href="http://admin-cms.yinchunyu.com" target="_blank">后台管理</a>
+      <a href="http://cms-admin.yinchunyu.com" target="_blank">后台管理</a>
       <a href="http://www.yinchunyu.com" target="_blank">老鹰博客</a>
     </div>
     <ClientOnly>

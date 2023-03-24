@@ -26,6 +26,7 @@ import { DataObj } from '../../../common/class/data-obj.class';
 export class LanguageController {
   constructor(private readonly languageService: LanguageService) {}
 
+  @RepeatSubmit()
   @Post()
   async create(
     @Body() reqCreateLanguageDto: ReqCreateLanguageDto,
