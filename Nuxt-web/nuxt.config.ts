@@ -38,5 +38,6 @@ export default defineNuxtConfig({
                 changeOrigin: true
             }
         }
-    }
+    },
+    plugins: [ { src:'@/plugins/baidu',mode:'client' }],
 })

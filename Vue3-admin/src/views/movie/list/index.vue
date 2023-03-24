@@ -5,7 +5,7 @@
         <el-input v-model="queryParams.keyword" placeholder="请输入中文名"></el-input>
       </el-form-item>
       <el-form-item label="所属栏目" prop="columnValue">
-        <el-select v-model="queryParams.columnValue" @change="columnValueChange">
+        <el-select v-model="queryParams.columnValue" @change="columnValueChange" clearable>
           <el-option
               v-for="item in allColumn"
               :key="+item.id"
@@ -15,7 +15,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="类型" prop="genres">
-        <el-select v-model="queryParams.genres" placeholder="请选择类型">
+        <el-select v-model="queryParams.genres" placeholder="请选择类型" clearable>
           <el-option
               v-for="item in genresList"
               :key="item.id"
@@ -25,7 +25,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="国家" prop="country">
-        <el-select v-model="queryParams.country" placeholder="请选择类型">
+        <el-select v-model="queryParams.country" placeholder="请选择类型" clearable>
           <el-option
               v-for="item in countryList"
               :key="item.id"
@@ -35,7 +35,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="年份" prop="year">
-        <el-select v-model="queryParams.year" placeholder="请选择年份">
+        <el-select v-model="queryParams.year" placeholder="请选择年份" clearable>
           <el-option
               v-for="(item, index) in yearList"
               :key="index"
@@ -45,7 +45,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="语言" prop="language">
-        <el-select v-model="queryParams.language" placeholder="请选择语言">
+        <el-select v-model="queryParams.language" placeholder="请选择语言" clearable>
           <el-option
               v-for="item in languageList"
               :key="item.id"
@@ -182,7 +182,7 @@ const allColumnOptions = computed({
 
 /** 新增按钮操作 */
 function handleAdd() {
-  proxy.$tab.openPage('/movie/add')
+  proxy.$tab.openPage('/movie/add', '新增影视')
 }
 /** 查询国家列表 */
 async function getList() {

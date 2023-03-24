@@ -37,6 +37,7 @@ import { RoleActorModule } from './modules/movie/role-actor/role-actor.module';
 import { VideoModule } from './modules/video/video-list/video-list.module';
 import { BannerModule } from './modules/basic/banner/banner.module';
 import { ColumnModule } from './modules/column/column.module';
+import { CollectModule } from './modules/collect/collect.module';
 
 /* 将 provider的类名作为别名，方便定时器调用 */
 const providers = [JobService];
@@ -98,6 +99,7 @@ const aliasProviders = createAliasProviders();
     VideoModule,
     BannerModule,
     ColumnModule,
+    CollectModule,
 
     /* 文章相关模块 */
     ArticleModule,

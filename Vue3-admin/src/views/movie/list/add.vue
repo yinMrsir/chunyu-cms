@@ -44,8 +44,13 @@ onMounted(() => {
 })
 
 watch(() => proxy.$route.query, () => {
-  if (proxy.$route.query.id) {
-    currTab.value = '0'
+  if (proxy.$route.path === '/movie/add') {
+    if (proxy.$route.query.id) {
+      currTab.value = '0'
+    } else {
+      id.value = null
+      setTitle(null)
+    }
   }
 })
 

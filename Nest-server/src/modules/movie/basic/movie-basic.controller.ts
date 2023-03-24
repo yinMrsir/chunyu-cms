@@ -8,7 +8,7 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
+
 import { MovieBasicService } from './movie-basic.service';
 import {
   ReqCreateMovieListDto,
@@ -26,12 +26,10 @@ import { MovieVideosService } from '../videos/movie-videos.service';
 import { PubDateService } from '../pub-date/pub-date.service';
 import { MovieLevelService } from '../movie-level/movie-level.service';
 import { RoleActorService } from '../role-actor/role-actor.service';
-import { lastValueFrom, map } from 'rxjs';
 
 @Controller('movie')
 export class MovieBasicController {
   constructor(
-    private httpService: HttpService,
     private readonly movieBasicService: MovieBasicService,
     private readonly pubDateService: PubDateService,
     private readonly movieLevelService: MovieLevelService,
@@ -64,60 +62,6 @@ export class MovieBasicController {
   @Get('updatePv/:movieId')
   updatePv(@Param('movieId') movieId: string) {
     return this.movieBasicService.updatePv(+movieId);
-  }
-
-  /**
-   * 采集
-   * @param query
-   */
-  @Public()
-  @Get('collect')
-  async collect(@Query() query) {
-    const queryObj = {
-      中国大陆: 1,
-      中国香港: 12,
-      中国台湾: 13,
-      韩国: 8,
-      美国: 2,
-      日本: 9,
-      电影: 'movie',
-      电视剧: 'tv',
-      动漫: 'cartoon',
-      综艺: 'variety',
-    };
-
-    const url = ``;
-    const headers = {
-      Authorization: '',
-      'Content-Type': 'application/json',
-    };
-    const data = await lastValueFrom(
-      this.httpService.get(url, { headers }).pipe(
-        map((response) => {
-          return response.data;
-        }),
-      ),
-    );
-    const promiseList = data.data.map((value) => {
-      const req = new ReqCreateMovieListDto();
-      req.title = value.title;
-      req.poster = '/external/' + value.poster.replace('', '');
-      req.titleEn = value.title_en;
-      req.titleOriginal = value.title_original;
-      req.columnValue = queryObj[query.category];
-      req.pubdate = value.pubdate;
-      req.summary = value.summary;
-      req.tags = value.tags.join(',');
-      req.akas = value.akas.join(',');
-      req.duration = value.duration;
-      req.theEnd = value.the_end;
-      req.languages = value.languages.join(',');
-      req.genres = '喜剧片';
-      req.countryIds = queryObj[query.country];
-
-      return this.movieBasicService.create(req);
-    });
-    await Promise.all(promiseList);
   }
 
   @Public()

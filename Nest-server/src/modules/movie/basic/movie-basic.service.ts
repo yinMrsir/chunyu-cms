@@ -72,7 +72,7 @@ export class MovieBasicService {
       });
     }
     if (reqListMovieListDto.columnValue) {
-      queryBuilder.where('movieBasic.columnValue = :columnValue', {
+      queryBuilder.andWhere('movieBasic.columnValue = :columnValue', {
         columnValue: reqListMovieListDto.columnValue,
       });
     }
@@ -139,6 +139,7 @@ export class MovieBasicService {
         'movieBasic',
         'movieVideos.id',
         'movieVideos.title',
+        'movieVideos.cover',
         'country',
         'video.id',
         'video.poster',

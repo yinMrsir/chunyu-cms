@@ -32,6 +32,7 @@ export class ActorListService {
         'country',
         'actor.countryId = country.id',
       )
+      .orderBy('actor.createTime', 'DESC')
       .skip(queryActorListDto.skip)
       .take(queryActorListDto.take);
 

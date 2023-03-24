@@ -5,7 +5,7 @@
         <el-form-item :label="item.title" :prop="item.field">
           <template v-for="item in filterOptions">
             <template v-if="item.type === 'select'">
-              <el-select v-model="queryParams[item.field]" :placeholder="`请选择${item.title}`">
+              <el-select v-model="queryParams[item.field]" :placeholder="`请选择${item.title}`" clearable>
                 <el-option
                     v-for="item in item.options"
                     :key="+item.value"
@@ -84,7 +84,7 @@
               <el-image
                   :src="item.render ? item.render(scope.row) :
                   (
-                      (scope.row[item.field]?.indexOf('http') > -1 || scope.row[item.field]?.indexOf('base64') > -1) ? scope.row[item.field] :
+                      (scope.row[item.field]?.indexOf('http') > -1 || scope.row[item.field]?.indexOf('base64') > -1 || scope.row[item.field]?.indexOf('/external') > -1) ? scope.row[item.field] :
                       baseUrl + (scope.row[item.field] || '/default.jpg')
                   )"
                   :style="item.style || { width: '70px', maxHeight: '100px' }"

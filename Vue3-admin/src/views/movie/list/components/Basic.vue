@@ -292,6 +292,18 @@ watch(() => proxy.$route.query, (newValue, oldValue) => {
   if(proxy.$route.query.id && newValue !== oldValue) {
     id.value = proxy.$route.query.id
     getMovieData()
+  } else {
+    movie.value = {
+      columnValue: 'movie',
+      summary: undefined,
+      countryList: [],
+      countryIds: [],
+      languages: [],
+      akas: [],
+      tags: [],
+      genres: [],
+      versions: []
+    }
   }
 })
 

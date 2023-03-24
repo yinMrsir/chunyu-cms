@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HttpModule } from '@nestjs/axios';
 import { MovieBasicService } from './movie-basic.service';
 import { MovieBasicController } from './movie-basic.controller';
 import { MovieBasic } from './entities/movie-basic.entity';
@@ -14,7 +13,6 @@ import { MovieVideosModule } from '../videos/movie-videos.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([MovieBasic, MoviePv]),
-    HttpModule,
     PubDateModule,
     MovieLevelModule,
     CastModule,
@@ -23,5 +21,6 @@ import { MovieVideosModule } from '../videos/movie-videos.module';
   ],
   controllers: [MovieBasicController],
   providers: [MovieBasicService],
+  exports: [MovieBasicService],
 })
 export class MovieBasicModule {}
