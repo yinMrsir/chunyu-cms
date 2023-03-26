@@ -76,6 +76,7 @@ export class IndexService {
           'movieBasic.title',
           'movieBasic.columnValue',
           'movieBasic.theEnd',
+          'movieBasic.episodeCount',
           'moviePv.pv',
         ])
         .where('movieBasic.columnValue = :columnValue', { columnValue })

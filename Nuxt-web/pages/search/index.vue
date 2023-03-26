@@ -37,6 +37,8 @@
                   <el-pagination
                       background
                       layout="prev, pager, next"
+                      :current-page="currentPage"
+                      :page-size="30"
                       :pager-count="5"
                       :total="total"
                       @current-change="handleCurrentChange"
@@ -79,15 +81,20 @@ const form = reactive({
 const movieList = ref([])
 const newList = ref([])
 const total = ref(0)
+const currentPage = ref(+route.query.page || 1)
 
 form.keyword = route.query.keyword
+
+definePageMeta({
+  key: route => route.fullPath
+})
 
 const newRes = await useHttp('/common/movie-list', { query: { pageSize: 20 } })
 newList.value = newRes.rows
 
 handleSearch()
 async function handleSearch() {
-  const data = await useHttp('/common/movie-list', { query: { keyword: form.keyword } })
+  const data = await useHttp('/common/movie-list', { query: { keyword: form.keyword, page: currentPage.value, size: 30 } })
   movieList.value = data.rows
   total.value = data.total
 }
@@ -110,4 +117,10 @@ async function handleCurrentChange(page) {
 .search-form {
   padding: 20px 0;
 }
+.pagination {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
 </style>

@@ -27,7 +27,7 @@
                 <el-image lazy class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
               </nuxt-link>
               <div class="video-list__detail">
-                <h4 class="title">{{ item.title }}</h4>
+                <h4 class="title text-overflow" :title="item.title">{{ item.title }}</h4>
                 <p class="text-overflow">
                   <template v-for="actor in item.casts">
                     {{ actor.actor.name }}&nbsp;
@@ -53,7 +53,7 @@
               <span class="badge">{{ index + 1 }}</span>
               {{ item.title }}
             </div>
-            <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
+            <span class="text-muted">{{ processingState(item) }}</span>
           </nuxt-link>
         </li>
       </ul>
@@ -72,6 +72,14 @@ const props = defineProps({
 })
 
 const runtimeConfig = useRuntimeConfig()
+
+function processingState(data) {
+  if (+data.theEnd === 1) {
+    return '已完结'
+  }
+  return `更新至${data.episodeCount || 0}集`
+}
+
 
 </script>
 
