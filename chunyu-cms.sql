@@ -1,9 +1,9 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 120.78.211.2
+Source Server         : 127.0.0.1
 Source Server Version : 50719
-Source Host           : 120.78.211.2:3306
+Source Host           : 127.0.0.1:3306
 Source Database       : chunyu-cms
 
 Target Server Type    : MYSQL
@@ -762,6 +762,10 @@ INSERT INTO `menu` VALUES ('2023-01-29 16:23:37.631133', '2023-01-29 16:23:37.00
 INSERT INTO `menu` VALUES ('2023-01-29 16:24:36.349283', '2023-01-29 16:24:36.000000', '', '90', '视频列表', '1', 'list', 'video/list/index', null, '1', 'C', '0', '0', null, 'list', '89.90.', '89', '2', 'admin', 'admin', '0');
 INSERT INTO `menu` VALUES ('2023-02-23 16:10:38.447932', '2023-02-23 16:10:38.000000', '', '91', '横幅管理', '5', 'banner', 'basic/banner/index', null, '1', 'C', '0', '0', null, 'druid', '75.91.', '75', '2', 'admin', 'admin', '0');
 INSERT INTO `menu` VALUES ('2023-03-10 02:07:04.137187', '2023-03-10 02:07:04.000000', '', '92', '栏目管理', '1', 'column', 'column/index', null, '1', 'C', '0', '0', null, 'tree-table', '92.', null, '2', 'admin', 'admin', '0');
+INSERT INTO `menu` VALUES ('2023-03-27 14:14:04.478574', '2023-03-27 15:06:32.000000', '', '93', '缓存管理', '1', 'cache', 'monitor/cache/index', NULL, '1', 'C', '0', '0', 'monitor:cache:list', 'redis', '2.93.', '2', '4', 'admin', 'admin', '0');
+INSERT INTO `menu` VALUES ('2023-03-27 16:08:05.769100', '2023-03-27 16:08:20.000000', '', '96', '缓存查询', '1', '', NULL, NULL, '1', 'F', '0', '0', 'monitor:cache:query', '#', '2.93.96.', '93', '3', 'admin', 'admin', '0');
+INSERT INTO `menu` VALUES ('2023-03-27 16:09:19.018035', '2023-03-27 16:09:50.000000', '', '97', '缓存删除', '2', '', NULL, NULL, '1', 'F', '0', '0', 'monitor:cache:remove', '#', '2.93.97.', '93', '3', 'admin', 'admin', '0');
+
 
 -- ----------------------------
 -- Table structure for movie_basic
@@ -1359,7 +1363,6 @@ CREATE TABLE `user_roles_role` (
 -- Records of user_roles_role
 -- ----------------------------
 INSERT INTO `user_roles_role` VALUES ('1', '1');
-INSERT INTO `user_roles_role` VALUES ('3', '1');
 INSERT INTO `user_roles_role` VALUES ('3', '2');
 
 -- ----------------------------
