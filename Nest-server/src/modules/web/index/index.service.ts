@@ -31,7 +31,9 @@ export class IndexService {
       .orderBy('columns.order', 'ASC')
       .addOrderBy('genre.id', 'ASC');
 
-    const queryData: any[] = await queryBuilder.cache(60000 * 30).getMany();
+    const queryData: any[] = await queryBuilder
+      .cache(`web:index:columnValue`, 60000 * 30)
+      .getMany();
 
     const columnsIds = queryData.map((value) => value.value);
     // 查询分类下的数据
@@ -62,7 +64,7 @@ export class IndexService {
         ])
         .orderBy('movieBasic.updateTime', 'DESC')
         .take(12)
-        .cache(60000 * 30)
+        .cache(`web:index:${columnValue}:rows`, 60000 * 30)
         .getMany();
     });
 
@@ -82,7 +84,7 @@ export class IndexService {
         .where('movieBasic.columnValue = :columnValue', { columnValue })
         .orderBy('moviePv.pv', 'DESC')
         .take(14)
-        .cache(60000 * 30)
+        .cache(`web:index:${columnValue}:rank`, 60000 * 30)
         .getMany();
     });
 
@@ -103,7 +105,7 @@ export class IndexService {
 
     const queryData: any[] = await queryBuilder
       .where({ columnValue })
-      .cache(60000 * 30)
+      .cache(`web:type:${columnValue}`, 60000 * 30)
       .getMany();
 
     const rankNames = queryData.map((value) => value.name);
@@ -135,7 +137,7 @@ export class IndexService {
         ])
         .orderBy('movieBasic.updateTime', 'DESC')
         .take(12)
-        .cache(60000 * 30)
+        .cache(`web:type:${columnValue}:${name}:rows`, 60000 * 30)
         .getMany();
     });
 
@@ -157,6 +159,7 @@ export class IndexService {
         )
         .orderBy('moviePv.pv', 'DESC')
         .take(14)
+        .cache(`web:type:${columnValue}:${name}:rank`, 60000 * 30)
         .getMany();
     });
 

@@ -9,7 +9,7 @@ import * as moment from 'moment';
 import { PaginatedDto } from 'src/common/dto/paginated.dto';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import { Between, FindOptionsWhere, In, Like, Not, Repository } from 'typeorm';
-import { DICTTYPE_KEY } from './dict.contant';
+import { DICTTYPE_KEY } from 'src/common/contants/redis.contant';
 import {
   ReqAddDictDataDto,
   ReqAddDictTypeDto,
@@ -70,7 +70,7 @@ export class DictService {
   }
 
   findAllDictType() {
-    return this.dictTypeRepository.find()
+    return this.dictTypeRepository.find();
   }
 
   /* 通过字典类型查询 */

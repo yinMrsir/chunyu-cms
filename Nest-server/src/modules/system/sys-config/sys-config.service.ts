@@ -11,7 +11,7 @@ import { ApiException } from 'src/common/exceptions/api.exception';
 import { Between, FindOptionsWhere, Like, Not, Repository } from 'typeorm';
 import { ReqAddConfigDto, ReqConfigListDto } from './dto/req-sys-config.dto';
 import { SysConfig } from './entities/sys-config.entity';
-import { SYSCONFIG_KEY } from './sys-config.contant';
+import { SYSCONFIG_KEY } from 'src/common/contants/redis.contant';
 
 @Injectable()
 export class SysConfigService {

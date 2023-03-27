@@ -39,7 +39,7 @@ import {
 } from './dto/req-dict.dto';
 import { DictData } from './entities/dict_data.entity';
 import { DictType } from './entities/dict_type.entity';
-import {Public} from "../../../common/decorators/public.decorator";
+import { Public } from '../../../common/decorators/public.decorator';
 
 @ApiTags('字典管理')
 @ApiBearerAuth()

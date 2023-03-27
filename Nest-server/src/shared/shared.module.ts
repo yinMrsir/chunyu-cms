@@ -43,6 +43,13 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
           autoLoadModels: configService.get<boolean>('database.autoLoadModels'),
           synchronize: configService.get<boolean>('database.synchronize'),
           logging: configService.get('database.logging'),
+          cache: {
+            type: 'redis',
+            options: {
+              host: configService.get<any>('redis'),
+              port: 6379,
+            },
+          },
         };
       },
       inject: [ConfigService],

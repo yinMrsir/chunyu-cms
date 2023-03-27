@@ -13,3 +13,8 @@ export const USER_ROLEKEYS_KEY = 'admin:roleKeys:token'; //角色标识
 export const USER_ROLEKS_KEY = 'admin:role:token'; //角色
 
 export const USER_ONLINE_KEY = 'admin:online:token'; // 在线用户
+
+export const DICTTYPE_KEY = 'sys:dictType'; // 字典
+export const SYSCONFIG_KEY = 'sys:sysConfig'; // 参数配置
+export const WEB_INDEX = 'web:index'; // 首页
+export const WEB_TYPE = 'web:type'; // 栏目页

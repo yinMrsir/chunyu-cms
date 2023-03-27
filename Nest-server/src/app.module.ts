@@ -18,6 +18,7 @@ import { OnlineModule } from './modules/monitor/online/online.module';
 import { JobModule } from './modules/monitor/job/job.module';
 import { ServerModule } from './modules/monitor/server/server.module';
 import { JobService } from './modules/monitor/job/job.service';
+import { CacheModule } from './modules/monitor/cache/cache.module';
 import { IndexModule } from './modules/web/index/index.module';
 import { CountryModule } from './modules/basic/country/country.module';
 import { LanguageModule } from './modules/basic/language/language.module';
@@ -80,6 +81,7 @@ const aliasProviders = createAliasProviders();
     OnlineModule,
     JobModule,
     ServerModule,
+    CacheModule,
 
     /* 影视类业务模块 */
     CountryModule,
