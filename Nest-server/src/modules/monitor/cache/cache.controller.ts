@@ -8,6 +8,7 @@ import {
 } from 'src/common/contants/redis.contant';
 import { CacheService } from './cache.service';
 import { DataObj } from '../../../common/class/data-obj.class';
+import { RequiresPermissions } from '../../../common/decorators/requires-permissions.decorator';
 
 export type ICache = {
   cacheName: string;
@@ -54,11 +55,13 @@ export class CacheController {
   }
 
   @Get('getNames')
+  @RequiresPermissions('monitor:cache:query')
   async getNames() {
     return new DataObj(this.caches);
   }
 
   @Get('getKeys/:cacheName')
+  @RequiresPermissions('monitor:cache:query')
   async getCacheKeys(@Param('cacheName') cacheName: string) {
     const data: string[] = await this.cacheService.getCacheKeys(
       cacheName + '*',
@@ -67,17 +70,20 @@ export class CacheController {
   }
 
   @Get('getValue/:cacheName/:cacheKey')
+  @RequiresPermissions('monitor:cache:query')
   async getCacheValue(@Param('cacheKey') cacheKey: string) {
     const data = await this.cacheService.getCache(cacheKey);
     return new DataObj(data);
   }
 
   @Delete('clearCacheKey/:cacheKey')
+  @RequiresPermissions('monitor:cache:remove')
   async clearCacheKey(@Param('cacheKey') cacheKey: string) {
     await this.cacheService.deleteCache(cacheKey);
   }
 
   @Delete('clearCacheAll')
+  @RequiresPermissions('monitor:cache:remove')
   async clearCacheAll() {
     const keys = await this.cacheService.getCacheKeys('*');
     this.cacheService.deleteCache(keys);
