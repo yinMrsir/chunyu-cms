@@ -41,6 +41,8 @@
 
 如果没有安装nest-cli，先执行`npm install -g @nestjs/cli`命令全局安装
 
+本地开发启动服务可查看：[相关视频](https://www.douyin.com/user/MS4wLjABAAAAUKMCVZGbQl7etrdd36GBIG6OGxClOwoHci_-PIlxNvE?modal_id=7213009576487177504)
+
 ## 部署
 
 ### 构建服务端：
