@@ -137,7 +137,10 @@ export class DeptService {
     if (dataScopeSql) {
       queryBuilde.andWhere(dataScopeSql);
     }
-    const deptArr = await queryBuilde.getRawMany();
+    const deptArr = this.sharedService.uniqueFunc(
+      await queryBuilde.getRawMany(),
+      'id',
+    );
     return this.sharedService.handleTree(deptArr);
   }
 

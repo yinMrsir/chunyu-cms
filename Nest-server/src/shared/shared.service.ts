@@ -67,6 +67,7 @@ export class SharedService {
         }
       }
     }
+
     return tree;
   }
 
@@ -168,5 +169,17 @@ export class SharedService {
   ): string {
     const customNanoid = customAlphabet(placeholder, length);
     return customNanoid();
+  }
+
+  /**
+   * 数组对象去重
+   * @param arr
+   * @param uniId
+   */
+  uniqueFunc(arr, uniId) {
+    const res = new Map();
+    return arr.filter(
+      (item) => !res.has(item[uniId]) && res.set(item[uniId], 1),
+    );
   }
 }
