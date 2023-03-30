@@ -1,8 +1,8 @@
 <template>
   <div class="container mt-20 show">
     <Head>
-      <Title>{{ info.name }} - {{ runtimeConfig.globalTitle }}</Title>
-      <Meta name="description" :content="`最新最全的${info.name}尽在淳渔影视。`" />
+      <Title>{{ title }}{{ info.name }} - {{ runtimeConfig.globalTitle }}</Title>
+      <Meta name="description" :content="`最新最全的${title}${info.name}尽在淳渔影视。`" />
     </Head>
 
     <el-row :gutter="40">
@@ -149,6 +149,19 @@ const y = new Date().getFullYear();
 for (let i = 0 ; i <= 15 ; i++){
   yearList.value.push(y-i)
 }
+
+const title = computed(() => {
+  let html = ''
+  if (route.query.y) {
+    html += route.query.y
+    html += '_'
+  }
+  if (route.query.t) {
+    html += route.query.t
+    html += '_'
+  }
+  return html
+})
 
 const [
   genreList,
