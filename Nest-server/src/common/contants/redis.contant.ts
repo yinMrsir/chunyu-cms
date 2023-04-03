@@ -18,3 +18,4 @@ export const DICTTYPE_KEY = 'sys:dictType'; // 字典
 export const SYSCONFIG_KEY = 'sys:sysConfig'; // 参数配置
 export const WEB_INDEX = 'web:index'; // 首页
 export const WEB_TYPE = 'web:type'; // 栏目页
+export const WEB_USER_KEY = 'web:user:token'; // 前台页面用户token

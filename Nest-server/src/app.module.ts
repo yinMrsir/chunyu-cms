@@ -39,6 +39,8 @@ import { VideoModule } from './modules/video/video-list/video-list.module';
 import { BannerModule } from './modules/basic/banner/banner.module';
 import { ColumnModule } from './modules/column/column.module';
 import { CollectModule } from './modules/collect/collect.module';
+import { WebUserModule } from './modules/web/user/web-user.module';
+import { WebAuthModule } from './modules/web/auth/web-auth.module';
 
 /* 将 provider的类名作为别名，方便定时器调用 */
 const providers = [JobService];
@@ -108,6 +110,8 @@ const aliasProviders = createAliasProviders();
 
     /* web模块 */
     IndexModule,
+    WebUserModule,
+    WebAuthModule,
   ],
   providers: [...aliasProviders],
 })
