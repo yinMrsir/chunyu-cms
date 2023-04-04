@@ -69,18 +69,21 @@
 
 <script setup>
 import { ArrowRight } from '@element-plus/icons-vue'
+import { useFetch } from "nuxt/app";
 
 const runtimeConfig = useRuntimeConfig()
 const route = useRoute()
 const list = ref([])
+const info = ref({})
 
-const {list: resList, info} = await useHttp('/type', { query: { columnValue: route.params.column } })
-if (!info) {
+const { data } = await useFetch('/api/type', { query: { columnValue: route.params.column } })
+if (!data.value.info) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page Not Found',
     fatal: true
   })
 }
-list.value = resList
+info.value = data.value.info
+list.value = data.value.list
 </script>

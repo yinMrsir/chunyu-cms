@@ -135,6 +135,7 @@
 <script setup>
 import { VideoCamera } from '@element-plus/icons-vue'
 import { onMounted } from "../../../.nuxt/imports";
+import {useFetch} from "nuxt/app";
 
 definePageMeta({
   key: route => route.fullPath
@@ -149,6 +150,14 @@ const y = new Date().getFullYear();
 for (let i = 0 ; i <= 15 ; i++){
   yearList.value.push(y-i)
 }
+const genreList = ref([])
+const countryList = ref([])
+const languageList = ref([])
+const movieList = ref([])
+const total = ref(0)
+const weekList = ref([])
+const monthList = ref([])
+const info = ref({})
 
 const title = computed(() => {
   let html = ''
@@ -163,21 +172,20 @@ const title = computed(() => {
   return html
 })
 
-const [
-  genreList,
-  countryList,
-  languageList,
-  movieList,
-  total,
-  weekList,
-  monthList,
-  info
-] = await useHttp('/show', {
+const { data } = await useFetch('/api/show', {
   query: {
     ...route.query,
     columnValue: route.params.column
   }
 })
+genreList.value = data.value.genreList
+countryList.value = data.value.countryList
+languageList.value = data.value.languageList
+movieList.value = data.value.movieList
+total.value = data.value.total
+weekList.value = data.value.weekList
+monthList.value = data.value.monthList
+info.value = data.value.info
 
 async function handleCurrentChange(page) {
   await navigateTo({

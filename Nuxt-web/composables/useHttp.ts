@@ -1,8 +1,17 @@
-import { useFetch, UseFetchOptions } from "#app";
+import {SearchParams} from "ohmyfetch";
 
-export const useHttp = async <T>(url: string, params?: UseFetchOptions<T>) => {
-    const { data } = await useFetch('/api' + url, params)
-    return data.value
+export const useGet = <T>(url: string, params?: SearchParams): Promise<T> => {
+    const { baseUrl } = useRuntimeConfig()
+    return $fetch(baseUrl + url, {
+        method: 'get',
+        params
+    })
 }
 
-export default useHttp
+export const usePost = <T>(url: string, body?: Record<string, any>) => {
+    const { baseUrl } = useRuntimeConfig()
+    return $fetch(baseUrl + url, {
+        method: 'post',
+        body
+    })
+}

@@ -39,8 +39,16 @@
 </template>
 
 <script setup>
+import {useFetch} from "#app";
+
 const visible = ref(false)
-const [banner, list] = await useHttp('/home')
+const banner = ref([])
+const list = ref([])
+
+const { data } = await useFetch('/api/home')
+banner.value = data.value.banner
+list.value = data.value.movieDataList
+
 const dialogWidth = ref('')
 
 onMounted(() => {

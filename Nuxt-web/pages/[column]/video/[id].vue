@@ -121,25 +121,33 @@
 <script setup>
 import { VideoCamera } from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
+import {useFetch} from "nuxt/app";
 
 const runtimeConfig = useRuntimeConfig()
 const route = useRoute()
 const id = route.params.id
-
 const qrcodeUrl = ref('')
+const detail = ref({})
+const likeRows = ref([])
+const weekList = ref([])
+const monthList = ref([])
 
 onMounted(() => {
   qrcodeUrl.value = window.location.href
 })
 
-const { detail, likeRows, weekList, monthList } = await useHttp('/video', { query: { id } })
-if (!detail) {
+const { data } = await useFetch('/api/video', { query: { id } })
+if (!data.value.detail) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page Not Found',
     fatal: true
   })
 }
+detail.value = data.value.detail
+likeRows.value = data.value.likeRows
+weekList.value = data.value.weekList
+monthList.value = data.value.monthList
 </script>
 
 <style lang="scss" scoped>

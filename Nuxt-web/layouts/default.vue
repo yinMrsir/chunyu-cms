@@ -15,12 +15,13 @@
         </div>
         <div class="header__right items-center" v-if="route.path !== '/search'">
           <el-input
-              class="w-50 m-2"
+              class="w-50 m-2 mr-20"
               placeholder="请输入关键词..."
               :suffix-icon="Search"
               v-model="searchValue"
               @keyup.enter.native="handleSearch"
           />
+          <el-button circle :icon="UserFilled" @click="goLogin"></el-button>
         </div>
       </div>
       <div class="mobile-nav hidden-sm-only hidden-sm-and-up">
@@ -36,18 +37,25 @@
     <footer>
       Copyright 2023 淳渔影视网 Inc. All Rights Reserved.
     </footer>
+    <LoginPop :visible="visible" @success="visible = false"/>
   </div>
 </template>
 
 <script setup>
-import { Search } from '@element-plus/icons-vue'
+import { Search, UserFilled } from '@element-plus/icons-vue'
+import { useFetch } from "nuxt/app";
+
 const route = useRoute()
 const searchValue = ref('')
+const visible = ref(false)
 
-const navigation = await useHttp('/common/navigation')
-
+const { data: navigation } = await useFetch('/api/common/navigation')
 function handleSearch() {
   navigateTo('/search?keyword=' + searchValue.value)
+}
+
+function goLogin() {
+  visible.value = true
 }
 
 </script>

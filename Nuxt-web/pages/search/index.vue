@@ -72,6 +72,8 @@
 </template>
 
 <script setup>
+import {useFetch} from "nuxt/app";
+
 const route = useRoute()
 
 const activeName = ref('first')
@@ -89,14 +91,14 @@ definePageMeta({
   key: route => route.fullPath
 })
 
-const newRes = await useHttp('/common/movie-list', { query: { pageSize: 20 } })
-newList.value = newRes.rows
+const { data } = await useFetch('/api/common/movie-list', { query: { pageSize: 20 } })
+newList.value = data.value.rows
 
 handleSearch()
 async function handleSearch() {
-  const data = await useHttp('/common/movie-list', { query: { keyword: form.keyword, page: currentPage.value, size: 30 } })
-  movieList.value = data.rows
-  total.value = data.total
+  const { data } = await useFetch('/api/common/movie-list', { query: { keyword: form.keyword, page: currentPage.value, size: 30 } })
+  movieList.value = data.value.rows
+  total.value = data.value.total
 }
 
 async function handleCurrentChange(page) {

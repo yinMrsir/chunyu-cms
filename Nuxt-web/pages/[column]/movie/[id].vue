@@ -160,19 +160,31 @@
 </template>
 
 <script setup>
-import { VideoCamera, Monitor, User, Place, Star, VideoPlay } from '@element-plus/icons-vue'
+import { Star, VideoPlay } from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
+import {useFetch} from "nuxt/app";
 
 const { globalTitle } = useRuntimeConfig()
 const route = useRoute()
 const id = route.params.id
 const qrcodeUrl = ref('')
+const detail = ref({})
+const roles = ref([])
+const casts = ref([])
+const weekList = ref([])
+const monthList = ref([])
 
 onMounted(() => {
   qrcodeUrl.value = window.location.href
 })
 
-const [detail, roles, casts, weekList, monthList] = await useHttp('/movie', { query: { id } })
+const { data } = await useFetch('/api/movie', { query: { id } })
+detail.value = data.value.detail
+roles.value = data.value.roles
+casts.value = data.value.casts
+weekList.value = data.value.weekList
+monthList.value = data.value.monthList
+
 if (!detail) {
   throw createError({
     statusCode: 404,

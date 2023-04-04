@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <el-dialog title="登录" width="360" v-model="visible">
+    <el-dialog title="登录" width="360" v-model="props.visible">
       <el-form ref="formRef" :model="form" :rules="rules">
         <el-form-item prop="email">
           <el-input v-model="form.email" placeholder="请输入邮箱" :prefix-icon="UserFilled"></el-input>
@@ -16,17 +16,20 @@
   </client-only>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="LoginPop">
+import {ComponentInternalInstance} from "@vue/runtime-core";
 import { ElMessage, FormInstance } from 'element-plus';
 import { UserFilled, Lock } from '@element-plus/icons-vue';
-import useHttp from "../composables/useHttp";
+import {useFetch} from "#app";
 
-definePageMeta({
-  layout: false
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const props = defineProps({
+  visible: {
+    type: Boolean,
+    default: false
+  }
 })
-
 const token = useCookie<string>('token')
-const visible = ref(true)
 const formRef = ref<FormInstance>()
 const form = reactive({
   email: '',
@@ -42,19 +45,16 @@ async function login(formEl: FormInstance | undefined) {
   if (!formEl) return
   await formEl.validate(async (valid) => {
     if (valid) {
-      const data = await useHttp<{code: number; msg: string; token?: string}>('/common/login', {
-        method: 'post',
-        body: form
-      })
-      if (data?.code === 200) {
-        visible.value = false
+      const { data } = await useFetch<any>('/api/common/login', { method: 'post', body: form })
+      if (data.value?.code === 200) {
         ElMessage({
           message: '登录成功',
           type: 'success',
         })
-        data?.token && (token.value = data.token)
+        data.value?.token && (token.value = data.value.token)
+        proxy?.$emit('success')
       } else {
-        ElMessage.error(data?.msg)
+        ElMessage.error(data.value?.msg)
       }
     }
   })

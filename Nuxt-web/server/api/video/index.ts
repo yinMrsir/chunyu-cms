@@ -1,18 +1,16 @@
 import {getQuery} from "h3";
 import {IResData, IResPage} from "~/global";
 import dayjs from "dayjs";
+import {useGet} from "~/composables/useHttp";
 
 export default defineEventHandler(async (event) => {
-  const runtimeConfig = useRuntimeConfig()
   const query = getQuery(event)
   const currTime = dayjs().format('YYYY-MM-DD')
   const weekStartTime = dayjs().subtract(7, 'day').format('YYYY-MM-DD')
   const mouthStartTime = dayjs().subtract(30, 'day').format('YYYY-MM-DD')
 
-  const [
-    detailRes
-  ] = await Promise.all([
-    $fetch<IResData<any>>(`${runtimeConfig.baseUrl}/movie/videos/${query.id}`)
+  const [ detailRes ] = await Promise.all([
+    useGet<IResData<any>>(`/movie/videos/${query.id}`)
   ])
 
   const [
@@ -20,30 +18,24 @@ export default defineEventHandler(async (event) => {
     weekList,
     monthList
   ] = await Promise.all([
-    $fetch<IResPage<any[]>>(`${runtimeConfig.baseUrl}/movie/list`, {
-      query: {
-        genres: detailRes.data.movie.genres.split(',')[0],
-        pageNum: 1,
-        pageSize: 30,
-      }
+    useGet<IResPage<any[]>>(`/movie/list`, {
+      genres: detailRes.data.movie.genres.split(',')[0],
+      pageNum: 1,
+      pageSize: 30,
     }),
-    $fetch<IResPage<any[]>>(runtimeConfig.baseUrl + '/movie/list', {
-      query: {
-        columnValue: detailRes.data.movie.columnValue,
-        pageNum: 1,
-        pageSize: 20,
-        orderBy: 'pv',
-        date: [weekStartTime, currTime]
-      }
+    useGet<IResPage<any[]>>('/movie/list', {
+      columnValue: detailRes.data.movie.columnValue,
+      pageNum: 1,
+      pageSize: 20,
+      orderBy: 'pv',
+      date: [weekStartTime, currTime]
     }),
-    $fetch<IResPage<any[]>>(runtimeConfig.baseUrl + '/movie/list', {
-      query: {
-        columnValue: detailRes.data.movie.columnValue,
-        pageNum: 1,
-        pageSize: 20,
-        orderBy: 'pv',
-        date: [mouthStartTime, currTime]
-      }
+    useGet<IResPage<any[]>>('/movie/list', {
+      columnValue: detailRes.data.movie.columnValue,
+      pageNum: 1,
+      pageSize: 20,
+      orderBy: 'pv',
+      date: [mouthStartTime, currTime]
     })
   ])
 

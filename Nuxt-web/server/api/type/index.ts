@@ -1,11 +1,11 @@
 import {getQuery} from "h3";
+import { useGet } from "~/composables/useHttp";
 
 export default defineEventHandler(async (event) => {
-    const runtimeConfig = useRuntimeConfig()
     const query = getQuery(event)
     const [res, info]: any = await Promise.all([
-        $fetch( `${runtimeConfig.baseUrl}/web/type/${query.columnValue}`),
-        $fetch(`${runtimeConfig.baseUrl}/column?value=${query.columnValue}`)
+        useGet( `/web/type/${query.columnValue}`),
+        useGet(`/column?value=${query.columnValue}`)
     ])
 
     return {
