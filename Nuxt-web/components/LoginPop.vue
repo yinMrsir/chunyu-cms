@@ -17,18 +17,17 @@
 </template>
 
 <script lang="ts" setup name="LoginPop">
-import { ComponentInternalInstance } from "@vue/runtime-core";
+import {ComponentInternalInstance} from "@vue/runtime-core";
 import { ElMessage, FormInstance } from 'element-plus';
 import { UserFilled, Lock } from '@element-plus/icons-vue';
-import { useFetch } from "#app";
+import {useFetch} from "#app";
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const visible = ref(false)
-const token = useCookie<string>('token')
 const formRef = ref<FormInstance>()
 const form = reactive({
-  email: '',
-  password: ''
+  email: '542968439@qq.com',
+  password: '123456'
 })
 const rules = ref({
   email: [{ required: true, message: '请输入邮箱地址' }],
@@ -46,8 +45,7 @@ async function login(formEl: FormInstance | undefined) {
           message: '登录成功',
           type: 'success',
         })
-        data.value?.token && (token.value = data.value.token)
-        visible.value = false
+        proxy?.$emit('success', data.value.token)
       } else {
         ElMessage.error(data.value?.msg)
       }
