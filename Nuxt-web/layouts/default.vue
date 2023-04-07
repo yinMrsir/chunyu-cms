@@ -21,7 +21,20 @@
               v-model="searchValue"
               @keyup.enter.native="handleSearch"
           />
-          <el-button circle :icon="UserFilled" @click="goLogin"></el-button>
+          <template v-if="userInfo">
+            <el-dropdown @command="handleCommand">
+              <el-button circle :icon="UserFilled" color="#155FAA"></el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="user">个人中心</el-dropdown-item>
+                  <el-dropdown-item divided command="logOut">退出</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </template>
+          <template v-else>
+            <el-button circle :icon="UserFilled" @click="goLogin"></el-button>
+          </template>
         </div>
       </div>
       <div class="mobile-nav hidden-sm-only hidden-sm-and-up">
@@ -37,7 +50,7 @@
     <footer>
       Copyright 2023 淳渔影视网 Inc. All Rights Reserved.
     </footer>
-    <LoginPop :visible="visible" @success="visible = false"/>
+    <LoginPop :visible="visible" @success="handleSuccess"/>
   </div>
 </template>
 
@@ -45,6 +58,7 @@
 import { Search, UserFilled } from '@element-plus/icons-vue'
 import { useFetch } from "nuxt/app";
 
+const userInfo = useCookie('userInfo')
 const route = useRoute()
 const searchValue = ref('')
 const visible = ref(false)
@@ -56,6 +70,25 @@ function handleSearch() {
 
 function goLogin() {
   visible.value = true
+}
+
+function handleCommand(command) {
+  switch (command) {
+    case 'logOut':
+      logOut()
+      break;
+    default:
+      break;
+  }
+}
+
+function logOut() {
+  userInfo.value = null
+}
+
+function handleSuccess(token) {
+  userInfo.value = { token }
+  visible.value = false
 }
 
 </script>

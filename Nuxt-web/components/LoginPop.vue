@@ -29,11 +29,10 @@ const props = defineProps({
     default: false
   }
 })
-const token = useCookie<string>('token')
 const formRef = ref<FormInstance>()
 const form = reactive({
-  email: '',
-  password: ''
+  email: '542968439@qq.com',
+  password: '123456'
 })
 const rules = ref({
   email: [{ required: true, message: '请输入邮箱地址' }],
@@ -51,8 +50,7 @@ async function login(formEl: FormInstance | undefined) {
           message: '登录成功',
           type: 'success',
         })
-        data.value?.token && (token.value = data.value.token)
-        proxy?.$emit('success')
+        proxy?.$emit('success', data.value.token)
       } else {
         ElMessage.error(data.value?.msg)
       }
