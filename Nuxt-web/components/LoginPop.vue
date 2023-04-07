@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <el-dialog title="登录" width="360" v-model="props.visible">
+    <el-dialog title="登录" width="360" v-model="visible">
       <el-form ref="formRef" :model="form" :rules="rules">
         <el-form-item prop="email">
           <el-input v-model="form.email" placeholder="请输入邮箱" :prefix-icon="UserFilled"></el-input>
@@ -17,18 +17,13 @@
 </template>
 
 <script lang="ts" setup name="LoginPop">
-import {ComponentInternalInstance} from "@vue/runtime-core";
+import { ComponentInternalInstance } from "@vue/runtime-core";
 import { ElMessage, FormInstance } from 'element-plus';
 import { UserFilled, Lock } from '@element-plus/icons-vue';
-import {useFetch} from "#app";
+import { useFetch } from "#app";
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
-const props = defineProps({
-  visible: {
-    type: Boolean,
-    default: false
-  }
-})
+const visible = ref(false)
 const token = useCookie<string>('token')
 const formRef = ref<FormInstance>()
 const form = reactive({
@@ -52,12 +47,18 @@ async function login(formEl: FormInstance | undefined) {
           type: 'success',
         })
         data.value?.token && (token.value = data.value.token)
-        proxy?.$emit('success')
+        visible.value = false
       } else {
         ElMessage.error(data.value?.msg)
       }
     }
   })
 }
+
+defineExpose({
+  setVisible(value: boolean) {
+    visible.value = value
+  }
+})
 
 </script>

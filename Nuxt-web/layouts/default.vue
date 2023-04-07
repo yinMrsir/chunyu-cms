@@ -37,7 +37,7 @@
     <footer>
       Copyright 2023 淳渔影视网 Inc. All Rights Reserved.
     </footer>
-    <LoginPop :visible="visible" @success="visible = false"/>
+    <LoginPop ref="loginPopRef"/>
   </div>
 </template>
 
@@ -45,6 +45,7 @@
 import { Search, UserFilled } from '@element-plus/icons-vue'
 import { useFetch } from "nuxt/app";
 
+const { proxy } = getCurrentInstance()
 const route = useRoute()
 const searchValue = ref('')
 const visible = ref(false)
@@ -55,7 +56,7 @@ function handleSearch() {
 }
 
 function goLogin() {
-  visible.value = true
+  proxy.$refs['loginPopRef'].setVisible(true)
 }
 
 </script>
