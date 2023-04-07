@@ -40,7 +40,9 @@
 
 <script setup>
 import {useFetch} from "#app";
+import {useCookie} from "nuxt/app";
 
+const warmReminder = useCookie('warmReminder', { maxAge: 60 * 60 })
 const visible = ref(false)
 const banner = ref([])
 const list = ref([])
@@ -52,7 +54,10 @@ list.value = data.value.movieDataList
 const dialogWidth = ref('')
 
 onMounted(() => {
-  visible.value = true
+  if (!warmReminder.value) {
+    visible.value = true
+    warmReminder.value = '1'
+  }
   dialogWidth.value = window.innerWidth > 600 ? '30%' : '320px'
 })
 

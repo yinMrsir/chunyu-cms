@@ -21,20 +21,22 @@
               v-model="searchValue"
               @keyup.enter.native="handleSearch"
           />
-          <template v-if="userInfo">
-            <el-dropdown @command="handleCommand">
-              <el-button circle :icon="UserFilled" color="#155FAA"></el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item command="user">个人中心</el-dropdown-item>
-                  <el-dropdown-item divided command="logOut">退出</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </template>
-          <template v-else>
-            <el-button circle :icon="UserFilled" @click="goLogin"></el-button>
-          </template>
+          <ClientOnly>
+            <template v-if="userInfo">
+              <el-dropdown @command="handleCommand">
+                <el-button circle :icon="UserFilled" color="#155FAA"></el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item command="user">个人中心</el-dropdown-item>
+                    <el-dropdown-item divided command="logOut">退出</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </template>
+            <template v-else>
+              <el-button circle :icon="UserFilled" @click="goLogin"></el-button>
+            </template>
+          </ClientOnly>
         </div>
       </div>
       <div class="mobile-nav hidden-sm-only hidden-sm-and-up">
@@ -55,8 +57,9 @@
 </template>
 
 <script setup>
-import { Search, UserFilled } from '@element-plus/icons-vue'
+import { Search, UserFilled} from '@element-plus/icons-vue'
 import { useFetch } from "nuxt/app";
+import { ElMessage } from "element-plus";
 
 const { proxy } = getCurrentInstance()
 const userInfo = useCookie('userInfo')
@@ -78,6 +81,10 @@ function handleCommand(command) {
       logOut()
       break;
     default:
+      ElMessage({
+        message: '开发中...',
+        type: 'info',
+      });
       break;
   }
 }
