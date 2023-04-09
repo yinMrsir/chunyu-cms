@@ -4,7 +4,7 @@
       <div class="container between">
         <div class="header__left">
           <nuxt-link to="/" class="logo">淳渔影视</nuxt-link>
-          <nav class="hidden-sm-and-down">
+          <nav class="hidden-sm-and-down" v-if="route.path.indexOf('/user') === -1">
             <ul>
               <li :class="route.path === '/' ? 'active' : ''"><NuxtLink to="/">首页</NuxtLink></li>
               <li v-for="item in navigation" :class="route.params.column === item.value ? 'active' : ''">
@@ -39,7 +39,7 @@
           </ClientOnly>
         </div>
       </div>
-      <div class="mobile-nav hidden-sm-only hidden-sm-and-up">
+      <div class="mobile-nav hidden-sm-only hidden-sm-and-up" v-if="route.path.indexOf('/user') === -1">
         <ul>
           <li :class="route.params.column === item.value ? 'active' : ''" :key="index" v-for="(item, index) in navigation">
             <nuxt-link :to="`/${item.value}`">{{ item.name }}</nuxt-link>
@@ -59,10 +59,9 @@
 <script setup>
 import { Search, UserFilled} from '@element-plus/icons-vue'
 import { useFetch } from "nuxt/app";
-import { ElMessage } from "element-plus";
 
 const { proxy } = getCurrentInstance()
-const userInfo = useCookie('userInfo')
+const userInfo = useStore('userInfo')
 const route = useRoute()
 const searchValue = ref('')
 
@@ -81,16 +80,16 @@ function handleCommand(command) {
       logOut()
       break;
     default:
-      ElMessage({
-        message: '开发中...',
-        type: 'info',
-      });
+      navigateTo('/user')
       break;
   }
 }
 
 function logOut() {
   userInfo.value = null
+  if (route.path.indexOf('/user') > -1) {
+    navigateTo('/')
+  }
 }
 
 function handleSuccess(token) {

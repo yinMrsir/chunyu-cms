@@ -42,7 +42,7 @@
                <nuxt-link :to="`/${detail.columnValue}/video/${detail.movieVideos[0].id}`" v-if="detail.movieVideos[0]">
                 <el-button :icon="VideoPlay" type="primary">立即播放</el-button>
                </nuxt-link>
-               <el-button :icon="Star" class="ml-10">收藏</el-button>
+               <el-button :icon="Star" class="ml-10" @click="handleCollect">收藏</el-button>
              </div>
            </el-form>
          </div>
@@ -163,9 +163,11 @@
 import { Star, VideoPlay } from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
 import {useFetch} from "nuxt/app";
+import {ElMessage} from "element-plus";
 
 const { globalTitle } = useRuntimeConfig()
 const route = useRoute()
+const userInfo = useStore('userInfo')
 const id = route.params.id
 const qrcodeUrl = ref('')
 const detail = ref({})
@@ -191,6 +193,16 @@ if (!detail) {
     statusMessage: 'Page Not Found',
     fatal: true
   })
+}
+
+// 收藏
+function handleCollect() {
+  if (!userInfo.value) {
+    ElMessage({
+      message: '请先登录',
+      type: 'warning'
+    })
+  }
 }
 
 </script>

@@ -23,7 +23,13 @@ export class DemoEnvironmentGuard implements CanActivate {
       this.configService.get<boolean>('isDemoEnvironment');
     if (!isDemoEnvironment) return true;
     const request: Request = context.switchToHttp().getRequest();
-    const allowUrlArr = ['/login', '/logout']; //放过的路由
+    const allowUrlArr = [
+      '/login',
+      '/logout',
+      '/web/user/login',
+      '/web/user/reg',
+      '/web/user/logout',
+    ]; //放过的路由
     if (
       request.method.toLocaleLowerCase() != 'get' &&
       !allowUrlArr.includes(request.url)
