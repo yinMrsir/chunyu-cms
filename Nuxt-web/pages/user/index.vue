@@ -1,7 +1,7 @@
 <template>
   <div class="container user-index">
     <Head>
-      <Title>1</Title>
+      <Title>个人中心</Title>
       <Style type="text/css" children="body { background-color: #f7f7f7; }" />
     </Head>
     <el-row :gutter="30" class="mt-20">

@@ -17,10 +17,10 @@
 </template>
 
 <script lang="ts" setup name="LoginPop">
-import {ComponentInternalInstance} from "@vue/runtime-core";
+import { ComponentInternalInstance } from "@vue/runtime-core";
 import { ElMessage, FormInstance } from 'element-plus';
 import { UserFilled, Lock } from '@element-plus/icons-vue';
-import {useFetch} from "#app";
+import { useFetch } from "#app";
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const visible = ref(false)

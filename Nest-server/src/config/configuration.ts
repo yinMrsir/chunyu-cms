@@ -9,7 +9,9 @@ export function isDev(): boolean {
 export default () => {
   let envConfig: IConfig = {};
   try {
-    envConfig = require(`./config.${process.env.NODE_ENV}`).default;
+    envConfig = require(`./config.${
+      process.env.NODE_ENV || 'development'
+    }`).default;
     //将文件上传路径绑定到环境变量上
     process.env.uploadPath = envConfig.uploadPath ?? '/upload';
   } catch (e) {

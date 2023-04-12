@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { WebUserService } from './web-user.service';
 import { Public } from '../../../common/decorators/public.decorator';
 import { LoginWebUserDto, RegWebUserDto } from './dto/req-web-user.dto';
@@ -20,5 +20,10 @@ export class WebUserController {
   @UseGuards(LocalWebAuthGuard)
   async login(@Body() loginUserDto: LoginWebUserDto, @Req() req: Request) {
     return this.webUserService.login(req);
+  }
+
+  @Get('getUserInfo')
+  getUserInfo() {
+    console.log(1);
   }
 }

@@ -19,7 +19,7 @@ import * as fs from 'fs-extra';
 
 @Controller('video')
 export class VideoController {
-  constructor(private readonly VideoService: VideoService) {}
+  constructor(private readonly videoService: VideoService) {}
 
   @Post()
   async create(
@@ -27,12 +27,12 @@ export class VideoController {
     @User(UserEnum.userName, UserInfoPipe) userName: string,
   ) {
     createVideoDto.createBy = createVideoDto.updateBy = userName;
-    await this.VideoService.create(createVideoDto);
+    await this.videoService.create(createVideoDto);
   }
 
   @Get('list')
   list(@Query(PaginationPipe) queryVideoDto: QueryVideoDto) {
-    return this.VideoService.findPageList(queryVideoDto);
+    return this.videoService.findPageList(queryVideoDto);
   }
 
   @Put()
@@ -41,12 +41,12 @@ export class VideoController {
     @User(UserEnum.userName, UserInfoPipe) userName: string,
   ) {
     updateVideoDto.updateBy = userName;
-    await this.VideoService.update(updateVideoDto);
+    await this.videoService.update(updateVideoDto);
   }
 
   @Delete(':ids')
   async remove(@Param('ids') ids: string) {
-    const data = await this.VideoService.findByIds(ids);
+    const data = await this.videoService.findByIds(ids);
     const deleteIds = [];
     data.forEach((value) => {
       fs.existsSync(value.path);
@@ -56,6 +56,6 @@ export class VideoController {
         deleteIds.push(value.id);
       }
     });
-    return this.VideoService.remove(deleteIds.join(','));
+    return this.videoService.remove(deleteIds.join(','));
   }
 }
