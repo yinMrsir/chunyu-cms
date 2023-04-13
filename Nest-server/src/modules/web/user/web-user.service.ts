@@ -52,4 +52,8 @@ export class WebUserService {
       token: jwtSign,
     };
   }
+
+  info(userId: number) {
+    return this.webUserRepository.findOneBy({ userId });
+  }
 }

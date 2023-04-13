@@ -4,29 +4,31 @@
       <Title>个人中心</Title>
       <Style type="text/css" children="body { background-color: #f7f7f7; }" />
     </Head>
-    <el-row :gutter="30" class="mt-20">
-     <el-col :span="6">
-       <div class="bg-fff user-index__head flex">
-         <img src="../../assets/images/toux.png" alt="">
-         <div>
-           542968439@qq.com
-           <p class="grey">ID: 449892</p>
-           <a class="lv lv1"></a>
-         </div>
-       </div>
-     </el-col>
-      <el-col :span="18" class="bg-fff">
-        <el-tabs
-            v-model="activeName"
-            class="demo-tabs"
-            @tab-click="handleClick"
-        >
-          <el-tab-pane label="我的收藏" name="first">我的收藏</el-tab-pane>
-          <el-tab-pane label="我的点赞" name="second">我的点赞</el-tab-pane>
-          <el-tab-pane label="我的评论" name="third">我的评论</el-tab-pane>
-        </el-tabs>
-      </el-col>
-    </el-row>
+    <ClientOnly>
+      <el-row :gutter="30" class="mt-20">
+        <el-col :span="6">
+          <div class="bg-fff user-index__head flex">
+            <img src="../../assets/images/toux.png" alt="">
+            <div>
+              {{ userInfo?.email }}
+              <p class="grey">ID: 449892</p>
+              <a class="lv lv1"></a>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="18" class="bg-fff">
+          <el-tabs
+              v-model="activeName"
+              class="demo-tabs"
+              @tab-click="handleClick"
+          >
+            <el-tab-pane label="我的收藏" name="first">我的收藏</el-tab-pane>
+            <el-tab-pane label="我的点赞" name="second">我的点赞</el-tab-pane>
+            <el-tab-pane label="我的评论" name="third">我的评论</el-tab-pane>
+          </el-tabs>
+        </el-col>
+      </el-row>
+    </ClientOnly>
   </div>
 </template>
 
@@ -34,14 +36,24 @@
 import type { TabsPaneContext } from 'element-plus'
 
 definePageMeta({
-  middleware: ["auth"]
+  middleware: ["auth"],
+  layout: false
 })
-
 const activeName = ref('first')
+const userInfo = ref({
+  email: 11
+})
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event)
 }
+
+if (process.client) {
+  const { data } = await useFetch('/api/user/info')
+  console.log(data)
+  userInfo.value = data.value
+}
+
 </script>
 
 <style lang="scss" scoped>

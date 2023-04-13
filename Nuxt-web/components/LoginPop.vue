@@ -39,7 +39,7 @@ async function login(formEl: FormInstance | undefined) {
   if (!formEl) return
   await formEl.validate(async (valid) => {
     if (valid) {
-      const { data } = await useFetch<any>('/api/common/login', { method: 'post', body: form })
+      const { data } = await useFetch<any>('/api/user/login', { method: 'post', body: form })
       if (data.value?.code === 200) {
         ElMessage({
           message: '登录成功',
