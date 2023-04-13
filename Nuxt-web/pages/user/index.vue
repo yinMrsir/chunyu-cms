@@ -11,7 +11,7 @@
             <img src="../../assets/images/toux.png" alt="">
             <div>
               {{ userInfo?.email }}
-              <p class="grey">ID: 449892</p>
+              <p class="grey">ID: {{ userInfo?.userId }}</p>
               <a class="lv lv1"></a>
             </div>
           </div>
@@ -39,19 +39,19 @@ definePageMeta({
   middleware: ["auth"],
   layout: false
 })
+
+const userCookie = useCookie('userInfo')
 const activeName = ref('first')
-const userInfo = ref({
-  email: 11
+
+const { data: userInfo } = await useFetch('/api/user/info', {
+  headers: {
+    Authorization: 'Bearer ' + userCookie.value.token
+  },
+  pick: ['email', 'userId']
 })
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event)
-}
-
-if (process.client) {
-  const { data } = await useFetch('/api/user/info')
-  console.log(data)
-  userInfo.value = data.value
 }
 
 </script>
