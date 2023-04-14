@@ -5,7 +5,7 @@
       <Style type="text/css" children="body { background-color: #f7f7f7; }" />
     </Head>
     <el-row :gutter="30" class="mt-20">
-      <el-col :span="6">
+      <el-col :md="6" :xs="24">
         <div class="bg-fff user-index__head flex">
           <img src="../../assets/images/toux.png" alt="">
           <div>
@@ -15,15 +15,11 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="18" class="bg-fff">
-        <el-tabs
-            v-model="activeName"
-            class="demo-tabs"
-            @tab-click="handleClick"
-        >
-          <el-tab-pane label="我的收藏" name="first">我的收藏</el-tab-pane>
-          <el-tab-pane label="我的点赞" name="second">我的点赞</el-tab-pane>
-          <el-tab-pane label="我的评论" name="third">我的评论</el-tab-pane>
+      <el-col :md="18" :xs="24" class="bg-fff">
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="我的收藏" name="collect">
+            <collect-data/>
+          </el-tab-pane>
         </el-tabs>
       </el-col>
     </el-row>
@@ -31,15 +27,16 @@
 </template>
 
 <script setup lang="ts">
-import type { TabsPaneContext } from 'element-plus'
+import CollectData from '@/components/user/CollectData.vue'
 
 definePageMeta({
   middleware: ["auth"],
   layout: false
 })
 
+const runtimeConfig = useRuntimeConfig()
 const userInfo = useCookie('userInfo')
-const activeName = ref('first')
+const activeName = ref<string>('collect')
 
 const { data: user } = await useFetch('/api/user/info', {
   headers: {
@@ -47,11 +44,6 @@ const { data: user } = await useFetch('/api/user/info', {
   },
   pick: ['email', 'userId']
 })
-
-const handleClick = (tab: TabsPaneContext, event: Event) => {
-  console.log(tab, event)
-}
-
 </script>
 
 <style lang="scss" scoped>

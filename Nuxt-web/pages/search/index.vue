@@ -75,7 +75,7 @@
 import {useFetch} from "nuxt/app";
 
 const route = useRoute()
-
+const runtimeConfig = useRuntimeConfig()
 const activeName = ref('first')
 const form = reactive({
   keyword: undefined

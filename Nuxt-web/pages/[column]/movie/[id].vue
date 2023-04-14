@@ -167,6 +167,7 @@ import {ElMessage} from "element-plus";
 
 const { globalTitle } = useRuntimeConfig()
 const route = useRoute()
+const userInfo = useCookie('userInfo')
 const id = route.params.id
 const qrcodeUrl = ref('')
 const detail = ref({})
@@ -174,6 +175,7 @@ const roles = ref([])
 const casts = ref([])
 const weekList = ref([])
 const monthList = ref([])
+const isCoolect = ref(false)
 
 onMounted(() => {
   qrcodeUrl.value = window.location.href
@@ -194,6 +196,12 @@ if (!detail) {
   })
 }
 
+const res = await useFetch('/api/user/collect/find', {
+  query: { id },
+  headers: {
+    Authorization: 'Bearer ' + userInfo.value.token
+  },
+})
 // 收藏
 function handleCollect() {
   const userInfo = useCookie('userInfo')
