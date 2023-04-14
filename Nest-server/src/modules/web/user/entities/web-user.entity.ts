@@ -3,7 +3,7 @@ import { IsOptional, IsString } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '../../../../common/entities/base.entity';
 
-@Entity({ name: 'web-user' })
+@Entity({ name: 'web_user' })
 export class WebUser extends BaseEntity {
   /* 用户Id */
   @PrimaryGeneratedColumn({

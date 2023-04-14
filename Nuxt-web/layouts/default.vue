@@ -58,10 +58,11 @@
 
 <script setup>
 import { Search, UserFilled} from '@element-plus/icons-vue'
-import { useFetch } from "nuxt/app";
+import { useFetch} from "nuxt/app";
 
 const { proxy } = getCurrentInstance()
 const userInfo = useCookie('userInfo')
+const isLogin = useIsLogin()
 const route = useRoute()
 const searchValue = ref('')
 
@@ -87,14 +88,16 @@ function handleCommand(command) {
 
 function logOut() {
   userInfo.value = null
+  isLogin.value = false
   if (route.path.indexOf('/user') > -1) {
     navigateTo('/')
   }
 }
 
-function handleSuccess(token) {
+async function handleSuccess(token) {
   userInfo.value = { token }
   proxy.$refs['loginPopRef'].setVisible(false)
+  isLogin.value = true
 }
 
 </script>

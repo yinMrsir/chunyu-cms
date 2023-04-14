@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { CreateUserCollectDto } from './dto/create-user-collect.dto';
 import { UpdateUserCollectDto } from './dto/update-user-collect.dto';
 import { UserCollect } from './entities/user-collect.entity';
+import { DataObj } from '../../../common/class/data-obj.class';
+import { MovieBasic } from '../../movie/basic/entities/movie-basic.entity';
 
 @Injectable()
 export class UserCollectService {
@@ -13,13 +15,24 @@ export class UserCollectService {
   ) {}
 
   create(createUserCollectDto: CreateUserCollectDto) {
-    return this.userCollectRepository.create(createUserCollectDto);
+    return this.userCollectRepository.save(createUserCollectDto);
   }
 
-  async findByPage(userId) {
-    const [rows, total] = await this.userCollectRepository.findAndCountBy({
-      userId,
-    });
+  async findByPage(userCollectQuery) {
+    console.log(userCollectQuery);
+    const queryBuilder = this.userCollectRepository
+      .createQueryBuilder('userCollect')
+      .leftJoinAndMapOne(
+        'userCollect.movie',
+        MovieBasic,
+        'movieBasic',
+        'userCollect.movieId = movieBasic.id',
+      )
+      .where({ userId: userCollectQuery.userId })
+      .take(userCollectQuery.take)
+      .skip(userCollectQuery.skip);
+
+    const [rows, total] = await queryBuilder.getManyAndCount();
     return {
       rows,
       total,
@@ -27,21 +40,18 @@ export class UserCollectService {
   }
 
   findByMovieIdPage(movieId) {
-    return `This action returns all userCollect`;
+    return movieId;
   }
 
-  findOne(userId: number, movieId: number) {
-    return this.userCollectRepository.findOneBy({
+  async findOne(userId: number, movieId: number) {
+    const data = await this.userCollectRepository.findOneBy({
       userId,
       movieId,
     });
-  }
-
-  update(id: number, updateUserCollectDto: UpdateUserCollectDto) {
-    return `This action updates a #${id} userCollect`;
+    return new DataObj(data);
   }
 
   remove(userId: number, movieId: number) {
-    return `This action removes a #${userId} userCollect`;
+    return this.userCollectRepository.delete({ userId, movieId });
   }
 }

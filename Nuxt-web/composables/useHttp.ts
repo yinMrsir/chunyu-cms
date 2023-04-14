@@ -17,3 +17,12 @@ export const usePost = <T>(url: string, body?: Record<string, any>, headers?: an
         headers
     })
 }
+
+export const useDelete = <T>(url: string, query?: SearchParams, headers?: any): Promise<T> => {
+    const { baseUrl } = useRuntimeConfig()
+    return $fetch(baseUrl + url, {
+        method: 'delete',
+        query,
+        headers
+    })
+}

@@ -42,7 +42,7 @@
                <nuxt-link :to="`/${detail.columnValue}/video/${detail.movieVideos[0].id}`" v-if="detail.movieVideos[0]">
                 <el-button :icon="VideoPlay" type="primary">立即播放</el-button>
                </nuxt-link>
-               <el-button :icon="Star" class="ml-10" @click="handleCollect">收藏</el-button>
+               <el-button :icon="isCollect ? StarFilled : Star" class="ml-10" @click="handleCollect">{{ isCollect ? '已收藏' : '收藏' }}</el-button>
              </div>
            </el-form>
          </div>
@@ -160,14 +160,15 @@
 </template>
 
 <script setup>
-import { Star, VideoPlay } from '@element-plus/icons-vue'
+import { Star, StarFilled, VideoPlay } from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
 import {useFetch} from "nuxt/app";
 import {ElMessage} from "element-plus";
+import {useIsLogin} from "../../../composables/states";
 
 const { globalTitle } = useRuntimeConfig()
 const route = useRoute()
-const userInfo = useCookie('userInfo')
+const isLogin = useIsLogin()
 const id = route.params.id
 const qrcodeUrl = ref('')
 const detail = ref({})
@@ -175,7 +176,7 @@ const roles = ref([])
 const casts = ref([])
 const weekList = ref([])
 const monthList = ref([])
-const isCoolect = ref(false)
+const isCollect = ref(false)
 
 onMounted(() => {
   qrcodeUrl.value = window.location.href
@@ -196,20 +197,43 @@ if (!detail) {
   })
 }
 
-const res = await useFetch('/api/user/collect/find', {
-  query: { id },
-  headers: {
-    Authorization: 'Bearer ' + userInfo.value.token
-  },
+watch(isLogin, (value) => {
+  if (value) {
+    getUserCollect()
+  }
 })
+
+async function getUserCollect() {
+  const userInfo = useCookie('userInfo')
+  if (!userInfo.value) return
+  const { data: userCollect } = await useFetch('/api/user/collect/find', {
+    query: { id },
+    headers: {
+      Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+    },
+  })
+  isCollect.value = !!userCollect.value.data
+}
+getUserCollect()
+
 // 收藏
-function handleCollect() {
+async function handleCollect() {
   const userInfo = useCookie('userInfo')
   if (!userInfo.value) {
     ElMessage({
       message: '请先登录',
       type: 'warning'
     })
+  } else {
+    const { code } = await $fetch(isCollect.value ? '/api/user/collect/cancel' : '/api/user/collect/add', {
+      query: { id },
+      headers: {
+        Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+      },
+    })
+    if (code === 200) {
+      isCollect.value = !isCollect.value
+    }
   }
 }
 
