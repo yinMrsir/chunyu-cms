@@ -4,31 +4,29 @@
       <Title>个人中心</Title>
       <Style type="text/css" children="body { background-color: #f7f7f7; }" />
     </Head>
-    <ClientOnly>
-      <el-row :gutter="30" class="mt-20">
-        <el-col :span="6">
-          <div class="bg-fff user-index__head flex">
-            <img src="../../assets/images/toux.png" alt="">
-            <div>
-              {{ userInfo?.email }}
-              <p class="grey">ID: {{ userInfo?.userId }}</p>
-              <a class="lv lv1"></a>
-            </div>
+    <el-row :gutter="30" class="mt-20">
+      <el-col :span="6">
+        <div class="bg-fff user-index__head flex">
+          <img src="../../assets/images/toux.png" alt="">
+          <div>
+            {{ user?.email }}
+            <p class="grey">ID: {{ user?.userId }}</p>
+            <a class="lv lv1"></a>
           </div>
-        </el-col>
-        <el-col :span="18" class="bg-fff">
-          <el-tabs
-              v-model="activeName"
-              class="demo-tabs"
-              @tab-click="handleClick"
-          >
-            <el-tab-pane label="我的收藏" name="first">我的收藏</el-tab-pane>
-            <el-tab-pane label="我的点赞" name="second">我的点赞</el-tab-pane>
-            <el-tab-pane label="我的评论" name="third">我的评论</el-tab-pane>
-          </el-tabs>
-        </el-col>
-      </el-row>
-    </ClientOnly>
+        </div>
+      </el-col>
+      <el-col :span="18" class="bg-fff">
+        <el-tabs
+            v-model="activeName"
+            class="demo-tabs"
+            @tab-click="handleClick"
+        >
+          <el-tab-pane label="我的收藏" name="first">我的收藏</el-tab-pane>
+          <el-tab-pane label="我的点赞" name="second">我的点赞</el-tab-pane>
+          <el-tab-pane label="我的评论" name="third">我的评论</el-tab-pane>
+        </el-tabs>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -40,12 +38,12 @@ definePageMeta({
   layout: false
 })
 
-const userCookie = useCookie('userInfo')
+const userInfo = useCookie('userInfo')
 const activeName = ref('first')
 
-const { data: userInfo } = await useFetch('/api/user/info', {
+const { data: user } = await useFetch('/api/user/info', {
   headers: {
-    Authorization: 'Bearer ' + userCookie.value.token
+    Authorization: 'Bearer ' + userInfo.value.token
   },
   pick: ['email', 'userId']
 })

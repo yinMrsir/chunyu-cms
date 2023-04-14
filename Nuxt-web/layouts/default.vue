@@ -61,7 +61,7 @@ import { Search, UserFilled} from '@element-plus/icons-vue'
 import { useFetch } from "nuxt/app";
 
 const { proxy } = getCurrentInstance()
-const userInfo = useStore('userInfo')
+const userInfo = useCookie('userInfo')
 const route = useRoute()
 const searchValue = ref('')
 

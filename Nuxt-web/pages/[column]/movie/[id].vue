@@ -167,7 +167,6 @@ import {ElMessage} from "element-plus";
 
 const { globalTitle } = useRuntimeConfig()
 const route = useRoute()
-const userInfo = useStore('userInfo')
 const id = route.params.id
 const qrcodeUrl = ref('')
 const detail = ref({})
@@ -197,6 +196,7 @@ if (!detail) {
 
 // 收藏
 function handleCollect() {
+  const userInfo = useCookie('userInfo')
   if (!userInfo.value) {
     ElMessage({
       message: '请先登录',
