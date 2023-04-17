@@ -225,7 +225,7 @@ async function handleCollect() {
       type: 'warning'
     })
   } else {
-    const { code } = await $fetch(isCollect.value ? '/api/user/collect/cancel' : '/api/user/collect/add', {
+    const { code, msg } = await $fetch(isCollect.value ? '/api/user/collect/cancel' : '/api/user/collect/add', {
       query: { id },
       headers: {
         Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
@@ -233,6 +233,11 @@ async function handleCollect() {
     })
     if (code === 200) {
       isCollect.value = !isCollect.value
+    } else {
+      ElMessage({
+        message: msg,
+        type: 'error'
+      })
     }
   }
 }

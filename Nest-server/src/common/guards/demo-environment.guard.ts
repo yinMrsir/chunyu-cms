@@ -28,7 +28,6 @@ export class DemoEnvironmentGuard implements CanActivate {
       '/logout',
       '/web/user/login',
       '/web/user/reg',
-      '/user-collect',
     ]; //放过的路由
     if (
       request.method.toLocaleLowerCase() != 'get' &&
