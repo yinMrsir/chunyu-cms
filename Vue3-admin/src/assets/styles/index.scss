@@ -6,6 +6,14 @@
 @import './btn.scss';
 @import './ruoyi.scss';
 
+:root {
+  --el-border-radius-base: 0 !important;
+}
+
+.el-tag {
+  --el-tag-border-radius: 0 !important;
+}
+
 body {
   height: 100%;
   margin: 0;
