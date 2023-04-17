@@ -19,7 +19,6 @@ export class UserCollectService {
   }
 
   async findByPage(userCollectQuery) {
-    console.log(userCollectQuery);
     const queryBuilder = this.userCollectRepository
       .createQueryBuilder('userCollect')
       .leftJoinAndMapOne(

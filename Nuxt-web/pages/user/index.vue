@@ -30,10 +30,10 @@
 import CollectData from '@/components/user/CollectData.vue'
 
 definePageMeta({
-  middleware: ["auth"]
+  middleware: ["auth"],
+  layout: false
 })
 
-const runtimeConfig = useRuntimeConfig()
 const userInfo = useCookie('userInfo')
 const activeName = ref<string>('collect')
 
