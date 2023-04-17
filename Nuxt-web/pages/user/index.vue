@@ -1,7 +1,7 @@
 <template>
   <div class="container user-index">
     <Head>
-      <Title>个人中心</Title>
+      <Title>个人中心 - {{ globalTitle }}</Title>
       <Style type="text/css" children="body { background-color: #f7f7f7; }" />
     </Head>
     <el-row :gutter="30" class="mt-20">
@@ -32,7 +32,7 @@ import CollectData from '@/components/user/CollectData.vue'
 definePageMeta({
   middleware: ["auth"]
 })
-
+const { globalTitle } = useRuntimeConfig()
 const userInfo = useCookie('userInfo')
 const activeName = ref<string>('collect')
 
