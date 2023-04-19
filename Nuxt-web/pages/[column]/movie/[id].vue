@@ -17,7 +17,7 @@
      <el-col :span="18" :xs="24">
        <div class="clearfix">
          <div class="movies-pic">
-           <el-image :src="detail.poster" fit="cover"></el-image>
+           <el-image :src="detail.poster" fit="cover" style="width: 100%"></el-image>
          </div>
          <div class="movies-info">
            <h1>{{ detail.title }}</h1>

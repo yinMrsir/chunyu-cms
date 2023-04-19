@@ -82,4 +82,12 @@ const { data: user } = await useFetch('/api/user/info', {
     }
   }
 }
+@media (max-width: 768px){
+  .user-index {
+    margin-top: -60px;
+    &__head {
+      margin: 0 -15px;
+    }
+  }
+}
 </style>
