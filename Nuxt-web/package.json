@@ -5,26 +5,16 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "upgrade": "nuxi upgrade --force"
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
     "dayjs": "^1.11.7",
     "element-plus": "^2.2.28",
-    "nuxi": "^3.4.1",
     "qrcode.vue": "^3.3.3",
     "sass": "^1.57.1"
   },
   "devDependencies": {
-    "nuxt": "^3.4.1"
-  },
-  "engines": {
-    "node": ">=16.14.0",
-    "npm": ">= 8.3.1"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ]
+    "nuxt": "3.0.0"
+  }
 }

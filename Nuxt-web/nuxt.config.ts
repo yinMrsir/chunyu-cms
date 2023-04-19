@@ -1,9 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    experimental: {
-        viewTransition: true,
-        renderJsonPayloads: true
-    },
     css: [
         '@/assets/css/main.css',
         'element-plus/dist/index.css',

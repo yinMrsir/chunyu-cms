@@ -111,7 +111,6 @@ async function handleSuccess(token) {
 
 <style lang="scss">
 .header {
-  view-transition-name: main-header;
   position: fixed;
   top: 0;
   z-index: 999;
