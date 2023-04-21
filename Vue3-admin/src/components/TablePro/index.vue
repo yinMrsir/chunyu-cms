@@ -4,7 +4,7 @@
       <template v-for="item in filterOptions">
         <el-form-item :label="item.title" :prop="item.field">
           <template v-for="item in filterOptions">
-            <template v-if="item.type === 'select'">
+            <template v-if="item.type === 'select' || item.type === 'radio'">
               <el-select v-model="queryParams[item.field]" :placeholder="`请选择${item.title}`" clearable>
                 <el-option
                     v-for="item in item.options"

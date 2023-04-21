@@ -16,6 +16,8 @@ import { UserInfoPipe } from '../../common/pipes/user-info.pipe';
 import { DataObj } from '../../common/class/data-obj.class';
 import { Public } from '../../common/decorators/public.decorator';
 import { ApiException } from '../../common/exceptions/api.exception';
+import { PaginationPipe } from '../../common/pipes/pagination.pipe';
+import { QueryColumnDto } from './dto/query-column.dto';
 
 @Controller('column')
 export class ColumnController {
@@ -36,14 +38,14 @@ export class ColumnController {
 
   @Public()
   @Get('list')
-  list() {
-    return this.columnService.findPageList();
+  list(@Query(PaginationPipe) queryColumnDto: QueryColumnDto) {
+    return this.columnService.findPageList(queryColumnDto);
   }
 
   @Public()
   @Get('all')
-  async all() {
-    const data = await this.columnService.findAll();
+  async all(@Query(PaginationPipe) queryColumnDto: QueryColumnDto) {
+    const data = await this.columnService.findAll(queryColumnDto);
     return new DataObj(data);
   }
 

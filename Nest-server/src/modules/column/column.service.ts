@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { CreateColumnDto } from './dto/create-column.dto';
+import { QueryColumnDto } from './dto/query-column.dto';
 import { UpdateColumnDto } from './dto/update-column.dto';
 import { Columns } from './entities/column.entity';
 
@@ -16,16 +17,28 @@ export class ColumnService {
     await this.columnsRepository.save(createColumnDto);
   }
 
-  async findPageList() {
-    const [rows, total] = await this.columnsRepository.findAndCount();
+  async findPageList(queryColumnDto: QueryColumnDto) {
+    const where: FindOptionsWhere<Columns> = {};
+    if (queryColumnDto.type) {
+      where.type = queryColumnDto.type;
+    }
+    const [rows, total] = await this.columnsRepository.findAndCount({
+      where,
+      take: queryColumnDto.take,
+      skip: queryColumnDto.skip,
+    });
     return {
       rows,
       total,
     };
   }
 
-  async findAll() {
-    return this.columnsRepository.find();
+  async findAll(queryColumnDto: QueryColumnDto) {
+    const where: FindOptionsWhere<Columns> = {};
+    if (queryColumnDto.type) {
+      where.type = queryColumnDto.type;
+    }
+    return this.columnsRepository.findBy(where);
   }
 
   findOne(where) {

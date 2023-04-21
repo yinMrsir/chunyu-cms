@@ -24,7 +24,8 @@ const columns = ref([
     field: 'type',
     type: 'radio',
     options: column_type,
-    add: true
+    add: true,
+    search: true
   },
   {
     title: '目录/路径',

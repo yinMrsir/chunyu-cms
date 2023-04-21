@@ -27,7 +27,14 @@ export class IndexService {
         'genre',
         'genre.columnValue = columns.value',
       )
-      .select(['columns.name', 'columns.value', 'genre.id', 'genre.name'])
+      .select([
+        'columns.name',
+        'columns.value',
+        'columns.type',
+        'genre.id',
+        'genre.name',
+      ])
+      .where('columns.type = :type', { type: 1 })
       .orderBy('columns.order', 'ASC')
       .addOrderBy('genre.id', 'ASC');
 
