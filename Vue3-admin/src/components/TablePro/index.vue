@@ -28,7 +28,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <el-col :span="1.5" v-if="isShowButtonList">
         <el-button
             v-if="formOptions.length > 0"
             type="primary"
@@ -37,7 +37,7 @@
             @click="handleAdd"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <el-col :span="1.5" v-if="isShowButtonList">
         <el-button
             type="success"
             plain
@@ -46,7 +46,7 @@
             @click="handleUpdate"
         >修改</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <el-col :span="1.5" v-if="isShowButtonList">
         <el-button
             type="danger"
             plain
@@ -60,7 +60,7 @@
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column prop="id" width="60" label="ID" align="center"  />
+      <el-table-column v-if="isShowIdColumn" prop="id" width="60" label="ID" align="center"  />
       <template v-for="item in TableOptions">
         <template v-if="item.slot" v-bind="item">
           <slot :name="item.slot"></slot>
@@ -144,7 +144,6 @@
         append-to-body
         :close-on-click-modal="false">
       <el-form ref="formRef" :model="form" label-width="100px" :rules="rules">
-
         <el-form-item :label="`${item.title}：`" :prop="item.field" v-for="item in formOptions">
           <template v-if="item.formSlot">
             <slot :name="item.formSlot" v-bind="item"></slot>
@@ -158,7 +157,7 @@
             />
           </template>
           <template v-else-if="item.type === 'radio'">
-            <el-radio-group v-model="form[item.field]">
+            <el-radio-group v-model="form[item.field]" v-bind="item.formProps" @change="item.change">
               <el-radio :label="radio.value" v-for="(radio, index) in item.options" :key="index">{{ radio.label }}</el-radio>
             </el-radio-group>
           </template>
@@ -279,6 +278,14 @@ const props = defineProps({
   formDialogWidth: {
     type: String,
     default: '600px'
+  },
+  isShowIdColumn: {
+    type: Boolean,
+    default: true
+  },
+  isShowButtonList: {
+    type: Boolean,
+    default: true
   }
 })
 const list = ref([])

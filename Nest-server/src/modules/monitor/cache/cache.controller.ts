@@ -5,6 +5,7 @@ import {
   SYSCONFIG_KEY,
   WEB_INDEX,
   WEB_TYPE,
+  WEB_USER_KEY,
 } from 'src/common/contants/redis.contant';
 import { CacheService } from './cache.service';
 import { DataObj } from '../../../common/class/data-obj.class';
@@ -26,7 +27,7 @@ export class CacheController {
       cacheName: USER_TOKEN_KEY,
       cacheKey: '',
       cacheValue: '',
-      remark: '用户信息',
+      remark: '系统用户',
     });
     this.caches.push({
       cacheName: SYSCONFIG_KEY,
@@ -51,6 +52,12 @@ export class CacheController {
       cacheKey: '',
       cacheValue: '',
       remark: '栏目数据',
+    });
+    this.caches.push({
+      cacheName: WEB_USER_KEY,
+      cacheKey: '',
+      cacheValue: '',
+      remark: '网站用户',
     });
   }
 

@@ -3,13 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateBannerDto } from './dto/create-banner.dto';
 import { UpdateBannerDto } from './dto/update-banner.dto';
-import {Banner} from "./entities/banner.entity";
+import { Banner } from './entities/banner.entity';
 
 @Injectable()
 export class BannerService {
   constructor(
     @InjectRepository(Banner)
-    private readonly bannerRepository: Repository<Banner>
+    private readonly bannerRepository: Repository<Banner>,
   ) {}
 
   create(createBannerDto: CreateBannerDto) {
@@ -20,8 +20,8 @@ export class BannerService {
     const [rows, total] = await this.bannerRepository.findAndCount();
     return {
       rows,
-      total
-    }
+      total,
+    };
   }
 
   update(updateBannerDto: UpdateBannerDto) {

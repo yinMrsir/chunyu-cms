@@ -23,7 +23,7 @@
             type="primary"
             icon="Cloudy"
             plain
-            @click="goTarget('https://gitee.com/yinMrsir/chunyu-cms')"
+            @click="goTarget('https://gitee.com/chunyu-cms/chunyu-cms')"
             >访问码云</el-button
           >
         </p>

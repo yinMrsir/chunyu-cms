@@ -9,7 +9,8 @@
             <ul>
               <li :class="route.path === '/' ? 'active' : ''"><NuxtLink to="/">首页</NuxtLink></li>
               <li v-for="item in navigation" :class="route.params.column === item.value ? 'active' : ''">
-                <nuxt-link :to="`/${item.value}`">{{item.name}}</nuxt-link >
+                <nuxt-link :to="`/${item.value}`" v-if="+item.type === 1">{{item.name}}</nuxt-link>
+                <nuxt-link :to="item.value" target="_blank" v-if="+item.type === 2">{{item.name}}</nuxt-link>
               </li>
             </ul>
           </nav>

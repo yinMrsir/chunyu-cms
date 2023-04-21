@@ -1,4 +1,5 @@
 import { WebUser } from '../entities/web-user.entity';
+import { PaginationDto } from '../../../../common/dto/pagination.dto';
 
 export class RegWebUserDto extends WebUser {}
 
@@ -7,3 +8,5 @@ export class LoginWebUserDto {
 
   password: string;
 }
+
+export class QueryWebUserDto extends PaginationDto {}

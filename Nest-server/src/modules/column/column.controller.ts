@@ -15,7 +15,7 @@ import { User, UserEnum } from '../../common/decorators/user.decorator';
 import { UserInfoPipe } from '../../common/pipes/user-info.pipe';
 import { DataObj } from '../../common/class/data-obj.class';
 import { Public } from '../../common/decorators/public.decorator';
-import {ApiException} from "../../common/exceptions/api.exception";
+import { ApiException } from '../../common/exceptions/api.exception';
 
 @Controller('column')
 export class ColumnController {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RegWebUserDto } from './dto/req-web-user.dto';
+import { QueryWebUserDto, RegWebUserDto } from './dto/req-web-user.dto';
 import { SharedService } from '../../../shared/shared.service';
 import { WebUser } from './entities/web-user.entity';
 import { Repository } from 'typeorm';
@@ -8,6 +8,7 @@ import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { WEB_USER_KEY } from '../../../common/contants/redis.contant';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
+import * as moment from 'moment';
 
 @Injectable()
 export class WebUserService {
@@ -48,6 +49,16 @@ export class WebUserService {
       'EX',
       60 * 60 * 24,
     );
+    // 保存最后登录时间和最后登录IP
+    await this.webUserRepository.update(
+      {
+        userId: user.userId,
+      },
+      {
+        loginIp: this.sharedService.getReqIP(request),
+        loginDate: moment().format('YYYY-MM-DDTHH:mm:ss'),
+      },
+    );
     return {
       token: jwtSign,
     };
@@ -55,5 +66,20 @@ export class WebUserService {
 
   info(userId: number) {
     return this.webUserRepository.findOneBy({ userId });
+  }
+
+  findListPage(queryWebUserDto: QueryWebUserDto) {
+    return this.webUserRepository.findAndCount({
+      take: queryWebUserDto.take,
+      skip: queryWebUserDto.skip,
+      select: [
+        'email',
+        'status',
+        'createTime',
+        'userId',
+        'loginDate',
+        'loginIp',
+      ],
+    });
   }
 }

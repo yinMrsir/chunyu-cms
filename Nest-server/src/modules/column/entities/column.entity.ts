@@ -11,6 +11,10 @@ export class Columns extends BaseEntity {
   @IsString()
   name: string;
 
+  @Column('varchar', { length: 1, comment: '栏目类型', default: '1' })
+  @IsString()
+  type: string;
+
   @Column('varchar', { length: 50, comment: '目录名' })
   @IsString()
   value: string;
