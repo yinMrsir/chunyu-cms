@@ -17,7 +17,11 @@ export class BannerService {
   }
 
   async findPageList() {
-    const [rows, total] = await this.bannerRepository.findAndCount();
+    const [rows, total] = await this.bannerRepository.findAndCount({
+      order: {
+        createTime: 'DESC',
+      },
+    });
     return {
       rows,
       total,

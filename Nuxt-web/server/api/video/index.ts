@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     useGet<IResPage<any[]>>(`/movie/list`, {
       genres: detailRes.data.movie.genres.split(',')[0],
       pageNum: 1,
-      pageSize: 30,
+      pageSize: 18,
     }),
     useGet<IResPage<any[]>>('/movie/list', {
       columnValue: detailRes.data.movie.columnValue,

@@ -17,7 +17,7 @@
       <el-col :span="18" :xs="24">
         <video style="width: 100%" :src="`/server/common/stream/${detail.videoInfo?.name}`" controls></video>
         <div>
-          <h1 class="mb-10 mt-10">{{ detail.movie.title }} - {{ detail.title }}</h1>
+          <h1 class="mb-10 mt-10">{{ detail.title }}</h1>
           <el-form :inline="true">
             <el-form-item label="类型：">{{ detail.movie.genres }}</el-form-item>
             <el-form-item label="地区：">
@@ -39,7 +39,7 @@
               <li v-for="item in detail.videos">
                 <nuxt-link :to="`/${detail.movie.columnValue}/video/${item.id}`">
                   <el-image class="img" fit="cover" :src="item.cover || item.video?.poster"></el-image>
-                  <p>{{+item.id === +route.params.id ? '正在播放: ' : '' }}{{ item.title }}</p>
+                  <p :title="item.title"><span :class="+item.id === +route.params.id ? 'animate' : ''">{{+item.id === +route.params.id ? '正在播放: ' : '' }}{{ item.title }}</span></p>
                 </nuxt-link>
               </li>
             </ul>
@@ -170,6 +170,7 @@ monthList.value = data.value.monthList
       display: inline-block;
       margin-right: 20px;
       position: relative;
+      overflow: hidden;
       p {
         display: block;
         position: absolute;
@@ -184,6 +185,35 @@ monthList.value = data.value.monthList
         box-sizing: border-box;
       }
     }
+  }
+}
+.animate {
+  padding-left: 20px;
+  white-space: nowrap;
+  display: inline-block;
+  animation: 15s wordsLoop linear infinite normal;
+  color: #ffffff;
+}
+
+@keyframes wordsLoop {
+  0% {
+    transform: translateX(0px);
+    -webkit-transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+  }
+}
+
+@-webkit-keyframes wordsLoop {
+  0% {
+    transform: translateX(0px);
+    -webkit-transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
   }
 }
 </style>

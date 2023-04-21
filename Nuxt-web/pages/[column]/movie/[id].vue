@@ -60,7 +60,7 @@
              <li v-for="item in detail.movieVideos">
                <nuxt-link :to="`/${detail.columnValue}/video/${item.id}`">
                  <el-image class="img" :src="item.cover || item.video?.poster"></el-image>
-                 <p>{{ item.title }}</p>
+                 <p :title="item.title">{{ item.title }}</p>
                </nuxt-link>
              </li>
            </ul>
