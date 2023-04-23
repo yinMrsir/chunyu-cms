@@ -152,7 +152,7 @@ const queryParams = ref({
 });
 
 /** 查询登录日志列表 */
-function getList() {
+function getList(sort = {}) {
   loading.value = true;
   list(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
     logininforList.value = response.rows;
@@ -220,5 +220,5 @@ function handleExport() {
   }, `config_${new Date().getTime()}.xlsx`);
 }
 
-getList();
+handleSortChange(defaultSort.value);
 </script>
