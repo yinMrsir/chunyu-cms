@@ -42,6 +42,7 @@ import { CollectModule } from './modules/collect/collect.module';
 import { WebUserModule } from './modules/web/user/web-user.module';
 import { WebAuthModule } from './modules/web/auth/web-auth.module';
 import { UserCollectModule } from './modules/web/user-collect/user-collect.module';
+import { LinkModule } from './modules/basic/link/link.module';
 
 /* 将 provider的类名作为别名，方便定时器调用 */
 const providers = [JobService];
@@ -105,6 +106,7 @@ const aliasProviders = createAliasProviders();
     BannerModule,
     ColumnModule,
     CollectModule,
+    LinkModule,
 
     /* 文章相关模块 */
     ArticleModule,

@@ -18,9 +18,7 @@
       友情链接
     </div>
     <div class="friendly-link__content">
-      <a href="http://cms.yinchunyu.com" target="_blank">淳渔CMS</a>
-      <a href="http://cms-admin.yinchunyu.com" target="_blank">后台管理</a>
-      <a href="http://www.yinchunyu.com" target="_blank">老鹰博客</a>
+      <a v-for="item in links" :href="item.url" target="_blank">{{ item.text }}</a>
     </div>
   </div>
 </template>
@@ -30,10 +28,12 @@ import {useFetch} from "#app";
 
 const banner = ref([])
 const list = ref([])
+const links = ref([])
 
 const { data } = await useFetch('/api/home')
 banner.value = data.value.banner
 list.value = data.value.movieDataList
+links.value = data.value.links
 </script>
 
 <style lang="scss">
