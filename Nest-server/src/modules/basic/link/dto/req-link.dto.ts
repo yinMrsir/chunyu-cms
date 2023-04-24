@@ -1,3 +1,3 @@
 import { PaginationDto } from '../../../../common/dto/pagination.dto';
 
-export class ReqListDto extends PaginationDto {}
+export class ReqLinkDto extends PaginationDto {}

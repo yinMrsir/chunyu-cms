@@ -22,6 +22,7 @@ export class MovieVideos extends BaseEntity {
   })
   @IsNumber()
   @ManyToOne(() => MovieBasic)
+  @JoinColumn({ name: 'movie_id' })
   movieId: number;
 
   @Column('varchar', {

@@ -18,6 +18,7 @@ const columns = ref([
   { title: '用户ID', field: 'userId' },
   { title: '账号', field: 'email' },
   { title: '状态', field: 'status', type: 'select', options: sys_normal_disable, add: true },
+  { title: '收藏影视', field: 'userCollectCount' },
   { title: '注册时间', field: 'createTime', type: 'dateTime' },
   { title: '最后登录IP', field: 'loginIp' },
   { title: '最后登录时间', field: 'loginDate', type: 'dateTime' },

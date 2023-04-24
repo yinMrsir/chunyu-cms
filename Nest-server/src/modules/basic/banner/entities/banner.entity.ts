@@ -1,6 +1,6 @@
-import { IsString, IsOptional, IsNumber } from "class-validator";
-import {Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { BaseEntity } from "../../../../common/entities/base.entity";
+import { IsString, IsOptional, IsNumber } from 'class-validator';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity } from '../../../../common/entities/base.entity';
 
 @Entity({ name: 'basic_banner' })
 export class Banner extends BaseEntity {
@@ -19,7 +19,11 @@ export class Banner extends BaseEntity {
   @IsOptional()
   url: string;
 
-  @Column({ type: 'varchar', comment: '链接类型 0: 站内 1: 站外', default: '0' })
+  @Column({
+    type: 'varchar',
+    comment: '链接类型 0: 站内 1: 站外',
+    default: '0',
+  })
   @IsString()
   urlType: string;
 }

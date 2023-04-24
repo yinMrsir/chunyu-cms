@@ -1,3 +1,3 @@
-import { Banner } from "../entities/banner.entity";
+import { Banner } from '../entities/banner.entity';
 
 export class CreateBannerDto extends Banner {}

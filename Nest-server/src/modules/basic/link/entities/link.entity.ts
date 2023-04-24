@@ -1,8 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { IsOptional, IsString } from 'class-validator';
+import { BaseEntity } from '../../../../common/entities/base.entity';
 
 @Entity({ name: 'basic_link' })
-export class Link {
+export class Link extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   @IsOptional()
   id: number;

@@ -110,7 +110,7 @@
       <el-table-column prop="seasonCount" label="季数"></el-table-column>
       <el-table-column prop="episodeCount" label="集数"></el-table-column>
       <el-table-column prop="moviePv.pv" label="访问量"></el-table-column>
-      <el-table-column prop="address" label="收藏量"></el-table-column>
+      <el-table-column prop="userCollectsCount" label="收藏量"></el-table-column>
       <el-table-column prop="address" label="评论数"></el-table-column>
       <el-table-column prop="movieVideosCount" label="视频数"></el-table-column>
       <el-table-column prop="updateTime" label="更新时间" min-width="170px" >

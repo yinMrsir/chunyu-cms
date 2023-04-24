@@ -16,8 +16,8 @@
 import { getLinkList, createLink, updateLink, deleteLink } from "./services";
 
 const columns = ref([
-  { title: '文字', field: 'text', add: true },
-  { title: '链接', field: 'url', add: true },
+  { title: '文字', field: 'text', add: [{ required: true, message: '请输入文字' }] },
+  { title: '链接', field: 'url', add:  [{ required: true, message: '请输入链接' }] },
   {
     actions: [
       {

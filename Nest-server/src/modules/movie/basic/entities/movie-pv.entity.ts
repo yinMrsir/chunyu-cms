@@ -21,6 +21,6 @@ export class MoviePv extends BaseEntity {
   pv: number;
 
   @OneToOne(() => MovieBasic, { onDelete: 'CASCADE' })
-  @JoinColumn({ referencedColumnName: 'id' })
+  @JoinColumn({ name: 'movie_id', referencedColumnName: 'id' })
   movie: MovieBasic;
 }

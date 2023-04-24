@@ -1,7 +1,8 @@
 import { Type } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '../../../../common/entities/base.entity';
+import { UserCollect } from '../../user-collect/entities/user-collect.entity';
 
 @Entity({ name: 'web_user' })
 export class WebUser extends BaseEntity {
@@ -71,4 +72,7 @@ export class WebUser extends BaseEntity {
   @IsOptional()
   @IsString()
   loginDate?: Date;
+
+  @OneToMany(() => UserCollect, (userCollect) => userCollect.userId)
+  userCollects: UserCollect[];
 }

@@ -9,6 +9,7 @@ import { IsOptional, IsNumber, IsString } from 'class-validator';
 import { BaseEntity } from '../../../../common/entities/base.entity';
 import { MovieVideos } from '../../videos/entities/movie-videos.entity';
 import { MoviePv } from './movie-pv.entity';
+import { UserCollect } from '../../../web/user-collect/entities/user-collect.entity';
 
 @Entity('movie_basic')
 export class MovieBasic extends BaseEntity {
@@ -263,4 +264,8 @@ export class MovieBasic extends BaseEntity {
   // 访问量
   @OneToOne(() => MoviePv, (moviePv) => moviePv.movie, { cascade: true })
   moviePv: MoviePv;
+
+  // 关联的收藏
+  @OneToMany(() => UserCollect, (userCollect) => userCollect.movieId)
+  userCollects: UserCollect[];
 }

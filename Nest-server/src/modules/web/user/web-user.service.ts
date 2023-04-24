@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { WEB_USER_KEY } from '../../../common/contants/redis.contant';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import * as moment from 'moment';
+import { UserCollect } from '../user-collect/entities/user-collect.entity';
 
 @Injectable()
 export class WebUserService {
@@ -69,17 +70,27 @@ export class WebUserService {
   }
 
   findListPage(queryWebUserDto: QueryWebUserDto) {
-    return this.webUserRepository.findAndCount({
-      take: queryWebUserDto.take,
-      skip: queryWebUserDto.skip,
-      select: [
-        'email',
-        'status',
-        'createTime',
-        'userId',
-        'loginDate',
-        'loginIp',
-      ],
-    });
+    const queryBuilder = this.webUserRepository
+      .createQueryBuilder('webUser')
+      .select((subQuery) => {
+        return subQuery
+          .select('COUNT(*)')
+          .from(UserCollect, 'userCollect')
+          .where('webUser.userId = userCollect.userId');
+      }, 'userCollectCount')
+      .addSelect('webUser.email', 'email')
+      .addSelect('webUser.status', 'status')
+      .addSelect('webUser.createTime', 'createTime')
+      .addSelect('webUser.userId', 'userId')
+      .addSelect('webUser.loginDate', 'loginDate')
+      .addSelect('webUser.loginIp', 'loginIp')
+      .addSelect('webUser.updateTime', 'updateTime')
+      .addSelect('webUser.remark', 'remark')
+      .addSelect('webUser.updateBy', 'updateBy')
+      .addSelect('webUser.createBy', 'createBy')
+      .skip(queryWebUserDto.skip)
+      .take(queryWebUserDto.take);
+
+    return Promise.all([queryBuilder.getRawMany(), queryBuilder.getCount()]);
   }
 }

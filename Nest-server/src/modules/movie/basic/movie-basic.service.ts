@@ -56,6 +56,10 @@ export class MovieBasicService {
         'movieBasic.movieVideosCount',
         'movieBasic.movieVideos',
       )
+      .loadRelationCountAndMap(
+        'movieBasic.userCollectsCount',
+        'movieBasic.userCollects',
+      )
       .leftJoinAndSelect('movieBasic.moviePv', 'moviePv')
       .select([
         'movieBasic',
