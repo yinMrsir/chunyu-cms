@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -11,6 +12,7 @@ import { WebUserService } from './web-user.service';
 import { Request } from 'express';
 import { Public } from '../../../common/decorators/public.decorator';
 import {
+  ChangeWebUserStatusDto,
   LoginWebUserDto,
   QueryWebUserDto,
   RegWebUserDto,
@@ -52,5 +54,12 @@ export class WebUserController {
       queryWebUserDto,
     );
     return { rows, total };
+  }
+
+  @Put('changeStatus')
+  async changeWebUserStatus(
+    @Body() changeWebUserStatusDto: ChangeWebUserStatusDto,
+  ) {
+    return this.webUserService.changeStatus(changeWebUserStatusDto);
   }
 }

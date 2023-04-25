@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { QueryWebUserDto, RegWebUserDto } from './dto/req-web-user.dto';
+import {
+  ChangeWebUserStatusDto,
+  QueryWebUserDto,
+  RegWebUserDto,
+} from './dto/req-web-user.dto';
 import { SharedService } from '../../../shared/shared.service';
 import { WebUser } from './entities/web-user.entity';
 import { Repository } from 'typeorm';
@@ -36,7 +40,7 @@ export class WebUserService {
       where: {
         email,
       },
-      select: ['email', 'userId', 'salt', 'password'],
+      select: ['email', 'userId', 'salt', 'password', 'status'],
     });
   }
 
@@ -92,5 +96,11 @@ export class WebUserService {
       .take(queryWebUserDto.take);
 
     return Promise.all([queryBuilder.getRawMany(), queryBuilder.getCount()]);
+  }
+
+  changeStatus(changeWebUserStatusDto: ChangeWebUserStatusDto) {
+    return this.webUserRepository.update(changeWebUserStatusDto.userId, {
+      status: changeWebUserStatusDto.status,
+    });
   }
 }

@@ -60,8 +60,12 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column v-if="isShowIdColumn" prop="id" width="60" label="ID" align="center"  />
       <template v-for="item in TableOptions">
-        <template v-if="item.slot" v-bind="item">
-          <slot :name="item.slot"></slot>
+        <template v-if="item.slot">
+          <el-table-column :prop="item.field" :label="item.title" v-bind="item.props">
+            <template #default="scope">
+              <slot :name="item.slot" v-bind="scope"></slot>
+            </template>
+          </el-table-column>
         </template>
         <template v-else-if="item.actions">
           <el-table-column label="操作" align="center" v-bind="item.props">

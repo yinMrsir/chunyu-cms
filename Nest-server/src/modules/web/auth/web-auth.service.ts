@@ -13,6 +13,7 @@ export class WebAuthService {
   async validateUser(email, password) {
     const user = await this.webUserService.findByEmail(email);
     if (!user) throw new ApiException('用户名不存在');
+    if (+user.status === 1) throw new ApiException('用户已禁用');
     const comparePassword = this.sharedService.md5(password + user.salt);
     if (comparePassword !== user.password)
       throw new ApiException('用户名或密码错误');
