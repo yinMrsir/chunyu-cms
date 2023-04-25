@@ -33,7 +33,7 @@ const columns = ref([
     add: [{required: true, message: '请输入目录/路径'}]
   },
   { title: '排序', field: 'order', type: 'number', add: true },
-  { title: '状态', field: 'status', add: true, type: 'radio', options: sys_normal_disable },
+  { title: '状态', field: 'status', add: true, type: 'radio', options: sys_normal_disable, search: true },
   { title: '备注', field: 'remark', add: true, formProps: { type: 'textarea' } },
   {
     actions: [

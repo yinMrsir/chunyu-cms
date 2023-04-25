@@ -22,6 +22,9 @@ export class ColumnService {
     if (queryColumnDto.type) {
       where.type = queryColumnDto.type;
     }
+    if (queryColumnDto.status) {
+      where.status = queryColumnDto.status;
+    }
     const [rows, total] = await this.columnsRepository.findAndCount({
       where,
       take: queryColumnDto.take,
@@ -37,6 +40,9 @@ export class ColumnService {
     const where: FindOptionsWhere<Columns> = {};
     if (queryColumnDto.type) {
       where.type = queryColumnDto.type;
+    }
+    if (queryColumnDto.status) {
+      where.status = queryColumnDto.status;
     }
     return this.columnsRepository.findBy(where);
   }

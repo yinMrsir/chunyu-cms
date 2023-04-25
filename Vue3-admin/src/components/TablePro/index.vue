@@ -3,20 +3,18 @@
     <el-form v-if="filterOptions.length > 0" :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
       <template v-for="item in filterOptions">
         <el-form-item :label="item.title" :prop="item.field">
-          <template v-for="item in filterOptions">
-            <template v-if="item.type === 'select' || item.type === 'radio'">
-              <el-select v-model="queryParams[item.field]" :placeholder="`请选择${item.title}`" clearable>
-                <el-option
-                    v-for="item in item.options"
-                    :key="+item.value"
-                    :label="item.label"
-                    :value="+item.value">
-                </el-option>
-              </el-select>
-            </template>
-            <template v-else>
-              <el-input v-model="queryParams[item.field]" :placeholder="`请输入${item.title}`" />
-            </template>
+          <template v-if="item.type === 'select' || item.type === 'radio'">
+            <el-select v-model="queryParams[item.field]" :placeholder="`请选择${item.title}`" clearable>
+              <el-option
+                  v-for="item in item.options"
+                  :key="+item.value"
+                  :label="item.label"
+                  :value="+item.value">
+              </el-option>
+            </el-select>
+          </template>
+          <template v-else>
+            <el-input v-model="queryParams[item.field]" :placeholder="`请输入${item.title}`" />
           </template>
         </el-form-item>
       </template>
