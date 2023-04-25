@@ -83,7 +83,7 @@ yarn build:prod
 ```
 
 ### 更新计划
-- [x] 友情链接支持后台配置
+- [x] [友情链接支持后台配置](https://www.douyin.com/user/MS4wLjABAAAAUKMCVZGbQl7etrdd36GBIG6OGxClOwoHci_-PIlxNvE?modal_id=7225255650392132903)
 - [ ] 用户签到
 - [ ] 用户影视评分
 - [ ] 用户评论
