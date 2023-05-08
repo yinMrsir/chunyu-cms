@@ -17,13 +17,13 @@
       <el-col :span="18" :xs="24">
         <video style="width: 100%" :src="`/server/common/stream/${detail.videoInfo?.name}`" controls></video>
         <div>
-          <h1 class="mb-10 mt-10">{{ detail.title }}</h1>
+          <h1 class="mb-10 mt-10 video-detail__title">{{ detail.title }} <span>暂无评分</span></h1>
           <el-form :inline="true">
-            <el-form-item label="类型：">{{ detail.movie.genres }}</el-form-item>
-            <el-form-item label="地区：">
+            <el-form-item label="类型:">{{ detail.movie.genres }}</el-form-item>
+            <el-form-item label="地区:">
               <template v-for="item in detail.country">{{ item.name }}&nbsp;</template>
             </el-form-item>
-            <el-form-item label="年份：">{{ detail.movie.year }}</el-form-item>
+            <el-form-item label="年份:">{{ detail.movie.year }}</el-form-item>
           </el-form>
         </div>
         <div>
@@ -214,6 +214,15 @@ monthList.value = data.value.monthList
   100% {
     transform: translateX(-100%);
     -webkit-transform: translateX(-100%);
+  }
+}
+
+.video-detail__title {
+  line-height: 1.2;
+
+  span {
+    font-size: 14px;
+    color: $light-gray;
   }
 }
 </style>

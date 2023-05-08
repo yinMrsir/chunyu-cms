@@ -20,24 +20,24 @@
            <el-image :src="detail.poster" fit="cover" style="width: 100%"></el-image>
          </div>
          <div class="movies-info">
-           <h1>{{ detail.title }}</h1>
+           <h1>{{ detail.title }} <span>暂无评分</span></h1>
            <el-form :inline="true" label-position="right">
-             <el-form-item label="类型：">{{ detail.genres }}</el-form-item>
-             <el-form-item label="地区：">
+             <el-form-item label="类型:">{{ detail.genres }}</el-form-item>
+             <el-form-item label="地区:">
                <template v-for="item in detail.country">
                  {{ item.name }} &nbsp;
                </template>
              </el-form-item>
-             <el-form-item label="年份：">{{ detail.year }}</el-form-item>
+             <el-form-item label="年份:">{{ detail.year }}</el-form-item>
            </el-form>
            <el-form label-position="right">
-             <el-form-item label="别名：" v-if="detail.akas">
-               <el-tag v-for="(tag, index) in detail.akas.split(',')" :key="index" class="mr-10">{{ tag }}</el-tag>
+             <el-form-item label="别名:" v-if="detail.akas">
+               {{ detail.akas.split(',').join('/') }}
              </el-form-item>
-             <el-form-item label="标签：" v-if="detail.tags">
+             <el-form-item label="标签:" v-if="detail.tags">
                <el-tag v-for="(tag, index) in detail.tags.split(',')" :key="index" class="mr-10">{{ tag }}</el-tag>
              </el-form-item>
-             <el-form-item label="更新：">{{ $dayjs(detail.updateTime).format('YYYY-MM-DD') }}</el-form-item>
+             <el-form-item label="更新:">{{ $dayjs(detail.updateTime).format('YYYY-MM-DD') }}</el-form-item>
              <div>
                <nuxt-link :to="`/${detail.columnValue}/video/${detail.movieVideos[0].id}`" v-if="detail.movieVideos[0]">
                 <el-button :icon="VideoPlay" type="primary">立即播放</el-button>
@@ -259,6 +259,10 @@ async function handleCollect() {
   }
   .el-form-item {
     margin-bottom: 5px;
+  }
+  span {
+    color: $light-gray;
+    font-size: 14px;
   }
 }
 .related_video {
