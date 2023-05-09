@@ -10,17 +10,18 @@
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: `/${detail.columnValue}/show`, query: { t: detail.genres?.split(',')[0] } }">{{ detail.genres?.split(',')[0] }}</el-breadcrumb-item>
-        <el-breadcrumb-item>{{ detail.title }}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ detail.title.length > 12 ? detail.title.substr(0, 12) + '...' : detail.title }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <el-row :gutter="40" class="mt-20">
      <el-col :span="18" :xs="24">
+       <h1 class="movie-detail-title hidden-sm-and-up">{{ detail.title }} <span>暂无评分</span></h1>
        <div class="clearfix">
          <div class="movies-pic">
            <el-image :src="detail.poster" fit="cover" style="width: 100%"></el-image>
          </div>
          <div class="movies-info">
-           <h1>{{ detail.title }} <span>暂无评分</span></h1>
+           <h1 class="hidden-sm-and-down">{{ detail.title }} <span>暂无评分</span></h1>
            <el-form :inline="true" label-position="right">
              <el-form-item label="类型:">{{ detail.genres }}</el-form-item>
              <el-form-item label="地区:">
@@ -28,21 +29,21 @@
                  {{ item.name }} &nbsp;
                </template>
              </el-form-item>
-             <el-form-item label="年份:">{{ detail.year }}</el-form-item>
+             <el-form-item label="年份:">{{ detail.year || '-' }}</el-form-item>
            </el-form>
            <el-form label-position="right">
              <el-form-item label="别名:" v-if="detail.akas">
-               {{ detail.akas.split(',').join('/') }}
+               <div class="text-overflow">{{ detail.akas.split(',').join('/') }}</div>
              </el-form-item>
              <el-form-item label="标签:" v-if="detail.tags">
-               <el-tag v-for="(tag, index) in detail.tags.split(',')" :key="index" class="mr-10">{{ tag }}</el-tag>
+               <div class="text-overflow">{{ detail.tags.split(',').join('/') }}</div>
              </el-form-item>
              <el-form-item label="更新:">{{ $dayjs(detail.updateTime).format('YYYY-MM-DD') }}</el-form-item>
              <div>
                <nuxt-link :to="`/${detail.columnValue}/video/${detail.movieVideos[0].id}`" v-if="detail.movieVideos[0]">
-                <el-button :icon="VideoPlay" type="primary">立即播放</el-button>
+                <el-button :icon="VideoPlay" type="primary" class="mr-10">立即播放</el-button>
                </nuxt-link>
-               <el-button :icon="isCollect ? StarFilled : Star" class="ml-10" @click="handleCollect">{{ isCollect ? '已收藏' : '收藏' }}</el-button>
+               <el-button :icon="isCollect ? StarFilled : Star" @click="handleCollect">{{ isCollect ? '已收藏' : '收藏' }}</el-button>
              </div>
            </el-form>
          </div>
@@ -74,8 +75,7 @@
              </h3>
            </div>
          </div>
-         <div class="desc" v-html="detail.summary">
-         </div>
+         <div class="desc" v-html="escapeHtml(detail.summary)"></div>
        </div>
        <!--  演员    -->
        <div class="mt-20" v-if="casts && casts.length">
@@ -242,6 +242,18 @@ async function handleCollect() {
   }
 }
 
+function escapeHtml(str) {
+  var temp = "";
+  if(str.length == 0) return "";
+  temp = str.replace(/&amp;/g,"&");
+  temp = temp.replace(/&lt;/g,"<");
+  temp = temp.replace(/&gt;/g,">");
+  temp = temp.replace(/&nbsp;/g," ");
+  temp = temp.replace(/&#39;/g,"\'");
+  temp = temp.replace(/&quot;/g,"\"");
+  return temp;
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -250,12 +262,23 @@ async function handleCollect() {
   margin-right: 20px;
   float: left;
 }
+.movie-detail-title {
+  color: #333;
+  font-size: 22px;
+  margin-bottom: 10px;
+  line-height: 1.2 ;
+  span {
+    color: $light-gray;
+    font-size: 14px;
+  }
+}
 .movies-info {
   h1 {
     color: #333;
     font-size: 22px;
     margin-bottom: 10px;
-    padding-top: 10px;
+    line-height: 1.2 ;
+    padding-top: 0;
   }
   .el-form-item {
     margin-bottom: 5px;
@@ -322,7 +345,7 @@ async function handleCollect() {
 
 @media only screen and (max-width:991px) {
   .movies-pic {
-    width: 100px;
+    width: 120px;
     margin-right: 10px;
   }
 }
