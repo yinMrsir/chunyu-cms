@@ -41,9 +41,15 @@
              <el-form-item label="更新:">{{ $dayjs(detail.updateTime).format('YYYY-MM-DD') }}</el-form-item>
              <div>
                <nuxt-link :to="`/${detail.columnValue}/video/${detail.movieVideos[0].id}`" v-if="detail.movieVideos[0]">
-                <el-button :icon="VideoPlay" type="primary" class="mr-10">立即播放</el-button>
+                <el-button :icon="VideoPlay" type="primary" class="mr-10">播放</el-button>
                </nuxt-link>
                <el-button :icon="isCollect ? StarFilled : Star" @click="handleCollect">{{ isCollect ? '已收藏' : '收藏' }}</el-button>
+               <el-popover placement="right" trigger="click">
+                 <template #reference>
+                   <el-button :icon="Edit">评分</el-button>
+                 </template>
+                 <el-rate />
+               </el-popover>
              </div>
            </el-form>
          </div>
@@ -160,7 +166,7 @@
 </template>
 
 <script setup>
-import { Star, StarFilled, VideoPlay } from '@element-plus/icons-vue'
+import { Star, StarFilled, VideoPlay, Edit } from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
 import {useFetch} from "nuxt/app";
 import {ElMessage} from "element-plus";
