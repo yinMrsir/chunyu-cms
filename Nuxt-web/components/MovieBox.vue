@@ -134,7 +134,7 @@ function processingState(data) {
       position: relative;
       span {
         position: absolute;
-        bottom: 5px;
+        bottom: 0;
         width: 100%;
         height: 30px;
         line-height: 30px;
