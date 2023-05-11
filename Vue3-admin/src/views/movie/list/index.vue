@@ -104,8 +104,8 @@
       </el-table-column>
       <el-table-column prop="year" label="年代"></el-table-column>
       <el-table-column prop="languages" label="语言" min-width="120px"></el-table-column>
-      <el-table-column prop="address" label="评分"></el-table-column>
-      <el-table-column prop="address" label="评分人数"></el-table-column>
+      <el-table-column prop="rate" label="评分"></el-table-column>
+      <el-table-column prop="rateUserCount" label="评分人数"></el-table-column>
       <el-table-column prop="duration" label="时长"></el-table-column>
       <el-table-column prop="seasonCount" label="季数"></el-table-column>
       <el-table-column prop="episodeCount" label="集数"></el-table-column>

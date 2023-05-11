@@ -28,8 +28,9 @@
           <el-row :gutter="20">
             <el-col :sm="4" :xs="8" v-for="item in categoryItem.rows">
               <div class="video-list__block">
-                <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`">
+                <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="img-box">
                   <el-image lazy class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
+                  <span>{{ +item.rate === 0 ? '暂无评分' : item.rate.toFixed(1) }}</span>
                 </nuxt-link>
                 <div class="video-list__detail">
                   <h4 class="title text-overflow">{{ item.title }}</h4>

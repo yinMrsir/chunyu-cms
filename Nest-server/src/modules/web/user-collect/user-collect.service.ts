@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserCollectDto } from './dto/create-user-collect.dto';
-import { UpdateUserCollectDto } from './dto/update-user-collect.dto';
 import { UserCollect } from './entities/user-collect.entity';
 import { DataObj } from '../../../common/class/data-obj.class';
 import { MovieBasic } from '../../movie/basic/entities/movie-basic.entity';

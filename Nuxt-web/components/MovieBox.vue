@@ -23,8 +23,9 @@
         <el-row :gutter="20">
           <el-col :sm="4" :xs="8" v-for="item in categoryItem.rows">
             <div class="video-list__block">
-              <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`">
+              <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="img-box">
                 <el-image lazy class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
+                <span>{{ +item.rate === 0 ? '暂无评分' : item.rate.toFixed(1) }}</span>
               </nuxt-link>
               <div class="video-list__detail">
                 <h4 class="title text-overflow" :title="item.title">{{ item.title }}</h4>
@@ -128,6 +129,24 @@ function processingState(data) {
     &__img {
       width: 100%;
       height: 218px;
+    }
+    .img-box {
+      position: relative;
+      span {
+        position: absolute;
+        bottom: 5px;
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+        left: 0;
+        display: inline-block;
+        background-image: linear-gradient(transparent,rgba(0,0,0,.5));
+        color: #fff;
+        font-size: 12px;
+        text-align: right;
+        padding-right: 10px;
+        box-sizing: border-box;
+      }
     }
   }
 

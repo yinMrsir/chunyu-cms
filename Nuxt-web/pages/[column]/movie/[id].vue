@@ -1,60 +1,62 @@
 <template>
   <div class="container mt-20">
     <Head>
-      <Title>{{ detail.title }}在线观看 - {{ globalTitle }}</Title>
-      <Meta name="description" :content="detail.summary" />
+      <Title>{{ data.detail.title }}在线观看 - {{ globalTitle }}</Title>
+      <Meta name="description" :content="data.detail.summary" />
     </Head>
 
     <div class="items-center">
      <span class="mr-10">当前位置</span>
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: `/${detail.columnValue}/show`, query: { t: detail.genres?.split(',')[0] } }">{{ detail.genres?.split(',')[0] }}</el-breadcrumb-item>
-        <el-breadcrumb-item>{{ detail.title.length > 12 ? detail.title.substr(0, 12) + '...' : detail.title }}</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: `/${data.detail.columnValue}/show`, query: { t: data.detail.genres?.split(',')[0] } }">{{ data.detail.genres?.split(',')[0] }}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ data.detail.title.length > 12 ? data.detail.title.substr(0, 12) + '...' : data.detail.title }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <el-row :gutter="40" class="mt-20">
      <el-col :span="18" :xs="24">
-       <h1 class="movie-detail-title hidden-sm-and-up">{{ detail.title }} <span>暂无评分</span></h1>
+       <h1 class="movie-detail-title hidden-sm-and-up">{{ data.detail.title }} <span :class="data.detail.rateUserCount > 0 ? 'rate' : ''">{{ data.detail.rateUserCount > 0 ? data.detail.rate.toFixed(1) : '暂无评分' }}</span></h1>
        <div class="clearfix">
          <div class="movies-pic">
-           <el-image :src="detail.poster" fit="cover" style="width: 100%"></el-image>
+           <el-image :src="data.detail.poster" fit="cover" style="width: 100%"></el-image>
          </div>
          <div class="movies-info">
-           <h1 class="hidden-sm-and-down">{{ detail.title }} <span>暂无评分</span></h1>
+           <h1 class="hidden-sm-and-down">{{ data.detail.title }} <span :class="data.detail.rateUserCount > 0 ? 'rate' : ''">{{ data.detail.rateUserCount > 0 ? data.detail.rate.toFixed(1) : '暂无评分' }}</span></h1>
            <el-form :inline="true" label-position="right">
-             <el-form-item label="类型:">{{ detail.genres }}</el-form-item>
+             <el-form-item label="类型:">{{ data.detail.genres }}</el-form-item>
              <el-form-item label="地区:">
-               <template v-for="item in detail.country">
+               <template v-for="item in data.detail.country">
                  {{ item.name }} &nbsp;
                </template>
              </el-form-item>
-             <el-form-item label="年份:">{{ detail.year || '-' }}</el-form-item>
+             <el-form-item label="年份:">{{ data.detail.year || '-' }}</el-form-item>
            </el-form>
            <el-form label-position="right">
-             <el-form-item label="别名:" v-if="detail.akas">
-               <div class="text-overflow">{{ detail.akas.split(',').join('/') }}</div>
+             <el-form-item label="别名:" v-if="data.detail.akas">
+               <div class="text-overflow">{{ data.detail.akas.split(',').join('/') }}</div>
              </el-form-item>
-             <el-form-item label="标签:" v-if="detail.tags">
-               <div class="text-overflow">{{ detail.tags.split(',').join('/') }}</div>
+             <el-form-item label="标签:" v-if="data.detail.tags">
+               <div class="text-overflow">{{ data.detail.tags.split(',').join('/') }}</div>
              </el-form-item>
-             <el-form-item label="更新:">{{ $dayjs(detail.updateTime).format('YYYY-MM-DD') }}</el-form-item>
+             <el-form-item label="更新:">{{ $dayjs(data.detail.updateTime).format('YYYY-MM-DD') }}</el-form-item>
              <div>
-               <nuxt-link :to="`/${detail.columnValue}/video/${detail.movieVideos[0].id}`" v-if="detail.movieVideos[0]">
+               <nuxt-link :to="`/${data.detail.columnValue}/video/${data.detail.movieVideos[0].id}`" v-if="data.detail.movieVideos[0]">
                 <el-button :icon="VideoPlay" type="primary" class="mr-10">播放</el-button>
                </nuxt-link>
                <el-button :icon="isCollect ? StarFilled : Star" @click="handleCollect">{{ isCollect ? '已收藏' : '收藏' }}</el-button>
-               <el-popover placement="right" trigger="click">
-                 <template #reference>
-                   <el-button :icon="Edit">评分</el-button>
-                 </template>
-                 <el-rate />
-               </el-popover>
+               <ClientOnly>
+                 <el-popover v-if="!userRateData" placement="right" trigger="click">
+                   <template #reference>
+                     <el-button :icon="Edit">评分</el-button>
+                   </template>
+                   <el-rate allow-half v-model="rate" @change="onRatechange" />
+                 </el-popover>
+               </ClientOnly>
              </div>
            </el-form>
          </div>
        </div>
-       <div class="mt-20" v-if="detail.movieVideos && detail.movieVideos.length">
+       <div class="mt-20" v-if="data.detail.movieVideos && data.detail.movieVideos.length">
          <div class="panel_hd between items-center">
            <div class="panel_hd__left">
              <h3 class="title items-center">
@@ -64,8 +66,8 @@
          </div>
          <div class="related_video">
            <ul class="clearfix">
-             <li v-for="item in detail.movieVideos">
-               <nuxt-link :to="`/${detail.columnValue}/video/${item.id}`">
+             <li v-for="item in data.detail.movieVideos">
+               <nuxt-link :to="`/${data.detail.columnValue}/video/${item.id}`">
                  <el-image class="img" :src="item.cover || item.video?.poster"></el-image>
                  <p :title="item.title">{{ item.title }}</p>
                </nuxt-link>
@@ -81,7 +83,7 @@
              </h3>
            </div>
          </div>
-         <div class="desc" v-html="escapeHtml(detail.summary)"></div>
+         <div class="desc" v-html="escapeHtml(data.detail.summary)"></div>
        </div>
        <!--  演员    -->
        <div class="mt-20" v-if="casts && casts.length">
@@ -177,25 +179,25 @@ const route = useRoute()
 const isLogin = useIsLogin()
 const id = route.params.id
 const qrcodeUrl = ref('')
-const detail = ref({})
 const roles = ref([])
 const casts = ref([])
 const weekList = ref([])
 const monthList = ref([])
 const isCollect = ref(false)
+const userRateData = ref(null)
+const rate = ref()
 
 onMounted(() => {
   qrcodeUrl.value = window.location.href
 })
 
-const { data } = await useFetch('/api/movie', { query: { id } })
-detail.value = data.value.detail
+const { data, refresh } = await useFetch('/api/movie', { query: { id } })
 roles.value = data.value.roles
 casts.value = data.value.casts
 weekList.value = data.value.weekList
 monthList.value = data.value.monthList
 
-if (!detail) {
+if (!data.value.detail) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page Not Found',
@@ -206,9 +208,11 @@ if (!detail) {
 watch(isLogin, (value) => {
   if (value) {
     getUserCollect()
+    getUserRate()
   }
 })
 
+// 获取用户收藏状态
 async function getUserCollect() {
   const userInfo = useCookie('userInfo')
   if (!userInfo.value) return
@@ -248,6 +252,48 @@ async function handleCollect() {
   }
 }
 
+// 获取用户评分状态
+async function getUserRate() {
+  const userInfo = useCookie('userInfo')
+  if (!userInfo.value) return
+  const { data: userRate } = await useFetch('/api/user/rate/find', {
+    query: { id },
+    headers: {
+      Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+    },
+  })
+  userRateData.value = userRate.value.data
+}
+getUserRate()
+
+// 设置评分
+async function onRatechange(value) {
+  const userInfo = useCookie('userInfo')
+  if (!userInfo.value) {
+    ElMessage({
+      message: '请先登录',
+      type: 'warning'
+    })
+  } else {
+    const { code, msg } = await $fetch('/api/user/rate/create', {
+      method: 'post',
+      body: { id, rate: rate.value },
+      headers: {
+        Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+      },
+    })
+    if (code === 200) {
+      refresh()
+      userRateData.value = { movieId: id, rate: rate.value }
+    } else {
+      ElMessage({
+        message: msg,
+        type: 'error'
+      })
+    }
+  }
+}
+
 function escapeHtml(str) {
   var temp = "";
   if(str.length == 0) return "";
@@ -276,6 +322,10 @@ function escapeHtml(str) {
   span {
     color: $light-gray;
     font-size: 14px;
+    &.rate {
+      font-size: 24px;
+      color: #06d706;
+    }
   }
 }
 .movies-info {
@@ -292,6 +342,10 @@ function escapeHtml(str) {
   span {
     color: $light-gray;
     font-size: 14px;
+    &.rate {
+      font-size: 24px;
+      color: #06d706;
+    }
   }
 }
 .related_video {

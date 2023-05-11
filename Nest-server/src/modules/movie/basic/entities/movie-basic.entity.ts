@@ -257,6 +257,22 @@ export class MovieBasic extends BaseEntity {
   @IsString()
   summary: string | null;
 
+  @Column('int', {
+    name: 'rate',
+    default: 0,
+    comment: '评分',
+  })
+  @IsOptional()
+  rate: number;
+
+  @Column('int', {
+    name: 'rate_user_count',
+    default: 0,
+    comment: '评分人数',
+  })
+  @IsOptional()
+  rateUserCount: number;
+
   // 关联的视频
   @OneToMany(() => MovieVideos, (movieVideos) => movieVideos.movieId)
   movieVideos: MovieVideos[];
