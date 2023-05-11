@@ -23,7 +23,7 @@ export class UserRateController {
       createUserRateDto.movieId,
     );
     if (userRate) throw new ApiException('已评分过当前影视');
-    this.userRateService.create({
+    await this.userRateService.create({
       userId,
       movieId: createUserRateDto.movieId,
       rate: createUserRateDto.rate,
