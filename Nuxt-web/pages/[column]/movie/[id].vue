@@ -192,18 +192,17 @@ onMounted(() => {
 })
 
 const { data, refresh } = await useFetch('/api/movie', { query: { id } })
-roles.value = data.value.roles
-casts.value = data.value.casts
-weekList.value = data.value.weekList
-monthList.value = data.value.monthList
-
-if (!data.value.detail) {
+if (!data.value) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page Not Found',
     fatal: true
   })
 }
+roles.value = data.value.roles
+casts.value = data.value.casts
+weekList.value = data.value.weekList
+monthList.value = data.value.monthList
 
 watch(isLogin, (value) => {
   if (value) {
@@ -295,7 +294,7 @@ async function onRatechange(value) {
 }
 
 function escapeHtml(str) {
-  var temp = "";
+  let temp = "";
   if(str.length == 0) return "";
   temp = str.replace(/&amp;/g,"&");
   temp = temp.replace(/&lt;/g,"<");
