@@ -133,6 +133,7 @@ function processingState(data) {
     .img-box {
       position: relative;
       height: 218px;
+      display: block;
       span {
         position: absolute;
         bottom: 0;

@@ -33,7 +33,8 @@ export default defineEventHandler(async (event) => {
       language: query.l,
       year: query.y,
       pageNum: query.page || 1,
-      pageSize: 30
+      pageSize: 30,
+      orderBy: query.orderBy
     }),
     useGet<IResPage<any[]>>('/movie/list', {
       columnValue: query.columnValue,

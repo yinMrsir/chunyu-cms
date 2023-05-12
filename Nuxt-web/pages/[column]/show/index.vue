@@ -56,14 +56,14 @@
             </ul>
           </el-form-item>
         </el-form>
-        <el-tabs v-model="activeName">
-          <el-tab-pane label="按时间" name="first"></el-tab-pane>
-          <el-tab-pane label="按人气" name="second"></el-tab-pane>
-          <el-tab-pane label="按评分" name="third"></el-tab-pane>
+        <el-tabs v-model="orderBy" @tab-change="handleTabChange">
+          <el-tab-pane label="按时间" name="createTime" :disabled="pending"></el-tab-pane>
+          <el-tab-pane label="按人气" name="pv" :disabled="pending"></el-tab-pane>
+          <el-tab-pane label="按评分" name="rate" :disabled="pending"></el-tab-pane>
         </el-tabs>
-        <div class="video-list">
+        <div class="video-list" v-loading="pending">
           <el-row :gutter="20">
-            <el-col :sm="4" :xs="8" v-for="item in movieList">
+            <el-col :sm="4" :xs="8" v-for="item in data.movieList">
               <div class="video-list__block">
                 <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="img-box">
                   <el-image class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
@@ -87,7 +87,7 @@
                 :current-page="currentPage"
                 :page-size="30"
                 :pager-count="5"
-                :total="total"
+                :total="data.total"
                 @current-change="handleCurrentChange"
             />
           </div>
@@ -136,7 +136,6 @@
 <script setup>
 import { VideoCamera } from '@element-plus/icons-vue'
 import { onMounted } from "../../../.nuxt/imports";
-import {useFetch} from "nuxt/app";
 
 definePageMeta({
   key: route => route.fullPath
@@ -145,7 +144,7 @@ definePageMeta({
 const runtimeConfig = useRuntimeConfig()
 const route = useRoute()
 const currentPage = ref(+route.query.page || 1)
-const activeName = ref('first')
+const orderBy = ref(route.query.orderBy || 'createTime')
 const yearList = ref([])
 const y = new Date().getFullYear();
 for (let i = 0 ; i <= 15 ; i++){
@@ -154,8 +153,6 @@ for (let i = 0 ; i <= 15 ; i++){
 const genreList = ref([])
 const countryList = ref([])
 const languageList = ref([])
-const movieList = ref([])
-const total = ref(0)
 const weekList = ref([])
 const monthList = ref([])
 const info = ref({})
@@ -173,17 +170,16 @@ const title = computed(() => {
   return html
 })
 
-const { data } = await useFetch('/api/show', {
+const { pending, data } = await useLazyAsyncData('data', () => $fetch('/api/show', {
   query: {
     ...route.query,
-    columnValue: route.params.column
+    columnValue: route.params.column,
+    orderBy: orderBy.value
   }
-})
+}))
 genreList.value = data.value.genreList
 countryList.value = data.value.countryList
 languageList.value = data.value.languageList
-movieList.value = data.value.movieList
-total.value = data.value.total
 weekList.value = data.value.weekList
 monthList.value = data.value.monthList
 info.value = data.value.info
@@ -193,12 +189,17 @@ async function handleCurrentChange(page) {
     path: route.path,
     query: {
       ...route.query,
+      orderBy: orderBy.value,
       page
     }
   })
   if (process.client) {
     window.scrollTo(0, 0)
   }
+}
+
+async function handleTabChange(value) {
+  refreshNuxtData('data')
 }
 
 </script>

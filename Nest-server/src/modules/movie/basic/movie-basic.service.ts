@@ -107,10 +107,13 @@ export class MovieBasicService {
         },
       );
     }
+    console.log(reqListMovieListDto.orderBy);
     if (reqListMovieListDto.orderBy === 'pv') {
       queryBuilder.orderBy('moviePv.pv', 'DESC');
+    } else if (reqListMovieListDto.orderBy === 'rate') {
+      queryBuilder.orderBy('movieBasic.rate', 'DESC');
     } else {
-      queryBuilder.orderBy('movieBasic.updateTime', 'DESC');
+      queryBuilder.orderBy('movieBasic.createTime', 'DESC');
     }
     const [rows, total] = await queryBuilder
       .skip(reqListMovieListDto.skip)
