@@ -274,7 +274,7 @@
   }
   /** 获取栏目 */
   async function getColumns() {
-    const { data } = await getColumnAll()
+    const { data } = await getColumnAll({ type: 1 })
     allColumn.value = data
   }
 
