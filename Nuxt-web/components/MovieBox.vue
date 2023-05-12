@@ -132,6 +132,7 @@ function processingState(data) {
     }
     .img-box {
       position: relative;
+      height: 218px;
       span {
         position: absolute;
         bottom: 0;
@@ -170,7 +171,7 @@ function processingState(data) {
 @media only screen and (max-width:991px){
   .video-list {
     &__block {
-      &__img {
+      &__img, .img-box {
         height: 170px;
       }
     }
