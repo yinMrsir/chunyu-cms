@@ -38,7 +38,6 @@
              <el-form-item label="标签:" v-if="data.detail.tags">
                <div class="text-overflow">{{ data.detail.tags.split(',').join('/') }}</div>
              </el-form-item>
-             <el-form-item label="更新:">{{ $dayjs(data.detail.updateTime).format('YYYY-MM-DD') }}</el-form-item>
              <div>
                <nuxt-link :to="`/${data.detail.columnValue}/video/${data.detail.movieVideos[0].id}`" v-if="data.detail.movieVideos[0]">
                 <el-button :icon="VideoPlay" type="primary" class="mr-10">播放</el-button>

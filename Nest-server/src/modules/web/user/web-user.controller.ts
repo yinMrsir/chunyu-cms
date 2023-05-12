@@ -22,6 +22,7 @@ import { JwtWebAuthGuard } from '../../../common/guards/jwt-web-auth.guard';
 import { DataObj } from '../../../common/class/data-obj.class';
 import { User, UserEnum } from '../../../common/decorators/user.decorator';
 import { PaginationPipe } from '../../../common/pipes/pagination.pipe';
+import { ApiException } from '../../../common/exceptions/api.exception';
 
 @Controller('web/user')
 export class WebUserController {
@@ -29,8 +30,10 @@ export class WebUserController {
 
   @Public()
   @Post('reg')
-  reg(@Body() regUserWebDto: RegWebUserDto) {
-    return this.webUserService.create(regUserWebDto);
+  async reg(@Body() regUserWebDto: RegWebUserDto) {
+    const user = await this.webUserService.findByEmail(regUserWebDto.email);
+    if (user) throw new ApiException('邮箱已注册');
+    await this.webUserService.create(regUserWebDto);
   }
 
   @Public()
