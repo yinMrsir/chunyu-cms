@@ -170,7 +170,7 @@ const title = computed(() => {
   return html
 })
 
-const { pending, data } = await useLazyAsyncData('data', () => $fetch('/api/show', {
+const { pending, data } = await useAsyncData('data', () => $fetch('/api/show', {
   query: {
     ...route.query,
     columnValue: route.params.column,
