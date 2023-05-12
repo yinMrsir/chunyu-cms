@@ -25,7 +25,7 @@ defineProps({
   }
 })
 
-const title = ref('淳渔管理系统');
+const title = ref('淳渔CMS管理系统');
 const settingsStore = useSettingsStore();
 const sideTheme = computed(() => settingsStore.sideTheme);
 </script>

@@ -1,7 +1,7 @@
 {
   "name": "chunyu-cms",
   "version": "0.0.1",
-  "description": "淳渔管理系统",
+  "description": "淳渔CMS管理系统",
   "author": "淳渔",
   "license": "MIT",
   "scripts": {
