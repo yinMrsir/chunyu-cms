@@ -82,8 +82,14 @@ yarn
 yarn build:prod
 ```
 
-### 更新计划
+### 更新
 - [x] [友情链接支持后台配置](https://www.douyin.com/user/MS4wLjABAAAAUKMCVZGbQl7etrdd36GBIG6OGxClOwoHci_-PIlxNvE?modal_id=7225255650392132903)
-- [ ] 用户签到
 - [x] 用户影视评分
-- [ ] 用户评论
+
+
+### 其他
+docker安装redis：
+https://www.runoob.com/docker/docker-install-redis.html
+
+docker安装mysql：
+https://www.runoob.com/docker/docker-install-mysql.html
