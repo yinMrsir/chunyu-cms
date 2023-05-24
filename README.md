@@ -37,7 +37,7 @@
 
 ## 开发前
 
-如未安装`mysql`数据库和`redis`请先自行安装。
+如未安装`mysql`数据库和`redis`请先自行安装。可选mysql8，redis7。
 
 如果没有安装nest-cli，先执行`npm install -g @nestjs/cli`命令全局安装
 
@@ -87,9 +87,12 @@ yarn build:prod
 - [x] 用户影视评分
 
 
-### 其他
-docker安装redis：
-https://www.runoob.com/docker/docker-install-redis.html
+### 相关链接
 
-docker安装mysql：
-https://www.runoob.com/docker/docker-install-mysql.html
+win安装Docker: https://zhuanlan.zhihu.com/p/441965046
+
+docker安装redis：https://www.runoob.com/docker/docker-install-redis.html
+
+docker安装mysql：https://www.runoob.com/docker/docker-install-mysql.html
+
+解决Navicat连接数据库提示`client does not support authentication：https://blog.csdn.net/lovedingd/article/details/106728292
