@@ -46,8 +46,10 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
           cache: {
             type: 'redis',
             options: {
-              host: configService.get<any>('redis'),
-              port: 6379,
+              socket: {
+                host: configService.get<any>('bullRedis.host'),
+                port: 6379,
+              },
             },
           },
         };
