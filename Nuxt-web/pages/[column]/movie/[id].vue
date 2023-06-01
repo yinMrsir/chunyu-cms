@@ -266,12 +266,14 @@ getUserRate()
 
 // 设置评分
 async function onRatechange(value) {
+  if (!value) return
   const userInfo = useCookie('userInfo')
   if (!userInfo.value) {
     ElMessage({
       message: '请先登录',
       type: 'warning'
     })
+    rate.value = 0
   } else {
     const { code, msg } = await $fetch('/api/user/rate/create', {
       method: 'post',
