@@ -25,16 +25,16 @@ export default defineNuxtConfig({
         }
     },
     runtimeConfig: {
-        baseUrl: process.env.BASE_URL || 'http://127.0.0.1:4000',
+        baseUrl: process.env.BASE_URL || 'http://[::1]:4000',
         public: {
-            apiBase: process.env.BASE_URL || 'http://127.0.0.1:4000',
+            apiBase: process.env.BASE_URL || 'http://[::1]:4000',
             globalTitle: '淳渔影视'
         }
     },
     nitro: {
         devProxy: {
             '/server': {
-                target: process.env.BASE_URL || 'http://127.0.0.1:4000',
+                target: process.env.BASE_URL || 'http://[::1]:4000',
                 changeOrigin: true
             },
             '/external': {

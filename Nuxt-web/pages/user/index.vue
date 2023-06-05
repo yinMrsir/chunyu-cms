@@ -14,6 +14,22 @@
             <a class="lv lv1"></a>
           </div>
         </div>
+        <el-card class="integral">
+          <template #header>
+            <div class="card-header">
+              <div>
+                金币
+                <span>50</span>
+              </div>
+              <el-button class="button" text size="small">
+                详情
+                <el-icon><ArrowRight /></el-icon>
+              </el-button>
+            </div>
+          </template>
+          <el-button type="primary">购买</el-button>
+          <el-button type="primary">签到领金币</el-button>
+        </el-card>
       </el-col>
       <el-col :md="18" :xs="24" class="bg-fff">
         <el-tabs v-model="activeName">
@@ -27,6 +43,7 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowRight } from '@element-plus/icons-vue'
 import CollectData from '@/components/user/CollectData.vue'
 
 definePageMeta({
@@ -42,6 +59,15 @@ const { data: user } = await useFetch('/api/user/info', {
   },
   pick: ['email', 'userId']
 })
+
+// 获取用户是否签到
+const { data } = await useFetch('/api/user/sign/getSign', {
+  headers: {
+    Authorization: 'Bearer ' + userInfo.value.token
+  }
+})
+console.log(data)
+
 </script>
 
 <style lang="scss" scoped>
@@ -81,12 +107,33 @@ const { data: user } = await useFetch('/api/user/info', {
       }
     }
   }
+  .el-card.is-always-shadow {
+    box-shadow: none;
+    border-radius: 0;
+    border: 0;
+  }
+  .integral {
+    margin: 10px 0;
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      span {
+        color: #F66C25;
+        font-weight: bold;
+        font-size: 18px;
+      }
+    }
+  }
 }
 @media (max-width: 768px){
   .user-index {
     margin-top: -60px;
     &__head {
       margin: 0 -15px;
+    }
+    .integral {
+      margin: 10px -15px;
     }
   }
 }
