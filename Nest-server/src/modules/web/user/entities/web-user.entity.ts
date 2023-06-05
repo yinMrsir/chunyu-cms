@@ -73,6 +73,14 @@ export class WebUser extends BaseEntity {
   @IsString()
   loginDate?: Date;
 
+  @Column({
+    name: 'member_type',
+    comment: '1: 普通用户 2：黄金会员',
+    default: 1,
+  })
+  @IsString()
+  memberType: number;
+
   @OneToMany(() => UserCollect, (userCollect) => userCollect.userId)
   userCollects: UserCollect[];
 }
