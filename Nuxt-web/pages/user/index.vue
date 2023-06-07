@@ -19,7 +19,7 @@
             <div class="card-header">
               <div>
                 金币
-                <span>50</span>
+                <span>{{ gold }}</span>
               </div>
               <el-button class="button" text size="small">
                 详情
@@ -28,7 +28,7 @@
             </div>
           </template>
           <el-button type="primary">购买</el-button>
-          <el-button type="primary">签到领金币</el-button>
+          <el-button type="primary" @click="handleSign">{{ sign ? '已签到' : '签到领金币' }}</el-button>
         </el-card>
       </el-col>
       <el-col :md="18" :xs="24" class="bg-fff">
@@ -45,6 +45,7 @@
 <script setup lang="ts">
 import { ArrowRight } from '@element-plus/icons-vue'
 import CollectData from '@/components/user/CollectData.vue'
+import { ElMessage } from "element-plus"
 
 definePageMeta({
   middleware: ["auth"]
@@ -53,21 +54,41 @@ const { globalTitle } = useRuntimeConfig()
 const userInfo = useCookie('userInfo')
 const activeName = ref<string>('collect')
 
+const headers = {
+  Authorization: 'Bearer ' + userInfo.value.token
+}
+
+// 获取用户信息
 const { data: user } = await useFetch('/api/user/info', {
-  headers: {
-    Authorization: 'Bearer ' + userInfo.value.token
-  },
+  headers,
   pick: ['email', 'userId']
 })
 
 // 获取用户是否签到
-const { data } = await useFetch('/api/user/sign/getSign', {
-  headers: {
-    Authorization: 'Bearer ' + userInfo.value.token
-  }
+const { data: sign, refresh } = await useFetch('/api/user/sign/getSign', {
+  headers
 })
-console.log(data)
 
+// 获取用户金币数量
+const { data: gold, refresh: refreshGold } = await useFetch('/api/user/user-wallet/findGold', {
+  headers
+})
+
+// 用户签到
+async function handleSign() {
+  if (sign.value) return;
+  const { code, msg, data } = await $fetch('/api/user/sign/sign', {
+    headers
+  })
+  ElMessage({
+    message: code === 200 ? `签到成功, ${data.signReward}` : msg,
+    type: code === 200 ? 'success' : 'error'
+  })
+  if (code === 200) {
+    refresh();
+    refreshGold()
+  }
+}
 </script>
 
 <style lang="scss" scoped>

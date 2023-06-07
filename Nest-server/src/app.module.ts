@@ -45,6 +45,7 @@ import { UserCollectModule } from './modules/web/user-collect/user-collect.modul
 import { LinkModule } from './modules/basic/link/link.module';
 import { UserRateModule } from './modules/web/user-rate/user-rate.module';
 import { UserSignModule } from './modules/web/user-sign/user-sign.module';
+import { UserWalletModule } from './modules/web/user-wallet/user-wallet.module';
 
 /* 将 provider的类名作为别名，方便定时器调用 */
 const providers = [JobService];
@@ -111,6 +112,7 @@ const aliasProviders = createAliasProviders();
     LinkModule,
     UserRateModule,
     UserSignModule,
+    UserWalletModule,
 
     /* 文章相关模块 */
     ArticleModule,

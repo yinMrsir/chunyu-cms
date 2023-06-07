@@ -14,6 +14,7 @@ import { WEB_USER_KEY } from '../../../common/contants/redis.contant';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import * as moment from 'moment';
 import { UserCollect } from '../user-collect/entities/user-collect.entity';
+import { UserWallet } from '../user-wallet/entities/user-wallet.entity';
 
 @Injectable()
 export class WebUserService {
@@ -92,6 +93,13 @@ export class WebUserService {
       .addSelect('webUser.remark', 'remark')
       .addSelect('webUser.updateBy', 'updateBy')
       .addSelect('webUser.createBy', 'createBy')
+      .leftJoinAndMapOne(
+        'webUser.wallet',
+        UserWallet,
+        'userWallet',
+        'webUser.userId = userWallet.userId',
+      )
+      .addSelect('userWallet.gold', 'walletGold')
       .skip(queryWebUserDto.skip)
       .take(queryWebUserDto.take);
 

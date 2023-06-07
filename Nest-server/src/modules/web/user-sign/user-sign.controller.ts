@@ -15,10 +15,8 @@ export class UserSignController {
   @Get('getSign')
   @UseGuards(JwtWebAuthGuard)
   async getSign(@User(UserEnum.userId) userId: number) {
-    console.log('[userId]', userId);
     const data = await this.userSignService.findUserSign(userId);
-    console.log(data);
-    return new DataObj(data);
+    return DataObj.create(data);
   }
 
   @Public()
@@ -26,7 +24,9 @@ export class UserSignController {
   @UseGuards(JwtWebAuthGuard)
   async sign(@User(UserEnum.userId) userId: number) {
     // 查询是否已签到过
-    // const data = await this.userSignService.findUserSign(userId);
-    // if (data) throw new  ApiException('用户今日已签到过，请勿重复签到');
+    const data = await this.userSignService.findUserSign(userId);
+    if (data) throw new ApiException('用户今日已签到过，请勿重复签到');
+    const content = await this.userSignService.sign(userId);
+    return DataObj.create(content);
   }
 }

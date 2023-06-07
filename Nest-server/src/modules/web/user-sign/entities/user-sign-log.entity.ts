@@ -27,7 +27,7 @@ export class UserSignLog extends BaseEntity {
     name: 'sign_reward',
     comment: '签到奖励内容',
   })
-  seriesDays: string;
+  signReward: string;
 
   @CreateDateColumn({
     name: 'sign_time',

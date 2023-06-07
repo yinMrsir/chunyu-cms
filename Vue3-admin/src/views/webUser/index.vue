@@ -29,6 +29,7 @@ const columns = ref([
   { title: '账号', field: 'email' },
   { title: '状态', field: 'status', type: 'select', options: sys_normal_disable, add: true, slot: 'status' },
   { title: '收藏影视', field: 'userCollectCount' },
+  { title: '金币数量', field: 'walletGold' },
   { title: '注册时间', field: 'createTime', type: 'dateTime' },
   { title: '最后登录IP', field: 'loginIp' },
   { title: '最后登录时间', field: 'loginDate', type: 'dateTime' },

@@ -20,4 +20,10 @@ router.post('/reg', defineEventHandler(async (event) => {
   return usePost('/web/user/reg', body)
 }))
 
+router.get('/user-wallet/findGold', defineEventHandler(async (event) => {
+  let headers = getHeaders(event)
+  const { data } = await useGet<{data: any}>('/user-wallet/findGold', {}, headers)
+  return data.gold
+}))
+
 export default useBase('/api/user', router.handler)

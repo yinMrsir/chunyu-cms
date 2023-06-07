@@ -1,8 +1,15 @@
 import { Type } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { BaseEntity } from '../../../../common/entities/base.entity';
 import { UserCollect } from '../../user-collect/entities/user-collect.entity';
+import { UserWallet } from '../../user-wallet/entities/user-wallet.entity';
 
 @Entity({ name: 'web_user' })
 export class WebUser extends BaseEntity {
