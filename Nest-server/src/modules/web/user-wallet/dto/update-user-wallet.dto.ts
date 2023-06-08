@@ -4,4 +4,6 @@ export class UpdateUserWalletDto {
   gold: number;
 
   type: string;
+
+  remark: string;
 }

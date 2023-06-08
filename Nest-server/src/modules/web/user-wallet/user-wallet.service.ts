@@ -4,12 +4,15 @@ import { Repository } from 'typeorm';
 import { UpdateUserWalletDto } from './dto/update-user-wallet.dto';
 import { UserWallet } from './entities/user-wallet.entity';
 import { ApiException } from '../../../common/exceptions/api.exception';
+import { UserWalletLog } from './entities/user-wallet-log.entity';
 
 @Injectable()
 export class UserWalletService {
   constructor(
     @InjectRepository(UserWallet)
     private readonly userWalletRepository: Repository<UserWallet>,
+    @InjectRepository(UserWalletLog)
+    private readonly userWalletLogRepository: Repository<UserWalletLog>,
   ) {}
 
   findGold(userId: number): Promise<UserWallet> {
@@ -23,7 +26,7 @@ export class UserWalletService {
       userId: updateUserWalletDto.userId,
     });
     let gold = wallet.gold;
-    if (updateUserWalletDto.type === 'add') {
+    if (updateUserWalletDto.type === '1') {
       gold = gold + updateUserWalletDto.gold;
     } else {
       gold = gold - updateUserWalletDto.gold;
@@ -31,7 +34,15 @@ export class UserWalletService {
         throw new ApiException('金币不足');
       }
     }
+    // 更新钱包金额
     await this.userWalletRepository.update(updateUserWalletDto.userId, {
+      gold,
+    });
+    // 写入记录
+    await this.userWalletLogRepository.save({
+      userId: updateUserWalletDto.userId,
+      type: updateUserWalletDto.type,
+      remark: updateUserWalletDto.remark,
       gold,
     });
   }

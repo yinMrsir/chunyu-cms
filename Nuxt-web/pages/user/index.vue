@@ -27,7 +27,7 @@
               </el-button>
             </div>
           </template>
-          <el-button type="primary">购买</el-button>
+          <el-button type="primary" @click="handleBuy">购买</el-button>
           <el-button type="primary" @click="handleSign">{{ sign ? '已签到' : '签到领金币' }}</el-button>
         </el-card>
       </el-col>
@@ -88,6 +88,13 @@ async function handleSign() {
     refresh();
     refreshGold()
   }
+}
+
+function handleBuy() {
+  ElMessage({
+    message: '支付功能正在开发,敬请期待...',
+    type: 'info'
+  })
 }
 </script>
 

@@ -67,7 +67,12 @@ export class UserSignService {
       ...content,
     });
     // 给用户添加金币
-    await this.userWalletService.updateGold({ userId, gold: 100, type: 'add' });
+    await this.userWalletService.updateGold({
+      userId,
+      gold: 100,
+      type: '1',
+      remark: '签到 +100',
+    });
     return content;
   }
 }
