@@ -47,7 +47,6 @@ export class CollectController {
         }),
       ),
     );
-    console.log(data);
     const promiseList = data.data.map((value) => {
       const req = new ReqCreateMovieListDto();
       req.title = value.title;

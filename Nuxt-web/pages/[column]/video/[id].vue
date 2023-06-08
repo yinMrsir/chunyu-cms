@@ -17,7 +17,10 @@
       <el-col :span="18" :xs="24">
         <video style="width: 100%" :src="`/server/common/stream/${detail.videoInfo?.name}`" controls></video>
         <div>
-          <h1 class="mb-10 mt-10 video-detail__title">{{ detail.title }} <span>暂无评分</span></h1>
+          <h1 class="mb-10 mt-10 video-detail__title">
+            {{ detail.title }}
+            <span :class="detail.movie.rateUserCount > 0 ? 'rate' : ''">{{ detail.movie.rateUserCount > 0 ? detail.movie.rate.toFixed(1) : '暂无评分' }}</span>
+          </h1>
           <el-form :inline="true">
             <el-form-item label="类型:">{{ detail.movie.genres }}</el-form-item>
             <el-form-item label="地区:">
@@ -221,8 +224,12 @@ monthList.value = data.value.monthList
   line-height: 1.2;
 
   span {
-    font-size: 14px;
     color: $light-gray;
+    font-size: 14px;
+    &.rate {
+      font-size: 24px;
+      color: #06d706;
+    }
   }
 }
 </style>

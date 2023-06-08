@@ -90,6 +90,8 @@ export class MovieVideosService {
         'movieBasic.genres',
         'movieBasic.columnValue',
         'movieBasic.summary',
+        'movieBasic.rateUserCount',
+        'movieBasic.rate',
         'country.name',
         'videos.id',
         'videos.title',

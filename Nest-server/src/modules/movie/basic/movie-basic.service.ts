@@ -107,7 +107,6 @@ export class MovieBasicService {
         },
       );
     }
-    console.log(reqListMovieListDto.orderBy);
     if (reqListMovieListDto.orderBy === 'pv') {
       queryBuilder.orderBy('moviePv.pv', 'DESC');
     } else if (reqListMovieListDto.orderBy === 'rate') {
@@ -176,7 +175,7 @@ export class MovieBasicService {
       },
     });
     if (!moviePv) throw new ApiException('数据不存在');
-    this.moviePvRepository.update(
+    await this.moviePvRepository.update(
       { movie: { id: movieId } },
       { pv: moviePv.pv + 1 },
     );
