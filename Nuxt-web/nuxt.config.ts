@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    devtools: { enabled: true },
     css: [
         '@/assets/css/main.css',
         'element-plus/dist/index.css',
@@ -40,6 +41,12 @@ export default defineNuxtConfig({
             '/external': {
                 target: 'http://cms.yinchunyu.com/external',
                 changeOrigin: true
+            }
+        },
+        // 该配置用于服务端请求转发
+        routeRules: {
+            '/server/**': {
+                proxy: 'http://[::1]:4000/**'
             }
         }
     },
