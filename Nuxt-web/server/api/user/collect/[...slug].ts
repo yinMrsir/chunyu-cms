@@ -4,12 +4,6 @@ import { createRouter, defineEventHandler, useBase } from 'h3'
 
 const router = createRouter()
 
-router.get('/list', defineEventHandler(async (event) => {
-  let headers = getHeaders(event)
-  const query = getQuery(event)
-  return useGet<{data: any}>('/user-collect/findByPage', query, headers)
-}))
-
 router.get('/find', defineEventHandler(async (event) => {
   const headers = getHeaders(event)
   const query = getQuery(event)

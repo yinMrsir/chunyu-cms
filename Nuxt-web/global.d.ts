@@ -19,3 +19,17 @@ export interface MovieGatherRes {
   childCategories: Object[],
   cssClass: string
 }
+
+
+type AsyncData<DataT, ErrorT> = {
+  data: Ref<DataT | null>
+  pending: Ref<boolean>
+  refresh: (opts?: AsyncDataExecuteOptions) => Promise<void>
+  execute: (opts?: AsyncDataExecuteOptions) => Promise<void>
+  error: Ref<ErrorT | null>
+}
+
+interface AsyncDataExecuteOptions {
+  dedupe?: boolean
+}
+

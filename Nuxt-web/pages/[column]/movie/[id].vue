@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-20">
     <Head>
-      <Title>{{ data.detail.title }}在线观看 - {{ globalTitle }}</Title>
+      <Title>{{ data.detail.title }}在线观看 - {{ runtimeConfig.public.globalTitle }}</Title>
       <Meta name="description" :content="data.detail.summary" />
     </Head>
 
@@ -173,7 +173,7 @@ import {useFetch} from "nuxt/app";
 import {ElMessage} from "element-plus";
 import {useIsLogin} from "../../../composables/states";
 
-const { globalTitle } = useRuntimeConfig()
+const runtimeConfig = useRuntimeConfig()
 const route = useRoute()
 const isLogin = useIsLogin()
 const id = route.params.id

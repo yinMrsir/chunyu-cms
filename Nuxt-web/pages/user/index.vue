@@ -1,7 +1,7 @@
 <template>
   <div class="container user-index">
     <Head>
-      <Title>个人中心 - {{ globalTitle }}</Title>
+      <Title>个人中心 - {{ runtimeConfig.public.globalTitle }}</Title>
       <Style type="text/css" children="body { background-color: #f7f7f7; }" />
     </Head>
     <el-row :gutter="30" class="mt-20">
@@ -9,8 +9,8 @@
         <div class="bg-fff user-index__head flex">
           <img src="../../assets/images/toux.png" alt="">
           <div>
-            {{ user?.email }}
-            <p class="grey">ID: {{ user?.userId }}</p>
+            {{ userData.data?.email }}
+            <p class="grey">ID: {{ userData.data?.userId }}</p>
             <a class="lv lv1"></a>
           </div>
         </div>
@@ -19,7 +19,7 @@
             <div class="card-header">
               <div>
                 金币
-                <span>{{ gold }}</span>
+                <span>{{ goldData.data.gold }}</span>
               </div>
               <el-button class="button" text size="small">
                 详情
@@ -28,7 +28,7 @@
             </div>
           </template>
           <el-button type="primary" @click="handleBuy">购买</el-button>
-          <el-button type="primary" @click="handleSign">{{ sign ? '已签到' : '签到领金币' }}</el-button>
+          <el-button type="primary" @click="handleSign">{{ signData.data ? '已签到' : '签到领金币' }}</el-button>
         </el-card>
       </el-col>
       <el-col :md="18" :xs="24" class="bg-fff">
@@ -50,36 +50,30 @@ import { ElMessage } from "element-plus"
 definePageMeta({
   middleware: ["auth"]
 })
-const { globalTitle } = useRuntimeConfig()
-const userInfo = useCookie('userInfo')
+const runtimeConfig = useRuntimeConfig()
+const userInfo = useCookie<{ token: string }>('userInfo')
 const activeName = ref<string>('collect')
-
 const headers = {
-  Authorization: 'Bearer ' + userInfo.value.token
+  Authorization: 'Bearer ' + userInfo.value?.token
 }
 
-// 获取用户信息
-const { data: user } = await useFetch('/api/user/info', {
-  headers,
-  pick: ['email', 'userId']
-})
-
-// 获取用户是否签到
-const { data: sign, refresh } = await useFetch('/api/user/sign/getSign', {
-  headers
-})
-
-// 获取用户金币数量
-const { data: gold, refresh: refreshGold } = await useFetch('/api/user/user-wallet/findGold', {
-  headers
-})
+const [
+  { data: userData },
+  { data: signData, refresh },
+  { data: goldData, refresh: refreshGold }
+] = await Promise.all([
+  // 获取用户信息
+  useFetch<{ data: { email: string; userId: number } }>(runtimeConfig.public.apiBase + '/web/user/info', { headers }),
+  // 获取用户是否签到
+  useFetch<{ data: null | number }>(runtimeConfig.public.apiBase + '/user-sign/getSign', { headers }),
+  // 获取用户金币数量
+  useFetch<{ data: { gold: number } }>(runtimeConfig.public.apiBase + '/user-wallet/findGold', { headers })
+])
 
 // 用户签到
 async function handleSign() {
-  if (sign.value) return;
-  const { code, msg, data } = await $fetch('/api/user/sign/sign', {
-    headers
-  })
+  if (signData.value?.data) return;
+  const { code, msg, data } = await $fetch<{ code: number; msg: string; data: any }>(runtimeConfig.public.apiBase + '/user-sign/sign', { headers })
   ElMessage({
     message: code === 200 ? `签到成功, ${data.signReward}` : msg,
     type: code === 200 ? 'success' : 'error'

@@ -31,7 +31,9 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
+import {ElMessage} from "element-plus";
+
 const runtimeConfig = useRuntimeConfig()
 const movieList = ref<any[]>([])
 const currentPage = ref<number>(1)
@@ -39,7 +41,7 @@ const total = ref(0)
 
 async function getList() {
   const userInfo = useCookie<{token: string}>('userInfo')
-  const { data } = await useFetch<{ rows:any[]; total: number }>('/api/user/collect/list', {
+  const { data: collectData, error } = await useFetch<{ rows:any[]; total: number;  code: number }>(runtimeConfig.public.apiBase + '/user-collect/findByPage', {
     query: {
       pageNum: currentPage.value,
       pageSize: 12
@@ -48,9 +50,15 @@ async function getList() {
       Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
     }
   })
-  if (data.value) {
-    movieList.value = data.value.rows
-    total.value = data.value.total
+  if (!error.value && collectData.value?.code === 200) {
+    movieList.value = collectData.value.rows
+    total.value = collectData.value.total
+  }
+  if (error.value) {
+    ElMessage({
+      message: error.value?.statusMessage,
+      type: 'error'
+    })
   }
 }
 getList()

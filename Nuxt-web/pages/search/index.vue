@@ -72,37 +72,50 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {useFetch} from "nuxt/app";
+import {IResPage} from "~/global";
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const activeName = ref('first')
-const form = reactive({
+const form = reactive<{ keyword: string | undefined }>({
   keyword: undefined
 })
 const movieList = ref([])
 const newList = ref([])
-const total = ref(0)
-const currentPage = ref(+route.query.page || 1)
+const total = ref<number>(0)
+const currentPage = ref<number>(1)
 
-form.keyword = route.query.keyword
+form.keyword = route.query.keyword as string
+if (route.query.page) {
+  currentPage.value = +route.query.page
+}
 
 definePageMeta({
   key: route => route.fullPath
 })
 
-const { data } = await useFetch('/api/common/movie-list', { query: { pageSize: 20 } })
-newList.value = data.value.rows
+// const { data } = await useFetch('/api/common/movie-list', { query: { pageSize: 20 } })
+// newList.value = data.value.rows
 
 handleSearch()
 async function handleSearch() {
-  const { data } = await useFetch('/api/common/movie-list', { query: { keyword: form.keyword, page: currentPage.value, size: 30 } })
-  movieList.value = data.value.rows
-  total.value = data.value.total
+  const { data } = await useFetch<IResPage<any>>(
+      runtimeConfig.public.apiBase + '/movie/list',
+      {
+        query: {
+          keyword: form.keyword,
+          pageNum: currentPage.value,
+          pageSize: 30
+        }
+      }
+  )
+  movieList.value = data.value?.rows || []
+  total.value = data.value?.total || 0
 }
 
-async function handleCurrentChange(page) {
+async function handleCurrentChange(page: number) {
   await navigateTo({
     path: route.path,
     query: {

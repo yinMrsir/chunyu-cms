@@ -44,7 +44,8 @@
       <div class="mobile-nav hidden-sm-only hidden-sm-and-up" v-if="route.path.indexOf('/user') === -1">
         <ul>
           <li :class="route.params.column === item.value ? 'active' : ''" :key="index" v-for="(item, index) in navigation">
-            <nuxt-link :to="`/${item.value}`">{{ item.name }}</nuxt-link>
+            <nuxt-link :to="`/${item.value}`" v-if="+item.type === 1">{{item.name}}</nuxt-link>
+            <nuxt-link :to="item.value" target="_blank" v-if="+item.type === 2">{{item.name}}</nuxt-link>
           </li>
         </ul>
       </div>
