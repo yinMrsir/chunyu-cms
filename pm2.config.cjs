@@ -11,7 +11,8 @@ module.exports = {
         MYSQL_USERNAME: '',
         MYSQL_PASSWORD: '',
         MYSQL_DATABASE: '',
-        REDIS_HOST: ''
+        REDIS_HOST: '',
+        DEV_TOOLS: false
       }
     },
     {
