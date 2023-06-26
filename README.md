@@ -96,3 +96,7 @@ docker安装redis：https://www.runoob.com/docker/docker-install-redis.html
 docker安装mysql：https://www.runoob.com/docker/docker-install-mysql.html
 
 解决Navicat连接数据库提示`client does not support authentication：https://blog.csdn.net/lovedingd/article/details/106728292
+
+### 有任何疑问可添加微信
+
+<img height="120" src="https://gitee.com/chunyu-cms/chunyu-cms/raw/main/wx.jpg" width="120"/>
