@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-20">
     <Head>
-      <Title>{{ detail.movie.title }}_{{ detail.title }}在线观看 - {{ runtimeConfig.globalTitle }}</Title>
+      <Title>{{ detail.movie.title }}_{{ detail.title }}在线观看 - {{ globalTitle }}</Title>
       <Meta name="description" :content="detail.movie.summary" />
     </Head>
 
@@ -58,7 +58,7 @@
           </div>
           <div class="video-list">
             <el-row :gutter="20">
-              <el-col :sm="4" :xs="8" v-for="item in likeRows">
+              <el-col :sm="4" :xs="8" v-for="item in likeRows.rows">
                 <div class="video-list__block">
                   <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`">
                     <el-image class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
@@ -89,7 +89,7 @@
           </h3>
         </div>
         <ul class="col-pd mb-20">
-          <li v-for="(item, index) in weekList">
+          <li v-for="(item, index) in weekList.rows">
             <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
@@ -106,7 +106,7 @@
           </h3>
         </div>
         <ul class="col-pd">
-          <li v-for="(item, index) in monthList">
+          <li v-for="(item, index) in monthList.rows">
             <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
@@ -121,36 +121,69 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { VideoCamera } from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
 import {useFetch} from "nuxt/app";
+import dayjs from "dayjs";
+import {useGet} from "~/composables/useHttp";
+import {IResData, IResPage} from "~/global";
 
 const runtimeConfig = useRuntimeConfig()
+const {public: publicConfig} = runtimeConfig
+const {apiBase, globalTitle} = publicConfig
 const route = useRoute()
 const id = route.params.id
 const qrcodeUrl = ref('')
-const detail = ref({})
-const likeRows = ref([])
-const weekList = ref([])
-const monthList = ref([])
 
 onMounted(() => {
   qrcodeUrl.value = window.location.href
 })
 
-const { data } = await useFetch('/api/video', { query: { id } })
-if (!data.value.detail) {
+const currTime = dayjs().format('YYYY-MM-DD')
+const weekStartTime = dayjs().subtract(7, 'day').format('YYYY-MM-DD')
+const mouthStartTime = dayjs().subtract(30, 'day').format('YYYY-MM-DD')
+
+const { data: detailRes } = await useFetch<IResData<any>>(apiBase + `/movie/videos/${id}`)
+if (!detailRes.value) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page Not Found',
     fatal: true
   })
 }
-detail.value = data.value.detail
-likeRows.value = data.value.likeRows
-weekList.value = data.value.weekList
-monthList.value = data.value.monthList
+const detail = detailRes.value.data
+const [
+  { data: likeRows },
+  { data: weekList },
+  { data: monthList }
+] = await Promise.all([
+  useFetch<IResPage<any[]>>(`${apiBase}/movie/list`, {
+    query: {
+      genres: detail.movie.genres.split(',')[0],
+      pageNum: 1,
+      pageSize: 18,
+    }
+  }),
+  useFetch<IResPage<any[]>>(`${apiBase}/movie/list`, {
+    query: {
+      columnValue: detail.movie.columnValue,
+      pageNum: 1,
+      pageSize: 20,
+      orderBy: 'pv',
+      date: [weekStartTime, currTime]
+    }
+  }),
+  useFetch<IResPage<any[]>>(`${apiBase}/movie/list`, {
+    query: {
+      columnValue: detail.movie.columnValue,
+      pageNum: 1,
+      pageSize: 20,
+      orderBy: 'pv',
+      date: [mouthStartTime, currTime]
+    }
+  })
+])
 </script>
 
 <style lang="scss" scoped>

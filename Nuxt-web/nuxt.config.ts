@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    devtools: { enabled: true },
+    devtools: { enabled: process.env.DEV_TOOLS || true },
     css: [
         '@/assets/css/main.css',
         'element-plus/dist/index.css',

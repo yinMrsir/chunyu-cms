@@ -2,7 +2,7 @@
   <div class="container index">
     <div class="banner">
       <el-carousel :interval="5000" arrow="always">
-        <el-carousel-item v-for="item in banner">
+        <el-carousel-item v-for="item in banner.rows">
           <nuxt-link v-if="+item.urlType === 0" :to="item.url">
             <el-image :src="item.img" fit="cover" />
           </nuxt-link>
@@ -12,28 +12,31 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-    <movie-box type="index" :category-item="item" v-for="item in list" />
+    <movie-box type="index" :category-item="item" v-for="item in movie.data" />
     <div class="friendly-link flex items-center mt-20">
       <img src="../assets/images/icon_26.png">
       友情链接
     </div>
     <div class="friendly-link__content">
-      <a v-for="item in links" :href="item.url" target="_blank">{{ item.text }}</a>
+      <a v-for="item in links.data" :href="item.url" target="_blank">{{ item.text }}</a>
     </div>
   </div>
 </template>
 
-<script setup>
-import {useFetch} from "#app";
+<script setup lang="ts">
+import {IResData, IResPage} from "~/global";
+const runtimeConfig = useRuntimeConfig()
+const {public: publicConfig} = runtimeConfig
+const {apiBase} = publicConfig
 
-const banner = ref([])
-const list = ref([])
-const links = ref([])
+// banner数据
+const getBannerRequest = useFetch<IResPage<any>>(apiBase + '/basic/banner/list')
+// 影视数据
+const getMovieRequest = useFetch<IResData<any>>(apiBase + '/web/index')
+// 获取友情链接
+const getLinks = useFetch<IResData<any>>(apiBase + '/basic/link/all')
 
-const { data } = await useFetch('/api/home')
-banner.value = data.value.banner
-list.value = data.value.movieDataList
-links.value = data.value.links
+const [{ data: banner }, { data:movie }, { data: links }] = await Promise.all([getBannerRequest, getMovieRequest, getLinks])
 </script>
 
 <style lang="scss">

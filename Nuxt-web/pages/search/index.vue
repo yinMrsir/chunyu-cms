@@ -96,9 +96,6 @@ definePageMeta({
   key: route => route.fullPath
 })
 
-// const { data } = await useFetch('/api/common/movie-list', { query: { pageSize: 20 } })
-// newList.value = data.value.rows
-
 handleSearch()
 async function handleSearch() {
   const { data } = await useFetch<IResPage<any>>(

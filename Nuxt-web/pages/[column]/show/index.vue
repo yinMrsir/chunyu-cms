@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-20 show">
     <Head>
-      <Title>{{ title }}{{ info.name }} - {{ runtimeConfig.globalTitle }}</Title>
+      <Title>{{ title }}{{ info.name }} - {{ globalTitle }}</Title>
       <Meta name="description" :content="`最新最全的${title}${info.name}尽在淳渔影视。`" />
     </Head>
 
@@ -20,7 +20,7 @@
               <li :class="route.query.t === '' || route.query.t === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, t: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="(item, index) in genreList" :class="route.query.t === item.name ? 'active' : ''">
+              <li v-for="(item, index) in genreList.data" :class="route.query.t === item.name ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, t: item.name } }">{{ item.name }}</nuxt-link>
               </li>
             </ul>
@@ -30,7 +30,7 @@
               <li :class="route.query.c === '' || route.query.c === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, c: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="(item, index) in countryList" :class="+route.query.c === +item.id ? 'active' : ''">
+              <li v-for="(item, index) in countryList.data" :class="+route.query.c === +item.id ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, c: item.id } }">{{ item.name }}</nuxt-link>
               </li>
             </ul>
@@ -50,7 +50,7 @@
               <li :class="route.query.l === '' || route.query.l === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, l: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="(item, index) in languageList" :class="route.query.l === item.name ? 'active' : ''">
+              <li v-for="(item, index) in languageList.rows" :class="route.query.l === item.name ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, l: item.name } }">{{ item.name }}</nuxt-link>
               </li>
             </ul>
@@ -63,7 +63,7 @@
         </el-tabs>
         <div class="video-list" v-loading="pending">
           <el-row :gutter="20">
-            <el-col :sm="4" :xs="8" v-for="item in data.movieList">
+            <el-col :sm="4" :xs="8" v-for="item in movieList.rows">
               <div class="video-list__block">
                 <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="img-box">
                   <el-image class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
@@ -87,7 +87,7 @@
                 :current-page="currentPage"
                 :page-size="30"
                 :pager-count="5"
-                :total="data.total"
+                :total="movieList.total"
                 @current-change="handleCurrentChange"
             />
           </div>
@@ -101,7 +101,7 @@
           </h3>
         </div>
         <ul class="col-pd mb-20">
-          <li v-for="(item, index) in weekList">
+          <li v-for="(item, index) in weekList.rows">
             <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
@@ -118,7 +118,7 @@
           </h3>
         </div>
         <ul class="col-pd">
-          <li v-for="(item, index) in monthList">
+          <li v-for="(item, index) in monthList.rows">
             <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
@@ -133,29 +133,27 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { VideoCamera } from '@element-plus/icons-vue'
-import { onMounted } from "../../../.nuxt/imports";
+import dayjs from "dayjs";
+import {IResData, IResPage} from "~/global";
 
 definePageMeta({
   key: route => route.fullPath
 })
 
 const runtimeConfig = useRuntimeConfig()
+const {public: publicConfig} = runtimeConfig
+const {apiBase, globalTitle} = publicConfig
 const route = useRoute()
-const currentPage = ref(+route.query.page || 1)
+const { query } = route
+const currentPage = ref<number>((route.query.page && +route.query.page) || 1)
 const orderBy = ref(route.query.orderBy || 'createTime')
-const yearList = ref([])
+const yearList = ref<number[]>([])
 const y = new Date().getFullYear();
-for (let i = 0 ; i <= 15 ; i++){
+for (let i = 0 ; i <= 15; i++){
   yearList.value.push(y-i)
 }
-const genreList = ref([])
-const countryList = ref([])
-const languageList = ref([])
-const weekList = ref([])
-const monthList = ref([])
-const info = ref({})
 
 const title = computed(() => {
   let html = ''
@@ -170,21 +168,64 @@ const title = computed(() => {
   return html
 })
 
-const { pending, data } = await useAsyncData('data', () => $fetch('/api/show', {
-  query: {
-    ...route.query,
-    columnValue: route.params.column,
-    orderBy: orderBy.value
-  }
-}))
-genreList.value = data.value.genreList
-countryList.value = data.value.countryList
-languageList.value = data.value.languageList
-weekList.value = data.value.weekList
-monthList.value = data.value.monthList
-info.value = data.value.info
+const currTime = dayjs().format('YYYY-MM-DD')
+const weekStartTime = dayjs().subtract(7, 'day').format('YYYY-MM-DD')
+const mouthStartTime = dayjs().subtract(30, 'day').format('YYYY-MM-DD')
 
-async function handleCurrentChange(page) {
+const [
+  { data: genreList },
+  { data: countryList },
+  { data: languageList },
+  { data: weekList },
+  { data: monthList },
+  { data: info },
+  { data: movieList, pending, refresh }
+] = await Promise.all([
+  useFetch<IResData<{name: string; id: number}[]>>(apiBase + '/basic/genre/all', {
+    query: {
+      columnValue: query.columnValue
+    }
+  }),
+  useFetch<IResData<{name: string; id: number}[]>>(apiBase + '/basic/country/all'),
+  useFetch<IResData<{name: string; id: number}[]>>(apiBase + '/basic/language/all'),
+  useFetch<IResPage<any[]>>(apiBase + '/movie/list', {
+    query: {
+      columnValue: query.columnValue,
+      pageNum: query.page || 1,
+      pageSize: 20,
+      orderBy: 'pv',
+      date: [weekStartTime, currTime]
+    }
+  }),
+  useFetch<IResPage<any[]>>(apiBase + '/movie/list', {
+    query: {
+      columnValue: query.columnValue,
+      pageNum: query.page || 1,
+      pageSize: 20,
+      orderBy: 'pv',
+      date: [mouthStartTime, currTime]
+    }
+  }),
+  useFetch<any>(apiBase + `/column`, {
+    query: {
+      value: query.columnValue
+    }
+  }),
+  useAsyncData<IResPage<any[]>>('data', () => $fetch(apiBase + '/movie/list', {
+    query: {
+      columnValue: query.columnValue,
+      genres: query.t,
+      country: query.c,
+      language: query.l,
+      year: query.y,
+      pageNum: query.page || 1,
+      pageSize: 30,
+      orderBy: orderBy.value
+    }
+  })),
+])
+
+async function handleCurrentChange(page: number) {
   await navigateTo({
     path: route.path,
     query: {
@@ -198,7 +239,7 @@ async function handleCurrentChange(page) {
   }
 }
 
-async function handleTabChange(value) {
+async function handleTabChange() {
   refreshNuxtData('data')
 }
 

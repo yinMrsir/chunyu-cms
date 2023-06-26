@@ -1,11 +1,11 @@
 <template>
   <div class="container">
     <Head>
-      <Title>最新{{ info.name }}在线观看 - {{ runtimeConfig.globalTitle }}</Title>
+      <Title>最新{{ info.name }}在线观看 - {{ globalTitle }}</Title>
       <Meta name="description" :content="`最新最全的${info.name}在线观看尽在淳渔影视。`" />
     </Head>
 
-    <el-row :gutter="20" class="mt-20" v-for="categoryItem in list">
+    <el-row :gutter="20" class="mt-20" v-for="categoryItem in res.data">
       <el-col :sm="18">
         <div class="panel_hd between items-center">
           <div class="panel_hd__left">
@@ -68,23 +68,25 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ArrowRight } from '@element-plus/icons-vue'
 import { useFetch } from "nuxt/app";
+import {IResData} from "~/global";
 
 const runtimeConfig = useRuntimeConfig()
+const {public: publicConfig} = runtimeConfig
+const {apiBase, globalTitle} = publicConfig
 const route = useRoute()
-const list = ref([])
-const info = ref({})
 
-const { data } = await useFetch('/api/type', { query: { columnValue: route.params.column } })
-if (!data.value.info) {
+const [{data: res}, { data: info }] = await Promise.all([
+  useFetch<IResData<any[]>>( `${apiBase}/web/type/${route.params.column}`),
+  useFetch<any>(`${apiBase}/column?value=${route.params.column}`)
+])
+if (!info.value) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page Not Found',
     fatal: true
   })
 }
-info.value = data.value.info
-list.value = data.value.list
 </script>

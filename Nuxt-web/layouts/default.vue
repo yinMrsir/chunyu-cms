@@ -8,7 +8,7 @@
           <nav class="hidden-sm-and-down" v-if="route.path.indexOf('/user') === -1">
             <ul>
               <li :class="route.path === '/' ? 'active' : ''"><NuxtLink to="/">首页</NuxtLink></li>
-              <li v-for="item in navigation" :class="route.params.column === item.value ? 'active' : ''">
+              <li v-for="item in navigation.data" :class="route.params.column === item.value ? 'active' : ''">
                 <nuxt-link :to="`/${item.value}`" v-if="+item.type === 1">{{item.name}}</nuxt-link>
                 <nuxt-link :to="item.value" target="_blank" v-if="+item.type === 2">{{item.name}}</nuxt-link>
               </li>
@@ -63,28 +63,35 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ComponentInternalInstance } from 'vue'
 import { Search, UserFilled} from '@element-plus/icons-vue'
 import { useFetch} from "nuxt/app";
 import dayjs from "dayjs";
 
-const { proxy } = getCurrentInstance()
-const userInfo = useCookie('userInfo')
+const runtimeConfig = useRuntimeConfig()
+const {public: publicConfig} = runtimeConfig
+const {apiBase} = publicConfig
+
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const userInfo = useCookie<{token: string} | null>('userInfo')
 const isLogin = useIsLogin()
 const route = useRoute()
 const searchValue = ref('')
 const year = dayjs().format('YYYY')
 
-const { data: navigation } = await useFetch('/api/common/navigation')
+const { data: navigation } = await useFetch(apiBase + '/column/all', {
+  query: { status: 0 }
+})
 function handleSearch() {
   navigateTo('/search?keyword=' + searchValue.value)
 }
 
 function goLogin() {
-  proxy.$refs['loginPopRef'].setVisible(true)
+  proxy?.$refs['loginPopRef']?.setVisible(true)
 }
 
-function handleCommand(command) {
+function handleCommand(command: string) {
   switch (command) {
     case 'logOut':
       logOut()
@@ -103,9 +110,9 @@ function logOut() {
   }
 }
 
-async function handleSuccess(token) {
+async function handleSuccess(token: string) {
   userInfo.value = { token }
-  proxy.$refs['loginPopRef'].setVisible(false)
+  proxy?.$refs['loginPopRef']?.setVisible(false)
   isLogin.value = true
 }
 

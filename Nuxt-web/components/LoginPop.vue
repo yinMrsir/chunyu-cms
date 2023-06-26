@@ -45,6 +45,10 @@ import { ElMessage, FormInstance } from 'element-plus';
 import { UserFilled, Lock } from '@element-plus/icons-vue';
 import {reactive} from "#imports";
 
+const runtimeConfig = useRuntimeConfig()
+const {public: publicConfig} = runtimeConfig
+const {apiBase} = publicConfig
+
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const visible = ref(false)
 const regDialogVisible = ref(false)
@@ -86,7 +90,7 @@ async function login(formEl: FormInstance | undefined) {
   if (!formEl) return
   await formEl.validate(async (valid) => {
     if (valid) {
-      const data = await $fetch<any>('/api/user/login', { method: 'post', body: form })
+      const data = await $fetch<any>(apiBase + '/web/user/login', { method: 'post', body: form })
       if (data.code === 200) {
         ElMessage({
           message: '登录成功',
@@ -106,7 +110,7 @@ async function handleReg(formEl: FormInstance | undefined) {
   if (!formEl) return
   await formEl.validate(async (valid) => {
     if (valid) {
-      const data = await $fetch<any>('/api/user/reg', { method: 'post', body: regForm })
+      const data = await $fetch<any>(apiBase + '/web/user/reg', { method: 'post', body: regForm })
       if (data.code === 200) {
         ElMessage({
           message: '注册成功',
