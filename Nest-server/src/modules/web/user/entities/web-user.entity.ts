@@ -1,15 +1,8 @@
 import { Type } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
-import {
-  Column,
-  Entity,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { IsOptional, IsString, IsEmail } from 'class-validator';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '../../../../common/entities/base.entity';
 import { UserCollect } from '../../user-collect/entities/user-collect.entity';
-import { UserWallet } from '../../user-wallet/entities/user-wallet.entity';
 
 @Entity({ name: 'web_user' })
 export class WebUser extends BaseEntity {
@@ -28,7 +21,7 @@ export class WebUser extends BaseEntity {
     length: 50,
     default: null,
   })
-  @IsString()
+  @IsEmail({}, { message: '邮箱地址不正确' })
   email?: string;
 
   /* 密码 */
@@ -85,7 +78,7 @@ export class WebUser extends BaseEntity {
     comment: '1: 普通用户 2：黄金会员',
     default: 1,
   })
-  @IsString()
+  @IsOptional()
   memberType: number;
 
   @OneToMany(() => UserCollect, (userCollect) => userCollect.userId)

@@ -43,7 +43,7 @@
 import { ComponentInternalInstance } from "@vue/runtime-core";
 import { ElMessage, FormInstance } from 'element-plus';
 import { UserFilled, Lock } from '@element-plus/icons-vue';
-import {reactive} from "#imports";
+import {isArray, reactive} from "#imports";
 
 const runtimeConfig = useRuntimeConfig()
 const {public: publicConfig} = runtimeConfig
@@ -90,15 +90,19 @@ async function login(formEl: FormInstance | undefined) {
   if (!formEl) return
   await formEl.validate(async (valid) => {
     if (valid) {
-      const data = await $fetch<any>(apiBase + '/web/user/login', { method: 'post', body: form })
-      if (data.code === 200) {
-        ElMessage({
-          message: '登录成功',
-          type: 'success',
-        })
-        proxy?.$emit('success', data.token)
-      } else {
-        ElMessage.error(data?.msg)
+      try {
+        const data = await $fetch<any>(apiBase + '/web/user/login', { method: 'post', body: form })
+        if (data.code === 200) {
+          ElMessage({
+            message: '登录成功',
+            type: 'success',
+          })
+          proxy?.$emit('success', data.token)
+        } else {
+          ElMessage.error(data?.msg)
+        }
+      } catch (e: any) {
+        ElMessage.error(isArray(e.data.msg) ? e.data.msg[0] : e.data.msg)
       }
     }
   })
@@ -110,15 +114,19 @@ async function handleReg(formEl: FormInstance | undefined) {
   if (!formEl) return
   await formEl.validate(async (valid) => {
     if (valid) {
-      const data = await $fetch<any>(apiBase + '/web/user/reg', { method: 'post', body: regForm })
-      if (data.code === 200) {
-        ElMessage({
-          message: '注册成功',
-          type: 'success',
-        })
-        regDialogVisible.value = false
-      } else {
-        ElMessage.error(data?.msg)
+      try {
+        const data = await $fetch<any>(apiBase + '/web/user/reg', { method: 'post', body: regForm })
+        if (data.code === 200) {
+          ElMessage({
+            message: '注册成功',
+            type: 'success',
+          })
+          regDialogVisible.value = false
+        } else {
+          ElMessage.error(data?.msg)
+        }
+      } catch (e: any) {
+        ElMessage.error(isArray(e.data.msg) ? e.data.msg[0] : e.data.msg)
       }
     }
   })

@@ -1,3 +1,5 @@
+import {ElMessage} from "element-plus";
+
 export function escapeHtml(str: string) {
   let temp = "";
   if(str.length === 0) return "";
@@ -8,4 +10,8 @@ export function escapeHtml(str: string) {
   temp = temp.replace(/&#39;/g,"\'");
   temp = temp.replace(/&quot;/g,"\"");
   return temp;
+}
+
+export function isArray(str: unknown) {
+  return Object.prototype.toString.call(str) === '[object Array]'
 }
