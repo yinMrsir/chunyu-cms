@@ -13,7 +13,11 @@ export class UserWalletController {
   @Get('findGold')
   @UseGuards(JwtWebAuthGuard)
   async findGold(@User(UserEnum.userId) userId: number) {
-    const data = await this.userWalletService.findGold(userId);
+    let data;
+    data = await this.userWalletService.findGold(userId);
+    if (!data) {
+      data = await this.userWalletService.create(userId);
+    }
     return DataObj.create(data);
   }
 }

@@ -15,6 +15,10 @@ export class UserWalletService {
     private readonly userWalletLogRepository: Repository<UserWalletLog>,
   ) {}
 
+  create(userId: number): Promise<UserWallet> {
+    return this.userWalletRepository.save({ userId, gold: 0 });
+  }
+
   findGold(userId: number): Promise<UserWallet> {
     return this.userWalletRepository.findOneBy({
       userId,
