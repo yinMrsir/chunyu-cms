@@ -19,7 +19,7 @@
             <div class="card-header">
               <div>
                 金币
-                <span>{{ goldData.data.gold }}</span>
+                <span>{{ goldData.data?.gold || 0 }}</span>
               </div>
               <el-button class="button" text size="small">
                 详情
