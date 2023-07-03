@@ -51,8 +51,9 @@ export class ColumnController {
 
   @Public()
   @Get()
-  findOne(@Query() where) {
-    return this.columnService.findOne(where);
+  async findOne(@Query() where) {
+    const data = await this.columnService.findOne(where);
+    return new DataObj(data);
   }
 
   @Put()
