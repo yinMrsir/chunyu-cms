@@ -258,6 +258,22 @@ export class MovieBasic extends BaseEntity {
   summary: string | null;
 
   @Column('int', {
+    name: 'is_pay',
+    comment: '是否付费',
+    default: 0,
+  })
+  @IsNumber()
+  isPay: number;
+
+  @Column('int', {
+    name: 'payment_amount',
+    comment: '支付金币',
+    default: 0,
+  })
+  @IsNumber()
+  paymentAmount: number;
+
+  @Column('int', {
     name: 'rate',
     default: 0,
     comment: '评分',

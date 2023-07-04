@@ -210,6 +210,14 @@
         />
       </el-form-item>
 
+      <el-form-item label="是否付费">
+        <el-switch v-model="movie.isPay" :active-value="1" :inactive-value="0"></el-switch>
+      </el-form-item>
+
+      <el-form-item label="支付金币" v-if="+movie.isPay === 1">
+        <el-input-number v-model="movie.paymentAmount" :min="0"></el-input-number>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="handleSubmit(formRef)">提 交</el-button>
         <el-button @click="proxy.$tab.closeOpenPage({ path: '/movie/movie-list' })">取 消</el-button>
@@ -239,7 +247,9 @@ let movie = ref({
   akas: [],
   tags: [],
   genres: [],
-  versions: []
+  versions: [],
+  isPay: 0,
+  paymentAmount: 0
 })
 const rules = ref({
   title: [{ required: true, message: "请填写片名", trigger: "blur" }],
