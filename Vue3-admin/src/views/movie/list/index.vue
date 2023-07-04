@@ -54,6 +54,12 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="是否付费" prop="isPay">
+        <el-select v-model="queryParams.isPay" placeholder="请选择" clearable>
+          <el-option label="免费" value="0"></el-option>
+          <el-option label="付费" value="1"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="更新日期" prop="date">
         <el-date-picker
             type="daterange"
@@ -112,6 +118,11 @@
       <el-table-column prop="moviePv.pv" label="访问量"></el-table-column>
       <el-table-column prop="userCollectsCount" label="收藏量"></el-table-column>
       <el-table-column prop="address" label="评论数"></el-table-column>
+      <el-table-column prop="isPay" label="是否付费">
+        <template #default="scope">
+          <el-tag :type="scope.row.isPay === 1 ? 'warning' : 'success'">{{ scope.row.isPay === 1 ? '付费' : '免费'}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="movieVideosCount" label="视频数"></el-table-column>
       <el-table-column prop="updateTime" label="更新时间" min-width="170px" >
         <template #default="scope">

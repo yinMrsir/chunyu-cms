@@ -19,7 +19,7 @@
                 <el-row :gutter="20">
                   <el-col :sm="4" :xs="8" v-for="item in movieList">
                     <div class="video-list__block">
-                      <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="img-box">
+                      <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="img-box">
                         <el-image class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
                         <span>{{ +item.rate === 0 ? '暂无评分' : item.rate.toFixed(1) }}</span>
                       </nuxt-link>
@@ -57,7 +57,7 @@
           </div>
           <ul class="col-pd mb-20">
             <li v-for="(item, index) in newList">
-              <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="between">
+              <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
                 <div>
                   <span class="badge">{{ index + 1 }}</span>
                   {{ item.title }}

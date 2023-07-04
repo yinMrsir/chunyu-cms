@@ -9,7 +9,7 @@
             <ul>
               <li :class="route.path === '/' ? 'active' : ''"><NuxtLink to="/">首页</NuxtLink></li>
               <li v-for="item in navigation.data" :class="route.params.column === item.value ? 'active' : ''">
-                <nuxt-link :to="`/${item.value}`" v-if="+item.type === 1">{{item.name}}</nuxt-link>
+                <nuxt-link :to="`/c-${item.value}`" v-if="+item.type === 1">{{item.name}}</nuxt-link>
                 <nuxt-link :to="item.value" target="_blank" v-if="+item.type === 2">{{item.name}}</nuxt-link>
               </li>
             </ul>
@@ -44,7 +44,7 @@
       <div class="mobile-nav hidden-sm-only hidden-sm-and-up" v-if="route.path.indexOf('/user') === -1">
         <ul>
           <li :class="route.params.column === item.value ? 'active' : ''" :key="index" v-for="(item, index) in navigation.data">
-            <nuxt-link :to="`/${item.value}`" v-if="+item.type === 1">{{item.name}}</nuxt-link>
+            <nuxt-link :to="`/c-${item.value}`" v-if="+item.type === 1">{{item.name}}</nuxt-link>
             <nuxt-link :to="item.value" target="_blank" v-if="+item.type === 2">{{item.name}}</nuxt-link>
           </li>
         </ul>

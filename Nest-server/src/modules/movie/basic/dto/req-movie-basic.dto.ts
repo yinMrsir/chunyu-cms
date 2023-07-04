@@ -34,4 +34,7 @@ export class ReqListMovieListDto extends PaginationDto {
 
   @IsOptional()
   date?: string[];
+
+  @IsOptional()
+  isPay?: number;
 }

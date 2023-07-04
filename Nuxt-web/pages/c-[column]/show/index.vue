@@ -40,7 +40,7 @@
               <li :class="route.query.y === '' || route.query.y === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, y: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="(item, index) in yearList" :class="route.query.y === item ? 'active' : ''">
+              <li v-for="(item, index) in yearList" :class="+route.query.y === item ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, y: item } }">{{ item }}</nuxt-link>
               </li>
             </ul>
@@ -62,10 +62,10 @@
           <el-tab-pane label="按评分" name="rate" :disabled="pending"></el-tab-pane>
         </el-tabs>
         <div class="video-list" v-loading="pending">
-          <el-row :gutter="20">
+          <el-row :gutter="20" v-if="movieList.total !== 0">
             <el-col :sm="4" :xs="8" v-for="item in movieList.rows">
               <div class="video-list__block">
-                <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="img-box">
+                <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="img-box">
                   <el-image class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
                   <span>{{ +item.rate === 0 ? '暂无评分' : item.rate.toFixed(1) }}</span>
                 </nuxt-link>
@@ -80,7 +80,7 @@
               </div>
             </el-col>
           </el-row>
-          <div class="pagination">
+          <div class="pagination" v-if="movieList.total !== 0">
             <el-pagination
                 background
                 layout="prev, pager, next"
@@ -91,6 +91,7 @@
                 @current-change="handleCurrentChange"
             />
           </div>
+          <el-empty description="未找到相关数据" v-if="movieList.total === 0"></el-empty>
         </div>
       </el-col>
       <el-col :span="6" class="hidden-sm-and-down">
@@ -102,7 +103,7 @@
         </div>
         <ul class="col-pd mb-20">
           <li v-for="(item, index) in weekList.rows">
-            <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="between">
+            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
@@ -119,7 +120,7 @@
         </div>
         <ul class="col-pd">
           <li v-for="(item, index) in monthList.rows">
-            <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="between">
+            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}

@@ -4,7 +4,7 @@ import { join } from 'path';
 import * as bodyParser from 'body-parser';
 import { AppModule } from './app.module';
 import { setupSwagger } from './setup-swagger';
-import * as history from 'connect-history-api-fallback';
+// import * as history from 'connect-history-api-fallback';
 import helmet from 'helmet';
 
 async function bootstrap() {

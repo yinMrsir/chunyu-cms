@@ -10,7 +10,7 @@
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item
-            :to="{ path: `/${detailRes.data.columnValue}/show`, query: { t: detailRes.data.genres?.split(',')[0] } }">
+            :to="{ path: `/c-${detailRes.data.columnValue}/show`, query: { t: detailRes.data.genres?.split(',')[0] } }">
           {{ detailRes.data.genres?.split(',')[0] }}
         </el-breadcrumb-item>
         <el-breadcrumb-item>
@@ -50,7 +50,7 @@
                 <div class="text-overflow">{{ detailRes.data.tags.split(',').join('/') }}</div>
               </el-form-item>
               <div>
-                <nuxt-link :to="`/${detailRes.data.columnValue}/video/${detailRes.data.movieVideos[0].id}`"
+                <nuxt-link :to="`/c-${detailRes.data.columnValue}/video/${detailRes.data.movieVideos[0].id}`"
                            v-if="detailRes.data.movieVideos[0]">
                   <el-button :icon="VideoPlay" type="primary" class="mr-10">播放</el-button>
                 </nuxt-link>
@@ -81,7 +81,7 @@
           <div class="related_video">
             <ul class="clearfix">
               <li v-for="item in detailRes.data.movieVideos">
-                <nuxt-link :to="`/${detailRes.data.columnValue}/video/${item.id}`">
+                <nuxt-link :to="`/c-${detailRes.data.columnValue}/video/${item.id}`">
                   <el-image class="img" :src="item.cover || item.video?.poster"></el-image>
                   <p :title="item.title">{{ item.title }}</p>
                 </nuxt-link>
@@ -151,7 +151,7 @@
         </div>
         <ul class="col-pd mb-20">
           <li v-for="(item, index) in weekListRes.rows">
-            <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="between">
+            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
@@ -168,7 +168,7 @@
         </div>
         <ul class="col-pd">
           <li v-for="(item, index) in monthListRes.rows">
-            <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="between">
+            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}

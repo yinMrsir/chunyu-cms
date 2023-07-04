@@ -93,6 +93,9 @@ export class MovieBasicService {
     if (reqListMovieListDto.year) {
       queryBuilder.andWhere({ year: reqListMovieListDto.year });
     }
+    if (reqListMovieListDto.isPay) {
+      queryBuilder.andWhere({ isPay: +reqListMovieListDto.isPay });
+    }
     if (reqListMovieListDto.language) {
       queryBuilder.andWhere('FIND_IN_SET(:language, movieBasic.languages)', {
         language: reqListMovieListDto.language,

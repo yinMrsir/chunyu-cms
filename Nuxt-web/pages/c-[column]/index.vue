@@ -17,7 +17,7 @@
           <div class="panel_hd__right items-center">
             <ul class="items-center">
               <li>
-                <nuxt-link :to="`/${route.params.column}/show?t=${categoryItem.name}`" class="items-center">
+                <nuxt-link :to="`/c-${route.params.column}/show?t=${categoryItem.name}`" class="items-center">
                   更多 <el-icon><ArrowRight /></el-icon>
                 </nuxt-link>
               </li>
@@ -28,7 +28,7 @@
           <el-row :gutter="20">
             <el-col :sm="4" :xs="8" v-for="item in categoryItem.rows">
               <div class="video-list__block">
-                <nuxt-link :to="`/${item.columnValue}/movie/${item.id}`" class="img-box">
+                <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="img-box">
                   <el-image lazy class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
                   <span>{{ +item.rate === 0 ? '暂无评分' : item.rate.toFixed(1) }}</span>
                 </nuxt-link>
@@ -54,7 +54,7 @@
         </div>
         <ul class="col-pd">
           <li v-for="(item, index) in categoryItem.ranks">
-            <nuxt-link to="/" class="between">
+            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
@@ -82,10 +82,11 @@ const [{data: res}, { data: info }] = await Promise.all([
   useFetch<IResData<any[]>>( `${apiBase}/web/type/${route.params.column}`),
   useFetch<any>(`${apiBase}/column?value=${route.params.column}`)
 ])
+
 if (!info.value.data) {
   throw createError({
     statusCode: 404,
-    statusMessage: 'Page Not Found',
+    statusMessage: 'Page Not Found+99',
     fatal: true
   })
 }

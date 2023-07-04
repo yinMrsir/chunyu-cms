@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :sm="4" :xs="8" v-for="item in movieList">
             <div class="video-list__block">
-              <nuxt-link :to="`/${item.movie.columnValue}/movie/${item.movie.id}`">
+              <nuxt-link :to="`/c-${item.movie.columnValue}/movie/${item.movie.id}`">
                 <el-image class="video-list__block__img" :src="item.movie.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
               </nuxt-link>
               <div class="video-list__detail">
