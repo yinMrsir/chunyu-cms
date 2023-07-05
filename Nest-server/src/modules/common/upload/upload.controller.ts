@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Query,
+  Req,
   Res,
   UploadedFile,
   UploadedFiles,
@@ -18,7 +19,7 @@ import { ApiTags } from '@nestjs/swagger';
 import sizeOf from 'image-size';
 import configuration from 'src/config/configuration';
 import { join } from 'path';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { Public } from '../../../common/decorators/public.decorator';
@@ -74,11 +75,15 @@ export class UploadController {
   @Keep()
   @Get('stream/:fileName')
   async streamFile(@Param('fileName') fileName: string, @Res() res: Response) {
+    if (!res.req.headers.referer) {
+      res.json({ message: '不合法', code: 201 });
+      return;
+    }
     const videoPath =
       path.join(__dirname, '../../../../public/upload/videos/') + fileName;
     const videoSize = fs.statSync(videoPath).size;
     const range = res.req.headers.range;
-    console.log(range);
+    console.log(res.req.headers.range);
     if (range) {
       const CHUNK_SIZE = 10 ** 6; // 1MB
       const start = Number(range.replace(/\D/g, ''));

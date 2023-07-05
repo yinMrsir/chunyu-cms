@@ -15,7 +15,7 @@
     </div>
     <el-row :gutter="40" class="mt-20">
       <el-col :span="18" :xs="24">
-        <video style="width: 100%" :src="`/server/common/stream/${detail.videoInfo?.name}`" controls></video>
+        <div id="mse"></div>
         <div>
           <h1 class="mb-10 mt-10 video-detail__title">
             {{ detail.title }}
@@ -126,19 +126,17 @@ import { VideoCamera } from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
 import {useFetch} from "nuxt/app";
 import dayjs from "dayjs";
-import {useGet} from "~/composables/useHttp";
 import {IResData, IResPage} from "~/global";
+import 'xgplayer/dist/index.min.css'
+import 'xgplayer/es/plugins/danmu/index.css'
 
+const userInfo = useCookie<{ token: string }>('userInfo')
 const runtimeConfig = useRuntimeConfig()
 const {public: publicConfig} = runtimeConfig
 const {apiBase, globalTitle} = publicConfig
 const route = useRoute()
 const id = route.params.id
 const qrcodeUrl = ref('')
-
-onMounted(() => {
-  qrcodeUrl.value = window.location.href
-})
 
 const currTime = dayjs().format('YYYY-MM-DD')
 const weekStartTime = dayjs().subtract(7, 'day').format('YYYY-MM-DD')
@@ -153,6 +151,62 @@ if (!detailRes.value) {
   })
 }
 const detail = detailRes.value.data
+
+onMounted(async () => {
+  qrcodeUrl.value = window.location.href
+
+  const [Player, Mp4Plugin, Danmu] = await Promise.all([
+    import('xgplayer'),
+    import("xgplayer-mp4"),
+    import('xgplayer/es/plugins/danmu')
+  ])
+  new Player.default({
+      id: 'mse',
+      autoplay: true,
+      volume: 0.3,
+      url: `/server/common/stream/${detail.videoInfo?.name}`,
+      playsinline: true,
+      danmu: {
+        comments: [
+          {
+            duration: 15000,
+            id: '1',
+            start: 3000,
+            txt: '好看，精彩！！！',
+            //弹幕自定义样式
+            style: {
+              color: '#ff9500',
+              fontSize: '20px',
+              border: 'solid 1px #ff9500',
+              borderRadius: '50px',
+              padding: '5px 11px',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)'
+            }
+          }
+        ],
+        area: {
+          start: 0,
+          end: 1
+        }
+      },
+      height: '100%',
+      width: '100%',
+      plugins: [Mp4Plugin.default, Danmu.default],
+      mp4plugin: {
+        maxBufferLength: 30,
+        minBufferLength: 5,
+        chunkSize: 5000,
+        reqOptions:{
+          mode: 'cors',
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + userInfo.value?.token
+          },
+        }
+      }
+    })
+})
+
 const [
   { data: likeRows },
   { data: weekList },
@@ -187,6 +241,16 @@ const [
 </script>
 
 <style lang="scss" scoped>
+#mse {
+  width: 100%;
+  height: 500px !important;
+  background: #000;
+}
+@media (max-width: 768px) {
+  #mse {
+    height: 300px !important;
+  }
+}
 .title {
   .el-icon {
     margin-right: 15px;
