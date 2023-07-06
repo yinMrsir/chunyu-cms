@@ -20,13 +20,13 @@
         <videos v-if="+currTab === 5" />
       </el-tab-pane>
       <el-tab-pane label="影片相册" v-if="id">
-        <photos ref="photos" v-if="+currTab === 6" />
+        <photos v-if="+currTab === 6" />
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
-<script setup name="MovieAdd">
+<script setup name="Movie-add">
 import Basic from './components/Basic'
 import PubDate from './components/PubDate'
 import Level from './components/Level'
@@ -38,19 +38,18 @@ import Role from './components/Role'
 const { proxy } = getCurrentInstance()
 const id = ref(null)
 const currTab = ref(null)
+const basicRef = ref(null)
+const isMounted = ref(false)
 
 onMounted(() => {
+  isMounted.value = true
   setTitle(proxy.$route.query.id)
+  isMounted.value = false
 })
 
-watch(() => proxy.$route.query, () => {
-  if (proxy.$route.path === '/movie/add') {
-    if (proxy.$route.query.id) {
-      currTab.value = '0'
-    } else {
-      id.value = null
-      setTitle(null)
-    }
+onActivated(() => {
+  if (!isMounted.value) {
+    setTitle(proxy.$route.query.id)
   }
 })
 

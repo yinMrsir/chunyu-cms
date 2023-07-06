@@ -83,19 +83,6 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
-  },
-  {
-    path: '/movie',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'add',
-        component: () => import('@/views/movie/list/add'),
-        name: 'MovieAdd',
-        meta: { title: ' '}
-      }
-    ]
   }
 ]
 
@@ -168,6 +155,20 @@ export const dynamicRoutes = [
         component: () => import('@/views/tool/gen/editTable'),
         name: 'GenEdit',
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
+      }
+    ]
+  },
+  {
+    path: '/movie',
+    component: Layout,
+    hidden: true,
+    permissions: ['movie:add'],
+    children: [
+      {
+        path: 'add',
+        component: () => import('@/views/movie/list/add'),
+        name: 'Movie-add',
+        meta: { title: '新增影视', noCache: false, activeMenu: '/movie/movie-list' }
       }
     ]
   }

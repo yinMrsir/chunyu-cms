@@ -58,7 +58,7 @@
     <footer>
       Copyright {{ year }} 淳渔影视网 Inc. All Rights Reserved.
     </footer>
-    <LoginPop  ref="loginPopRef" @success="handleSuccess"/>
+    <LoginPop ref="loginPopRef" @success="handleSuccess"/>
     <el-backtop :right="100" :bottom="100" />
   </div>
 </template>
@@ -77,6 +77,7 @@ const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const userInfo = useCookie<{token: string} | null>('userInfo')
 const isLogin = useIsLogin()
 const route = useRoute()
+
 const searchValue = ref('')
 const year = dayjs().format('YYYY')
 

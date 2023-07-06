@@ -122,6 +122,7 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { VideoCamera } from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
 import {useFetch} from "nuxt/app";
@@ -129,11 +130,15 @@ import dayjs from "dayjs";
 import {IResData, IResPage} from "~/global";
 import 'xgplayer/dist/index.min.css'
 import 'xgplayer/es/plugins/danmu/index.css'
+import '../../../plugins/xgplayerPlugins/payTipPlugin.css'
 
 const userInfo = useCookie<{ token: string }>('userInfo')
+const loginDialogVisible = useLoginDialogVisible()
+
 const runtimeConfig = useRuntimeConfig()
 const {public: publicConfig} = runtimeConfig
 const {apiBase, globalTitle} = publicConfig
+
 const route = useRoute()
 const id = route.params.id
 const qrcodeUrl = ref('')
@@ -155,17 +160,34 @@ const detail = detailRes.value.data
 onMounted(async () => {
   qrcodeUrl.value = window.location.href
 
-  const [Player, Mp4Plugin, Danmu] = await Promise.all([
+  const [Player, Mp4Plugin, Danmu, PayTip] = await Promise.all([
     import('xgplayer'),
     import("xgplayer-mp4"),
-    import('xgplayer/es/plugins/danmu')
+    import('xgplayer/es/plugins/danmu'),
+    import('~/plugins/xgplayerPlugins/payTipPlugin')
   ])
-  new Player.default({
+  console.log(detail.movie.freeDuration)
+  const player = new Player.default({
       id: 'mse',
       autoplay: true,
       volume: 0.3,
       url: `/server/common/stream/${detail.videoInfo?.name}`,
       playsinline: true,
+      height: '100%',
+      width: '100%',
+      plugins: [Mp4Plugin.default, Danmu.default, PayTip.default],
+      mp4plugin: {
+        maxBufferLength: 30,
+        minBufferLength: 5,
+        chunkSize: 5000,
+        reqOptions:{
+          mode: 'cors',
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + userInfo.value?.token
+          },
+        }
+      },
       danmu: {
         comments: [
           {
@@ -189,24 +211,50 @@ onMounted(async () => {
           end: 1
         }
       },
-      height: '100%',
-      width: '100%',
-      plugins: [Mp4Plugin.default, Danmu.default],
-      mp4plugin: {
-        maxBufferLength: 30,
-        minBufferLength: 5,
-        chunkSize: 5000,
-        reqOptions:{
-          mode: 'cors',
-          method: 'GET',
-          headers: {
-            'Authorization': 'Bearer ' + userInfo.value?.token
-          },
+      payTipPlugin: {
+        lookTime: detail.movie.freeDuration * 60,
+        arriveTime (callback: () => void) {
+          if (+detail.movie.isPay === 1) {
+            player.pause()
+            callback()
+          }
+        },
+        clickButton (callback: () => void) {
+          const userInfo = useCookie<{ token: string }>('userInfo')
+          if (!userInfo.value?.token) {
+            loginDialogVisible.value = true
+          } else {
+            buyMovie(player, () => {
+              callback()
+            })
+          }
         }
       }
     })
 })
 
+/** 购买影视 */
+function buyMovie(player: any, callback: { (): void; (): void; }) {
+  ElMessageBox.confirm(
+    `确定要支付${detail.movie.paymentAmount}金币购买此影片吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(() => {
+    detail.movie.isPay = 0
+    player.play()
+    callback()
+    ElMessage({
+      type: 'success',
+      message: '购买成功',
+    })
+  })
+}
+
+/** 获取猜你喜欢、周榜单、月榜单数据 */
 const [
   { data: likeRows },
   { data: weekList },

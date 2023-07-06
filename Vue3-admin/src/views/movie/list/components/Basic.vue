@@ -218,6 +218,12 @@
         <el-input-number v-model="movie.paymentAmount" :min="0"></el-input-number>
       </el-form-item>
 
+      <el-form-item label="免费时长" v-if="+movie.isPay === 1">
+        <el-input v-model="movie.freeDuration" placeholder="请输入" oninput="value=value.replace(/^\.+|[^\d.]/g,'')">
+          <template #append>分钟</template>
+        </el-input>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="handleSubmit(formRef)">提 交</el-button>
         <el-button @click="proxy.$tab.closeOpenPage({ path: '/movie/movie-list' })">取 消</el-button>
@@ -289,31 +295,29 @@ const statusList = ref([
 const versions = ref(["2D", "3D", "iMax", "iMax3D"])
 const formRef = ref()
 const allColumn = ref([])
+const isMounted = ref(false)
 
 onMounted(async () => {
+  isMounted.value = true
   id.value = proxy.$route.query.id
   if (id.value) {
     await getMovieData()
+  } else {
+    clearMovieData()
   }
-  await getGenresSimple()
+  await getGenresSimple
+  isMounted.value = false
 })
 
-watch(() => proxy.$route.query, (newValue, oldValue) => {
-  if(proxy.$route.query.id && newValue !== oldValue) {
+onActivated(async () => {
+  if (!isMounted.value) {
     id.value = proxy.$route.query.id
-    getMovieData()
-  } else {
-    movie.value = {
-      columnValue: 'movie',
-      summary: undefined,
-      countryList: [],
-      countryIds: [],
-      languages: [],
-      akas: [],
-      tags: [],
-      genres: [],
-      versions: []
+    if (id.value) {
+      await getMovieData()
+    } else {
+      clearMovieData()
     }
+    await getGenresSimple()
   }
 })
 
@@ -329,6 +333,20 @@ async function getMovieData() {
     countryList: data.country,
     akas: data.akas?.split(',') || [],
     tags: data.tags?.split(',') || []
+  }
+}
+
+function clearMovieData() {
+  movie.value = {
+    columnValue: 'movie',
+    summary: undefined,
+    countryList: [],
+    countryIds: [],
+    languages: [],
+    akas: [],
+    tags: [],
+    genres: [],
+    versions: []
   }
 }
 

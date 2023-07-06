@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <el-dialog title="登录" width="360" v-model="visible">
+    <el-dialog title="登录" width="360" v-model="loginDialogVisible">
       <el-form ref="formRef" :model="form" :rules="rules">
         <el-form-item prop="email">
           <el-input v-model="form.email" placeholder="请输入邮箱" :prefix-icon="UserFilled"></el-input>
@@ -44,14 +44,16 @@ import { ComponentInternalInstance } from "@vue/runtime-core";
 import { ElMessage, FormInstance } from 'element-plus';
 import { UserFilled, Lock } from '@element-plus/icons-vue';
 import {isArray, reactive} from "#imports";
+import {useLoginDialogVisible, useRegDialogVisible} from "~/composables/states";
 
 const runtimeConfig = useRuntimeConfig()
 const {public: publicConfig} = runtimeConfig
 const {apiBase} = publicConfig
 
+const regDialogVisible = useRegDialogVisible()
+const loginDialogVisible = useLoginDialogVisible()
+
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
-const visible = ref(false)
-const regDialogVisible = ref(false)
 const formRef = ref<FormInstance>()
 const formRegRef = ref<FormInstance>()
 const form = reactive({
@@ -134,19 +136,19 @@ async function handleReg(formEl: FormInstance | undefined) {
 
 // 隐藏登录弹层，显示注册弹层
 function handleShowRegDialog() {
-  visible.value = false
+  loginDialogVisible.value = false
   regDialogVisible.value = true
 }
 
 // 隐藏注册弹层，显示登录弹层
 function handleShowLoginDialog() {
-  visible.value = true
+  loginDialogVisible.value = true
   regDialogVisible.value = false
 }
 
 defineExpose({
   setVisible(value: boolean) {
-    visible.value = value
+    loginDialogVisible.value = value
   }
 })
 

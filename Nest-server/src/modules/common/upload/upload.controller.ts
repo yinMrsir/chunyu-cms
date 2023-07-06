@@ -83,7 +83,6 @@ export class UploadController {
       path.join(__dirname, '../../../../public/upload/videos/') + fileName;
     const videoSize = fs.statSync(videoPath).size;
     const range = res.req.headers.range;
-    console.log(res.req.headers.range);
     if (range) {
       const CHUNK_SIZE = 10 ** 6; // 1MB
       const start = Number(range.replace(/\D/g, ''));

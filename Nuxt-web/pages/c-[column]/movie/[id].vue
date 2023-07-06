@@ -187,7 +187,7 @@ import {Star, StarFilled, VideoPlay, Edit} from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
 import {useFetch} from "nuxt/app";
 import {ElMessage} from "element-plus";
-import {useIsLogin} from "~/composables/states";
+import {useIsLogin, useLoginDialogVisible} from "~/composables/states";
 import dayjs from "dayjs";
 import {IResData, IResPage} from "~/global";
 import {escapeHtml} from '~/utils/tool'
@@ -195,8 +195,11 @@ import {escapeHtml} from '~/utils/tool'
 const runtimeConfig = useRuntimeConfig()
 const {public: publicConfig} = runtimeConfig
 const {apiBase} = publicConfig
+
 const route = useRoute()
 const isLogin = useIsLogin()
+const loginDialogVisible = useLoginDialogVisible()
+
 const id = route.params.id
 const qrcodeUrl = ref<string>('')
 const isCollect = ref<boolean>(false)
@@ -253,17 +256,16 @@ if (!detailRes.value) {
 /** 更新访问量 */
 useFetch(`${apiBase}/movie/updatePv/${id}`)
 
-watch(isLogin, (value) => {
-  if (value) {
-    getUserCollect()
-    getUserRate()
-  }
+/** 登录状态发生改变 重新获取收藏和评分状态 */
+watch(isLogin, () => {
+  getUserCollect()
+  getUserRate()
 })
 
 /** 获取用户收藏状态 */
+getUserCollect()
 async function getUserCollect() {
   const userInfo = useCookie<{ token: string }>('userInfo')
-  if (!userInfo.value) return
   const {data: userCollect} = await useFetch<{ data: any }>(apiBase + '/user-collect/find', {
     query: {movieId: id},
     headers: {
@@ -273,16 +275,11 @@ async function getUserCollect() {
   isCollect.value = !!userCollect.value?.data
 }
 
-getUserCollect()
-
 /** 收藏 */
 async function handleCollect() {
   const userInfo = useCookie<{ token: string }>('userInfo')
   if (!userInfo.value) {
-    ElMessage({
-      message: '请先登录',
-      type: 'warning'
-    })
+    loginDialogVisible.value = true
   } else {
     let code: number
     let msg = ''
@@ -318,9 +315,9 @@ async function handleCollect() {
 }
 
 /** 获取用户评分状态 */
+getUserRate()
 async function getUserRate() {
   const userInfo = useCookie<{ token: string }>('userInfo')
-  if (!userInfo.value) return
   const {data: userRate} = await useFetch<{ data: any }>(apiBase + '/user-rate', {
     query: {movieId: id},
     headers: {
@@ -330,17 +327,12 @@ async function getUserRate() {
   userRateData.value = !!userRate.value?.data
 }
 
-getUserRate()
-
 /** 设置评分 */
 async function onRatechange(value: string) {
   if (!value) return
   const userInfo = useCookie<{ token: string }>('userInfo')
   if (!userInfo.value) {
-    ElMessage({
-      message: '请先登录',
-      type: 'warning'
-    })
+    loginDialogVisible.value = true
     rate.value = 0
   } else {
     const {code, msg} = await $fetch<{ code: number; msg: string }>(apiBase + '/user-rate', {

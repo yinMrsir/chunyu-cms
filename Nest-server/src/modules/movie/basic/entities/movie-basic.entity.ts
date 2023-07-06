@@ -274,6 +274,14 @@ export class MovieBasic extends BaseEntity {
   paymentAmount: number;
 
   @Column('int', {
+    name: 'free_duration',
+    comment: '免费时长(分钟)',
+    default: 1,
+  })
+  @IsOptional()
+  freeDuration: number;
+
+  @Column('int', {
     name: 'rate',
     default: 0,
     comment: '评分',

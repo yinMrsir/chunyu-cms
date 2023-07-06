@@ -1,0 +1,18 @@
+.pay-tip-plugin {
+    background: rgba(0,0,0,0.8);
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 99;
+    display: none;
+    color: #FFFFFF;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+.pay-tip-plugin .el-button {
+    margin-top: 20px;
+    font-size: 14px;
+    padding: 15px 20px;
+}

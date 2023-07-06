@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="Actor-list">
 import { createActor, getActorList, updateActor, deleteActor } from './services'
 const { proxy } = getCurrentInstance()
 const { sex_type } = proxy.useDict('sex_type')
