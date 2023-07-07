@@ -6,14 +6,7 @@
     </Head>
     <el-row :gutter="30" class="mt-20">
       <el-col :md="6" :xs="24">
-        <div class="bg-fff user-index__head flex">
-          <img src="../../assets/images/toux.png" alt="">
-          <div>
-            {{ userData.data?.email }}
-            <p class="grey">ID: {{ userData.data?.userId }}</p>
-            <a class="lv lv1"></a>
-          </div>
-        </div>
+        <UserInfoData />
         <el-card class="integral">
           <template #header>
             <div class="card-header">
@@ -21,7 +14,7 @@
                 金币
                 <span>{{ goldData.data?.gold || 0 }}</span>
               </div>
-              <el-button class="button" text size="small">
+              <el-button class="button" text size="small" @click="handleGoWalletLog">
                 详情
                 <el-icon><ArrowRight /></el-icon>
               </el-button>
@@ -43,9 +36,10 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessage } from "element-plus"
 import { ArrowRight } from '@element-plus/icons-vue'
 import CollectData from '@/components/user/CollectData.vue'
-import { ElMessage } from "element-plus"
+import UserInfoData from "~/components/user/UserInfoData.vue";
 
 definePageMeta({
   middleware: ["auth"]
@@ -58,12 +52,9 @@ const headers = {
 }
 
 const [
-  { data: userData },
   { data: signData, refresh },
   { data: goldData, refresh: refreshGold }
 ] = await Promise.all([
-  // 获取用户信息
-  useFetch<{ data: { email: string; userId: number } }>(runtimeConfig.public.apiBase + '/web/user/info', { headers }),
   // 获取用户是否签到
   useFetch<{ data: null | number }>(runtimeConfig.public.apiBase + '/user-sign/getSign', { headers }),
   // 获取用户金币数量
@@ -90,50 +81,14 @@ function handleBuy() {
     type: 'info'
   })
 }
+
+function handleGoWalletLog() {
+  navigateTo({ path: '/user/wallet-log' })
+}
 </script>
 
 <style lang="scss" scoped>
 .user-index {
-  .over-avatar {
-    width: 160px;
-    height: 160px;
-    background: $drak-blue;
-    border-radius: 50%;
-    color: #FFFFFF;
-    text-align: center;
-    line-height: 160px;
-    font-size: 60px;
-    margin: 0 auto;
-  }
-  &__personal-name {
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 0;
-  }
-  &__head {
-    padding: 20px;
-    > img {
-      width: 80px;
-      margin-right: 20px;
-    }
-    .lv {
-      background: url('../../assets/images/jlt.png') no-repeat 0 0;
-      display: inline-block;
-      width: 42px;
-      height: 22px;
-      vertical-align: middle;
-      margin-top: 15px;
-      &.lv1 {
-        background-position: 0 -373px;
-      }
-    }
-  }
-  .el-card.is-always-shadow {
-    box-shadow: none;
-    border-radius: 0;
-    border: 0;
-  }
   .integral {
     margin: 10px 0;
     .card-header {
@@ -150,13 +105,10 @@ function handleBuy() {
 }
 @media (max-width: 768px){
   .user-index {
-    margin-top: -60px;
-    &__head {
-      margin: 0 -15px;
-    }
     .integral {
       margin: 10px -15px;
     }
   }
 }
 </style>
+

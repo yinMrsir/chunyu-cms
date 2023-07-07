@@ -9,6 +9,8 @@ export default class payTipPlugin extends Plugin {
   private arriveTime: ((e: any) => void) | undefined;
   private clickButton: ((e: any) => void) | undefined;
   private lookTime: number;
+  private tip: string;
+  
 
   static get pluginName() {
     return 'payTipPlugin'
@@ -23,6 +25,7 @@ export default class payTipPlugin extends Plugin {
     this.lookTime = args?.config.lookTime
     this.arriveTime = args?.config.arriveTime
     this.clickButton = args?.config.clickButton
+    this.tip = args?.config.tip
   }
 
   beforePlayerInit () {
@@ -53,7 +56,8 @@ export default class payTipPlugin extends Plugin {
           })
         }
       }
-    })
+    });
+    (this.find('.tip-text') as HTMLSpanElement).innerHTML = this.tip
   }
 
   destroy () {
@@ -63,6 +67,6 @@ export default class payTipPlugin extends Plugin {
   }
 
   render () {
-    return `<div id="pay-tip-plugin" class="pay-tip-plugin">此为付费视频，支付10金币继续观看？<button type="button" class="el-button el-button--primary el-button--small">支 付</button></div>`
+    return `<div id="pay-tip-plugin" class="pay-tip-plugin"><span class="tip-text"></span><button type="button" class="el-button el-button--primary el-button--small">支 付</button></div>`
   }
 }

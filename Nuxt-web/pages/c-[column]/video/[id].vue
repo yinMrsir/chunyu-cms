@@ -142,6 +142,8 @@ const {apiBase, globalTitle} = publicConfig
 const route = useRoute()
 const id = route.params.id
 const qrcodeUrl = ref('')
+// 是否购买了影片
+const isUserBuy = ref(false)
 
 const currTime = dayjs().format('YYYY-MM-DD')
 const weekStartTime = dayjs().subtract(7, 'day').format('YYYY-MM-DD')
@@ -157,6 +159,17 @@ if (!detailRes.value) {
 }
 const detail = detailRes.value.data
 
+/** 查询用户是否购买影片 */
+if (userInfo.value) {
+  const { data: userBuy } = await useFetch<IResData<any>>(apiBase + `/user-movie`, {
+    query: { movieId: detail.movieId },
+    headers: {
+      Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+    },
+  })
+  isUserBuy.value = !!userBuy.value?.data
+}
+
 onMounted(async () => {
   qrcodeUrl.value = window.location.href
 
@@ -166,7 +179,6 @@ onMounted(async () => {
     import('xgplayer/es/plugins/danmu'),
     import('~/plugins/xgplayerPlugins/payTipPlugin')
   ])
-  console.log(detail.movie.freeDuration)
   const player = new Player.default({
       id: 'mse',
       autoplay: true,
@@ -212,15 +224,16 @@ onMounted(async () => {
         }
       },
       payTipPlugin: {
+        tip: `此为付费视频，支付${detail.movie.paymentAmount}金币继续观看？`,
         lookTime: detail.movie.freeDuration * 60,
         arriveTime (callback: () => void) {
+          if (isUserBuy.value) return
           if (+detail.movie.isPay === 1) {
             player.pause()
             callback()
           }
         },
         clickButton (callback: () => void) {
-          const userInfo = useCookie<{ token: string }>('userInfo')
           if (!userInfo.value?.token) {
             loginDialogVisible.value = true
           } else {
@@ -243,14 +256,28 @@ function buyMovie(player: any, callback: { (): void; (): void; }) {
       cancelButtonText: '取消',
       type: 'warning',
     }
-  ).then(() => {
-    detail.movie.isPay = 0
-    player.play()
-    callback()
-    ElMessage({
-      type: 'success',
-      message: '购买成功',
+  ).then(async () => {
+    const { code, msg } = await $fetch<IResData<any>>(apiBase + `/user-movie`, {
+      method: 'post',
+      body: { movieId: detail.movieId },
+      headers: {
+        Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+      },
     })
+    if (code === 200) {
+      isUserBuy.value = true
+      player.play()
+      callback()
+      ElMessage({
+        type: 'success',
+        message: '购买成功',
+      })
+    } else {
+      ElMessage({
+        type: 'error',
+        message: msg,
+      })
+    }
   })
 }
 
