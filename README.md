@@ -83,9 +83,18 @@ yarn build:prod
 ```
 
 ### 更新
+### 2023-5
 - [x] [友情链接支持后台配置](https://www.douyin.com/user/MS4wLjABAAAAUKMCVZGbQl7etrdd36GBIG6OGxClOwoHci_-PIlxNvE?modal_id=7225255650392132903)
 - [x] 用户影视评分
 
+### 2023-7-7
+- [x] 用户签到
+- [x] 用户签到获得金币
+- [x] 视频支持支付金币观看
+
+#### 待完成
+- [ ] 用户购买金币
+- [ ] 视频发送弹幕
 
 ### 相关链接
 
