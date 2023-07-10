@@ -1,5 +1,6 @@
 <template>
   <table-pro
+    ref="table"
     dialog-title="家长引导"
     :columns="columns"
     :tableParams="formParams"
@@ -7,6 +8,7 @@
     :create-fn="createFn"
     :update-fn="updateFn"
     :delete-fn="deleteMovieLevel"
+    :is-auto-fetch="false"
   />
 </template>
 
@@ -73,5 +75,24 @@ function updateFn(params) {
     levelId: +params.level[params.level.length - 1]
   })
 }
+
+const isMounted = ref(false)
+
+onMounted(async () => {
+  isMounted.value = true
+  await proxy.$refs.table.getList()
+  isMounted.value = false
+})
+
+onActivated(() => {
+  if (isMounted.value) {
+    return
+  }
+  if (proxy.$route.query.id) {
+    proxy.$nextTick(() => {
+      proxy.$refs.table.getList({ movieId: proxy.$route.query.id })
+    })
+  }
+})
 
 </script>

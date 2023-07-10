@@ -288,6 +288,10 @@ const props = defineProps({
   isShowButtonList: {
     type: Boolean,
     default: true
+  },
+  isAutoFetch: {
+    type: Boolean,
+    default: true
   }
 })
 const list = ref([])
@@ -334,14 +338,18 @@ const formOptions = computed(() => {
   return props.columns.filter(value => value.add)
 })
 
-getList()
+if (props.isAutoFetch) {
+  getList()
+}
+
 /** 获取表格数据 */
-async function getList() {
+async function getList(params = {}) {
   loading.value = true
   try {
     const data = await props.tableRequestFn({
       ...queryParams.value,
-      ...props.tableParams
+      ...props.tableParams,
+      ...params
     })
     list.value = data.rows
     total.value = data.total
@@ -439,6 +447,11 @@ function resetQuery() {
   proxy.resetForm("queryRef");
   handleQuery();
 }
+
+defineExpose({
+  getList
+})
+
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,6 @@
 <template>
   <table-pro
+      ref="table"
       dialog-title="演员"
       :formParams="params"
       :tableParams="params"
@@ -8,6 +9,7 @@
       :create-fn="createMovieCastProfessionMethod"
       :update-fn="updateMovieCastProfessionMethod"
       :delete-fn="deleteMovieCast"
+      :is-auto-fetch="false"
   />
 </template>
 
@@ -71,5 +73,25 @@ function updateMovieCastProfessionMethod(params) {
     movieId: +proxy.$route.query.id
   })
 }
+
+
+const isMounted = ref(false)
+
+onMounted(async () => {
+  isMounted.value = true
+  await proxy.$refs.table.getList()
+  isMounted.value = false
+})
+
+onActivated(() => {
+  if (isMounted.value) {
+    return
+  }
+  if (proxy.$route.query.id) {
+    proxy.$nextTick(() => {
+      proxy.$refs.table.getList({ movieId: proxy.$route.query.id })
+    })
+  }
+})
 
 </script>

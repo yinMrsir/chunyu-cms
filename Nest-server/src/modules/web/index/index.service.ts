@@ -71,7 +71,7 @@ export class IndexService {
           'cast.id',
           'actor.name',
         ])
-        .orderBy('movieBasic.createTime', 'DESC')
+        .orderBy('movieBasic.updateTime', 'DESC')
         .take(12)
         .cache(`web:index:${columnValue}:rows`, 60000 * 30)
         .getMany();

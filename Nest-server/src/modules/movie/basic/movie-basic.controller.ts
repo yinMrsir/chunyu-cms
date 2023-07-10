@@ -26,6 +26,7 @@ import { MovieVideosService } from '../videos/movie-videos.service';
 import { PubDateService } from '../pub-date/pub-date.service';
 import { MovieLevelService } from '../movie-level/movie-level.service';
 import { RoleActorService } from '../role-actor/role-actor.service';
+import { UserCollectService } from '../../web/user-collect/user-collect.service';
 
 @Controller('movie')
 export class MovieBasicController {
@@ -36,6 +37,7 @@ export class MovieBasicController {
     private readonly castService: CastService,
     private readonly roleActorService: RoleActorService,
     private readonly movieVideoService: MovieVideosService,
+    private readonly userCollectService: UserCollectService,
   ) {}
 
   @Post()
@@ -83,6 +85,7 @@ export class MovieBasicController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await Promise.all([
+      this.userCollectService.removeByMovieId(+id), // 删除关联对收藏数据
       this.pubDateService.removeByMovieId(+id), // 删除相关上映时间数据
       this.movieLevelService.removeByMovieId(+id), // 删除相关家长引导数据
       this.castService.removeByMovieId(+id), // 删除关联的影人

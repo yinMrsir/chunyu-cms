@@ -9,6 +9,7 @@ import { MovieLevelModule } from '../movie-level/movie-level.module';
 import { CastModule } from '../cast/cast.module';
 import { RoleActorModule } from '../role-actor/role-actor.module';
 import { MovieVideosModule } from '../videos/movie-videos.module';
+import { UserCollectModule } from '../../web/user-collect/user-collect.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { MovieVideosModule } from '../videos/movie-videos.module';
     CastModule,
     RoleActorModule,
     MovieVideosModule,
+    UserCollectModule,
   ],
   controllers: [MovieBasicController],
   providers: [MovieBasicService],

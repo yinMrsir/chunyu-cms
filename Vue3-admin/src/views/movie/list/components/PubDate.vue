@@ -1,5 +1,6 @@
 <template>
   <table-pro
+      ref="table"
       dialog-title="上映时间"
       :columns="columns"
       :formParams="formParams"
@@ -8,6 +9,7 @@
       :create-fn="createMoviePubDate"
       :update-fn="updateMoviePubDate"
       :delete-fn="deleteMoviePubDate"
+      :is-auto-fetch="false"
   />
 </template>
 
@@ -62,4 +64,24 @@ const columns = ref([
     ]
   }
 ])
+
+const isMounted = ref(false)
+
+onMounted(async () => {
+  isMounted.value = true
+  await proxy.$refs.table.getList()
+  isMounted.value = false
+})
+
+onActivated(() => {
+  if (isMounted.value) {
+    return
+  }
+  if (proxy.$route.query.id) {
+    proxy.$nextTick(() => {
+      proxy.$refs.table.getList({ movieId: proxy.$route.query.id })
+    })
+  }
+})
+
 </script>

@@ -49,7 +49,11 @@ export class UserCollectService {
     return new DataObj(data);
   }
 
-  remove(userId: number, movieId: number) {
+  remove(userId?: number, movieId?: number) {
     return this.userCollectRepository.delete({ userId, movieId });
+  }
+
+  removeByMovieId(movieId: number) {
+    return this.userCollectRepository.delete({ movieId });
   }
 }

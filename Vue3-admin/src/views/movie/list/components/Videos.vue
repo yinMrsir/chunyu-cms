@@ -1,6 +1,7 @@
 <template>
   <div class="videos-list">
     <table-pro
+        ref="table"
         dialog-title="相关视频"
         :columns="columns"
         :table-params="tableParams"
@@ -9,6 +10,7 @@
         :create-fn="createMovieVideos"
         :update-fn="updateMovieVideos"
         :delete-fn="deleteMovieVideos"
+        :is-auto-fetch="false"
     />
   </div>
 </template>
@@ -59,7 +61,7 @@ const columns = ref([
     },
   },
   { title: '状态', field: 'status', add: true, type: 'select', options: sysNormalDisable },
-  { title: '排序', field: 'sort', add: true, type: 'number' },
+  { title: '排序', field: 'sort', add: [{ required: true, message: '请输入排序' }], type: 'number', },
   {
     actions: [
       {
@@ -77,6 +79,26 @@ const columns = ref([
 const tableParams = ref({
   movieId: +proxy.$route.query.id
 })
+const isMounted = ref(false)
+
+onMounted(async () => {
+  isMounted.value = true
+  await proxy.$refs.table.getList()
+  isMounted.value = false
+})
+
+onActivated(() => {
+  if (isMounted.value) {
+    return
+  }
+  if (proxy.$route.query.id) {
+    proxy.$nextTick(() => {
+      proxy.$refs.table.getList({ movieId: proxy.$route.query.id })
+    })
+  }
+})
+
+
 </script>
 
 

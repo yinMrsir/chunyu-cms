@@ -115,7 +115,7 @@ export class MovieBasicService {
     } else if (reqListMovieListDto.orderBy === 'rate') {
       queryBuilder.orderBy('movieBasic.rate', 'DESC');
     } else {
-      queryBuilder.orderBy('movieBasic.createTime', 'DESC');
+      queryBuilder.orderBy('movieBasic.updateTime', 'DESC');
     }
     const [rows, total] = await queryBuilder
       .skip(reqListMovieListDto.skip)

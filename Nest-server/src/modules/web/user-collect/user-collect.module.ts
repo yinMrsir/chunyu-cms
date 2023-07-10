@@ -8,5 +8,6 @@ import { UserCollect } from './entities/user-collect.entity';
   imports: [TypeOrmModule.forFeature([UserCollect])],
   controllers: [UserCollectController],
   providers: [UserCollectService],
+  exports: [UserCollectService],
 })
 export class UserCollectModule {}
