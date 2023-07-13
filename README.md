@@ -96,6 +96,9 @@ yarn build:prod
 - [ ] 用户购买金币
 - [ ] 视频发送弹幕
 
+### 单文件打包
+如果你有需求要打包成单文件或者pkg包，可进入Nest-server执行`yarn ncc:pkg`, 因bull库不支持单文件执行，所以打包前需将引入了bull库的相关模块移除！
+
 ### 相关链接
 
 win安装Docker: https://zhuanlan.zhihu.com/p/441965046
