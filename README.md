@@ -82,7 +82,10 @@ yarn
 yarn build:prod
 ```
 
-### 更新
+### 单文件打包
+如果你有需求要打包成单文件或者pkg包，可进入Nest-server执行`yarn ncc:pkg`, 因bull库不支持单文件执行，所以打包前需将引入了bull库的相关模块移除！
+
+## 更新
 ### 2023-5
 - [x] [友情链接支持后台配置](https://www.douyin.com/user/MS4wLjABAAAAUKMCVZGbQl7etrdd36GBIG6OGxClOwoHci_-PIlxNvE?modal_id=7225255650392132903)
 - [x] 用户影视评分
@@ -92,14 +95,11 @@ yarn build:prod
 - [x] 用户签到获得金币
 - [x] 视频支持支付付费观看
 
-#### 待完成
+### 待完成
 - [ ] 用户购买金币
 - [ ] 视频发送弹幕
 
-### 单文件打包
-如果你有需求要打包成单文件或者pkg包，可进入Nest-server执行`yarn ncc:pkg`, 因bull库不支持单文件执行，所以打包前需将引入了bull库的相关模块移除！
-
-### 相关链接
+## 相关链接
 
 win安装Docker: https://zhuanlan.zhihu.com/p/441965046
 
@@ -109,6 +109,6 @@ docker安装mysql：https://www.runoob.com/docker/docker-install-mysql.html
 
 解决Navicat连接数据库提示`client does not support authentication：https://blog.csdn.net/lovedingd/article/details/106728292
 
-### 有任何疑问可添加微信
+## 有任何疑问可添加微信
 
 <img height="120" src="https://gitee.com/chunyu-cms/chunyu-cms/raw/main/wx.jpg" width="120"/>
