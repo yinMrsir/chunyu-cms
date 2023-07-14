@@ -30,6 +30,7 @@ export class DemoEnvironmentGuard implements CanActivate {
       '/web/user/reg',
       '/user-collect',
       '/user-rate',
+      '/user-movie',
     ]; //放过的路由
     if (
       request.method.toLocaleLowerCase() != 'get' &&
