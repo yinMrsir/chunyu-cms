@@ -131,8 +131,9 @@ import {IResData, IResPage} from "~/global";
 import 'xgplayer/dist/index.min.css'
 import 'xgplayer/es/plugins/danmu/index.css'
 import '../../../plugins/xgplayerPlugins/payTipPlugin.css'
+import PresetPlayer from "xgplayer";
 
-const userInfo = useCookie<{ token: string }>('userInfo')
+const token = useToken()
 const loginDialogVisible = useLoginDialogVisible()
 
 const runtimeConfig = useRuntimeConfig()
@@ -144,6 +145,10 @@ const id = route.params.id
 const qrcodeUrl = ref('')
 // 是否购买了影片
 const isUserBuy = ref(false)
+// 视频支付提示插件
+let payTipInstance: { hidden: () => void; } | null = null
+// 视频组件
+let player: PresetPlayer | null = null
 
 const currTime = dayjs().format('YYYY-MM-DD')
 const weekStartTime = dayjs().subtract(7, 'day').format('YYYY-MM-DD')
@@ -160,15 +165,25 @@ if (!detailRes.value) {
 const detail = detailRes.value.data
 
 /** 查询用户是否购买影片 */
-if (userInfo.value) {
-  const { data: userBuy } = await useFetch<IResData<any>>(apiBase + `/user-movie`, {
-    query: { movieId: detail.movieId },
-    headers: {
-      Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
-    },
-  })
-  isUserBuy.value = !!userBuy.value?.data
+getUserMovie()
+async function getUserMovie() {
+  if (token.value) {
+    const { data: userBuy } = await useFetch<IResData<any>>(apiBase + `/user-movie`, {
+      query: { movieId: detail.movieId },
+      headers: {
+        Authorization: token.value
+      },
+    })
+    isUserBuy.value = !!userBuy.value?.data
+  }
 }
+
+watch(token, async () => {
+  await getUserMovie()
+  payTipInstance?.hidden()
+  player?.play()
+})
+
 
 onMounted(async () => {
   qrcodeUrl.value = window.location.href
@@ -179,71 +194,72 @@ onMounted(async () => {
     import('xgplayer/es/plugins/danmu'),
     import('~/plugins/xgplayerPlugins/payTipPlugin')
   ])
-  const player = new Player.default({
-      id: 'mse',
-      autoplay: true,
-      volume: 0.3,
-      url: `/server/common/stream/${detail.videoInfo?.name}`,
-      playsinline: true,
-      height: '100%',
-      width: '100%',
-      plugins: [Mp4Plugin.default, Danmu.default, PayTip.default],
-      mp4plugin: {
-        maxBufferLength: 30,
-        minBufferLength: 5,
-        chunkSize: 5000,
-        reqOptions:{
-          mode: 'cors',
-          method: 'GET',
-          headers: {
-            'Authorization': 'Bearer ' + userInfo.value?.token
-          },
-        }
-      },
-      danmu: {
-        comments: [
-          {
-            duration: 15000,
-            id: '1',
-            start: 3000,
-            txt: '好看，精彩！！！',
-            //弹幕自定义样式
-            style: {
-              color: '#ff9500',
-              fontSize: '20px',
-              border: 'solid 1px #ff9500',
-              borderRadius: '50px',
-              padding: '5px 11px',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)'
-            }
-          }
-        ],
-        area: {
-          start: 0,
-          end: 1
-        }
-      },
-      payTipPlugin: {
-        tip: `此为付费视频，支付${detail.movie.paymentAmount}金币继续观看？`,
-        lookTime: detail.movie.freeDuration * 60,
-        arriveTime (callback: () => void) {
-          if (isUserBuy.value) return
-          if (+detail.movie.isPay === 1) {
-            player.pause()
-            callback()
-          }
+  player = new Player.default({
+    id: 'mse',
+    autoplay: true,
+    volume: 0.3,
+    url: `/server/common/stream/${detail.videoInfo?.name}`,
+    playsinline: true,
+    height: '100%',
+    width: '100%',
+    plugins: [Mp4Plugin.default, Danmu.default, PayTip.default],
+    mp4plugin: {
+      maxBufferLength: 30,
+      minBufferLength: 5,
+      chunkSize: 5000,
+      reqOptions:{
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Authorization': token.value
         },
-        clickButton (callback: () => void) {
-          if (!userInfo.value?.token) {
-            loginDialogVisible.value = true
-          } else {
-            buyMovie(player, () => {
-              callback()
-            })
+      }
+    },
+    danmu: {
+      comments: [
+        {
+          duration: 15000,
+          id: '1',
+          start: 3000,
+          txt: '好看，精彩！！！',
+          //弹幕自定义样式
+          style: {
+            color: '#ff9500',
+            fontSize: '20px',
+            border: 'solid 1px #ff9500',
+            borderRadius: '50px',
+            padding: '5px 11px',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)'
           }
+        }
+      ],
+      area: {
+        start: 0,
+        end: 1
+      }
+    },
+    payTipPlugin: {
+      tip: `此为付费视频，支付${detail.movie.paymentAmount}金币继续观看？`,
+      lookTime: detail.movie.freeDuration * 60,
+      arriveTime (callback: () => void) {
+        if (isUserBuy.value) return
+        if (+detail.movie.isPay === 1) {
+          player?.pause()
+          callback()
+        }
+      },
+      clickButton (callback: () => void) {
+        if (!token.value) {
+          loginDialogVisible.value = true
+        } else {
+          buyMovie(player, () => {
+            callback()
+          })
         }
       }
-    })
+    }
+  })
+  payTipInstance = player.getPlugin('payTipPlugin')
 })
 
 /** 购买影视 */
@@ -261,7 +277,7 @@ function buyMovie(player: any, callback: { (): void; (): void; }) {
       method: 'post',
       body: { movieId: detail.movieId },
       headers: {
-        Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+        Authorization: token.value
       },
     })
     if (code === 200) {

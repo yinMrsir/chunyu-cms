@@ -9,7 +9,7 @@ export default class payTipPlugin extends Plugin {
   private arriveTime: ((e: any) => void) | undefined;
   private clickButton: ((e: any) => void) | undefined;
   private lookTime: number;
-  private tip: string;
+  private readonly tip: string;
   
 
   static get pluginName() {
@@ -58,6 +58,10 @@ export default class payTipPlugin extends Plugin {
       }
     });
     (this.find('.tip-text') as HTMLSpanElement).innerHTML = this.tip
+  }
+
+  hidden() {
+    (document.querySelector('#pay-tip-plugin') as HTMLDivElement).style.display = 'none'
   }
 
   destroy () {

@@ -1,6 +1,12 @@
 /** 登录状态 */
 export const useIsLogin = () => useState<boolean>('isLogin', () => false)
 
+/** 用户信息 **/
+export const useToken = () => useState<string>('token', () => {
+  const userInfo = useCookie<{ token: string }>('userInfo')
+  return userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+})
+
 /** 登录弹层显示状态 */
 export const useLoginDialogVisible = () => useState<boolean>('loginDialogVisible', () => false)
 
