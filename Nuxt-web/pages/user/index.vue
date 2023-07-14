@@ -40,15 +40,16 @@ import { ElMessage } from "element-plus"
 import { ArrowRight } from '@element-plus/icons-vue'
 import CollectData from '@/components/user/CollectData.vue'
 import UserInfoData from "~/components/user/UserInfoData.vue";
+import {useToken} from "~/composables/states";
 
 definePageMeta({
   middleware: ["auth"]
 })
 const runtimeConfig = useRuntimeConfig()
-const userInfo = useCookie<{ token: string }>('userInfo')
+const token = useToken()
 const activeName = ref<string>('collect')
 const headers = {
-  Authorization: 'Bearer ' + userInfo.value?.token
+  Authorization: token.value
 }
 
 const [

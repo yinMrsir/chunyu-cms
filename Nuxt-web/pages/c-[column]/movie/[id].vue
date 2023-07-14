@@ -187,7 +187,7 @@ import {Star, StarFilled, VideoPlay, Edit} from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
 import {useFetch} from "nuxt/app";
 import {ElMessage} from "element-plus";
-import {useIsLogin, useLoginDialogVisible} from "~/composables/states";
+import {useLoginDialogVisible, useToken} from "~/composables/states";
 import dayjs from "dayjs";
 import {IResData, IResPage} from "~/global";
 import {escapeHtml} from '~/utils/tool'
@@ -197,7 +197,7 @@ const {public: publicConfig} = runtimeConfig
 const {apiBase} = publicConfig
 
 const route = useRoute()
-const isLogin = useIsLogin()
+const token = useToken()
 const loginDialogVisible = useLoginDialogVisible()
 
 const id = route.params.id
@@ -257,7 +257,7 @@ if (!detailRes.value) {
 useFetch(`${apiBase}/movie/updatePv/${id}`)
 
 /** 登录状态发生改变 重新获取收藏和评分状态 */
-watch(isLogin, () => {
+watch(token, () => {
   getUserCollect()
   getUserRate()
 })
@@ -265,11 +265,10 @@ watch(isLogin, () => {
 /** 获取用户收藏状态 */
 getUserCollect()
 async function getUserCollect() {
-  const userInfo = useCookie<{ token: string }>('userInfo')
   const {data: userCollect} = await useFetch<{ data: any }>(apiBase + '/user-collect/find', {
     query: {movieId: id},
     headers: {
-      Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+      Authorization: token.value
     },
   })
   isCollect.value = !!userCollect.value?.data
@@ -277,8 +276,7 @@ async function getUserCollect() {
 
 /** 收藏 */
 async function handleCollect() {
-  const userInfo = useCookie<{ token: string }>('userInfo')
-  if (!userInfo.value) {
+  if (!token.value) {
     loginDialogVisible.value = true
   } else {
     let code: number
@@ -287,7 +285,7 @@ async function handleCollect() {
       let {code: codeRes, msg: msgRes} = await $fetch<{ code: number; msg: string }>(apiBase + `/user-collect/${id}`, {
         method: 'DELETE',
         headers: {
-          Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+          Authorization: token.value
         },
       })
       code = codeRes
@@ -297,7 +295,7 @@ async function handleCollect() {
         body: {movieId: id},
         method: 'POST',
         headers: {
-          Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+          Authorization: token.value
         },
       })
       code = codeRes
@@ -317,11 +315,10 @@ async function handleCollect() {
 /** 获取用户评分状态 */
 getUserRate()
 async function getUserRate() {
-  const userInfo = useCookie<{ token: string }>('userInfo')
   const {data: userRate} = await useFetch<{ data: any }>(apiBase + '/user-rate', {
     query: {movieId: id},
     headers: {
-      Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+      Authorization: token.value
     },
   })
   userRateData.value = !!userRate.value?.data
@@ -330,8 +327,7 @@ async function getUserRate() {
 /** 设置评分 */
 async function onRatechange(value: string) {
   if (!value) return
-  const userInfo = useCookie<{ token: string }>('userInfo')
-  if (!userInfo.value) {
+  if (!token.value) {
     loginDialogVisible.value = true
     rate.value = 0
   } else {
@@ -339,7 +335,7 @@ async function onRatechange(value: string) {
       method: 'post',
       body: {movieId: id, rate: rate.value},
       headers: {
-        Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+        Authorization: token.value
       },
     })
     if (code === 200) {

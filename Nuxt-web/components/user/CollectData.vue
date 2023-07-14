@@ -33,21 +33,22 @@
 
 <script lang="ts" setup>
 import {ElMessage} from "element-plus";
+import {useToken} from "~/composables/states";
 
+const token = useToken()
 const runtimeConfig = useRuntimeConfig()
 const movieList = ref<any[]>([])
 const currentPage = ref<number>(1)
 const total = ref(0)
 
 async function getList() {
-  const userInfo = useCookie<{token: string}>('userInfo')
   const { data: collectData, error } = await useFetch<{ rows:any[]; total: number;  code: number }>(runtimeConfig.public.apiBase + '/user-collect/findByPage', {
     query: {
       pageNum: currentPage.value,
       pageSize: 12
     },
     headers: {
-      Authorization: userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+      Authorization: token.value
     }
   })
   if (!error.value && collectData.value?.code === 200) {

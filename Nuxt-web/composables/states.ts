@@ -1,6 +1,3 @@
-/** 登录状态 */
-export const useIsLogin = () => useState<boolean>('isLogin', () => false)
-
 /** 用户信息 **/
 export const useToken = () => useState<string>('token', () => {
   const userInfo = useCookie<{ token: string }>('userInfo')

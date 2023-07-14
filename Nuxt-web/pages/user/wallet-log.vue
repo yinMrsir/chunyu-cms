@@ -44,9 +44,10 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
 import {IResPage} from "~/global";
+import {useToken} from "~/composables/states";
 
 const runtimeConfig = useRuntimeConfig()
-const userInfo = useCookie<{ token: string }>('userInfo')
+const token = useToken()
 const list = ref([])
 const queryParams = reactive({
   pageSize: 10
@@ -55,7 +56,7 @@ const count = ref(0)
 const currentPage = ref<number>(1)
 
 const headers = {
-  Authorization: 'Bearer ' + userInfo.value?.token
+  Authorization: token.value
 }
 
 onMounted(() => {

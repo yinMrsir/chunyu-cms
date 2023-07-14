@@ -10,10 +10,12 @@
 </template>
 
 <script setup lang="ts">
+import {useToken} from "~/composables/states";
+
 const runtimeConfig = useRuntimeConfig()
-const userInfo = useCookie<{ token: string }>('userInfo')
+const token = useToken()
 const headers = {
-  Authorization: 'Bearer ' + userInfo.value?.token
+  Authorization: token.value
 }
 
 // 获取用户信息

@@ -75,7 +75,6 @@ const {apiBase} = publicConfig
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const userInfo = useCookie<{token: string} | null>('userInfo')
-const isLogin = useIsLogin()
 const token = useToken()
 const route = useRoute()
 
@@ -106,7 +105,6 @@ function handleCommand(command: string) {
 
 function logOut() {
   userInfo.value = null
-  isLogin.value = false
   token.value = ''
   if (route.path.indexOf('/user') > -1) {
     navigateTo('/')
@@ -117,7 +115,6 @@ async function handleSuccess(tokenString: string) {
   userInfo.value = { token: tokenString }
   token.value = 'Bearer ' + tokenString
   proxy?.$refs['loginPopRef']?.setVisible(false)
-  isLogin.value = true
 }
 
 </script>
