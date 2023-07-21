@@ -68,6 +68,7 @@ import { ComponentInternalInstance } from 'vue'
 import { Search, UserFilled} from '@element-plus/icons-vue'
 import { useFetch} from "nuxt/app";
 import dayjs from "dayjs";
+import LoginPop from "~/components/LoginPop.vue";
 
 const runtimeConfig = useRuntimeConfig()
 const {public: publicConfig} = runtimeConfig
@@ -78,6 +79,7 @@ const userInfo = useCookie<{token: string} | null>('userInfo')
 const token = useToken()
 const route = useRoute()
 
+const loginPopRef = ref<InstanceType<typeof LoginPop> | null>(null)
 const searchValue = ref('')
 const year = dayjs().format('YYYY')
 
@@ -89,7 +91,7 @@ function handleSearch() {
 }
 
 function goLogin() {
-  proxy?.$refs['loginPopRef']?.setVisible(true)
+  loginPopRef.value?.setVisible(true)
 }
 
 function handleCommand(command: string) {
@@ -114,7 +116,7 @@ function logOut() {
 async function handleSuccess(tokenString: string) {
   userInfo.value = { token: tokenString }
   token.value = 'Bearer ' + tokenString
-  proxy?.$refs['loginPopRef']?.setVisible(false)
+  loginPopRef.value?.setVisible(false)
 }
 
 </script>
