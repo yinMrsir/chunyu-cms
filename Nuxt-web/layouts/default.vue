@@ -59,7 +59,7 @@
       Copyright {{ year }} 淳渔影视网 Inc. All Rights Reserved.
     </footer>
     <LoginPop ref="loginPopRef" @success="handleSuccess"/>
-    <el-backtop :right="100" :bottom="100" />
+    <el-backtop />
   </div>
 </template>
 

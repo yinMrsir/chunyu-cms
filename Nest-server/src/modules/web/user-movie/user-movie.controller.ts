@@ -34,15 +34,13 @@ export class UserMovieController {
     const movie: MovieBasic = await this.movieBasicService.findOne(
       createUserMovieDto.movieId,
     );
-    await Promise.all([
-      this.userMovieService.create(userId, createUserMovieDto.movieId),
-      this.userWalletService.updateGold({
-        userId,
-        gold: movie.paymentAmount,
-        type: '2',
-        remark: `购买${movie.title} -${movie.paymentAmount}`,
-      }),
-    ]);
+    await this.userWalletService.updateGold({
+      userId,
+      gold: movie.paymentAmount,
+      type: '2',
+      remark: `购买${movie.title} -${movie.paymentAmount}`,
+    });
+    await this.userMovieService.create(userId, createUserMovieDto.movieId);
   }
 
   @Public()
