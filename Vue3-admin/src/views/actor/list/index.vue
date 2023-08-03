@@ -1,13 +1,6 @@
 <template>
   <div class="app-container">
-    <table-pro
-        dialog-title="影人"
-        :columns="columns"
-        :table-request-fn="getActorList"
-        :create-fn="createActorMethod"
-        :update-fn="updateActorMethod"
-        :delete-fn="deleteActor"
-    />
+    <table-pro dialog-title="影人" :columns="columns" :table-request-fn="getActorList" :create-fn="createActorMethod" :update-fn="updateActorMethod" :delete-fn="deleteActor"/>
   </div>
 </template>
 
