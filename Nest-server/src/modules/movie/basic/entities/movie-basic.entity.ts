@@ -262,7 +262,7 @@ export class MovieBasic extends BaseEntity {
     comment: '是否付费',
     default: 0,
   })
-  @IsNumber()
+  @IsOptional()
   isPay: number;
 
   @Column('int', {
@@ -270,7 +270,7 @@ export class MovieBasic extends BaseEntity {
     comment: '支付金币',
     default: 0,
   })
-  @IsNumber()
+  @IsOptional()
   paymentAmount: number;
 
   @Column('int', {
