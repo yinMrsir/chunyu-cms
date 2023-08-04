@@ -85,6 +85,7 @@ export class MovieVideosService {
       .select([
         'movieVideos.title',
         'movieVideos.movieId',
+        'movieVideos.typeId',
         'movieBasic.title',
         'movieBasic.year',
         'movieBasic.genres',

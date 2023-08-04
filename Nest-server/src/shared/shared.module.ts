@@ -25,6 +25,8 @@ import { RepeatSubmitGuard } from 'src/common/guards/repeat-submit.guard';
 import { DemoEnvironmentGuard } from 'src/common/guards/demo-environment.guard';
 import { AllExceptionsFilter } from 'src/common/filters/all-exception.filter';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from '../modules/system/auth/auth.constants';
 
 @Global()
 @Module({
@@ -80,6 +82,11 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 60,
+    }),
+
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '168h' },
     }),
 
     /* 导入系统日志模块 */

@@ -243,7 +243,8 @@ onMounted(async () => {
       lookTime: detail.movie.freeDuration * 60,
       arriveTime (callback: () => void) {
         if (isUserBuy.value) return
-        if (+detail.movie.isPay === 1) {
+        // 影片设置了需要购买才能观看并且是正片
+        if (+detail.movie.isPay === 1 && +detail.typeId === 1) {
           player?.pause()
           callback()
         }
