@@ -54,10 +54,10 @@ export default defineConfig({
   uploadPath: '',
 
   //静态文件前缀地址
-  publicPath: `http://127.0.0.1:4000`,
+  publicPath: `http://[::1]:4000`,
 
   // 默认图片地址
-  defaultImg: `http://127.0.0.1:4000/default.jpg`,
+  defaultImg: `http://[::1]:4000/default.jpg`,
 
   // 是否演示环境
   isDemoEnvironment: false,
