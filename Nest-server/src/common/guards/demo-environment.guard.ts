@@ -27,11 +27,11 @@ export class DemoEnvironmentGuard implements CanActivate {
       this.configService.get<boolean>('isDemoEnvironment');
     if (!isDemoEnvironment) return true;
     const request: Request = context.switchToHttp().getRequest();
-    // 此处处理特殊用户 不限制接口, 此块代码可以根据实际情况移除
+    // 此处因演示环境原因 处理特殊用户 不限制接口, 此块代码可以根据实际情况移除
     const authorization = request.headers['authorization'];
     if (!authorization) return true;
     const payload = await this.jwtService.verify(authorization.slice(7));
-    if (+payload?.userId === 0) return true;
+    if (+payload?.userId === -1) return true;
     // === end
     const allowUrlArr = [
       '/login',
