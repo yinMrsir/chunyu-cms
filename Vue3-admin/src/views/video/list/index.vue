@@ -27,6 +27,7 @@
             <el-input v-model="form.url" style="display: none" />
             <video-upload
                 ref="videoUploadRef"
+                :replace-url="replaceUrl"
                 @on-success="uploadSuccessHandle"
                 @on-poster-change="posterChangeHandle"
             />
@@ -172,6 +173,13 @@ function uploadSuccessHandle(video) {
   form.size = video.size
   form.path = video.path
   form.name = video.name
+}
+
+function replaceUrl(str) {
+  if (import.meta.env.VITE_APP_ENV === 'production') {
+    return str.replace('cms.yinchunyu.com/server', 'cms-admin.yinchunyu.com/api')
+  }
+  return str.replace('[::1]:4000', 'localhost:4001/dev-api')
 }
 
 function posterChangeHandle(posterUrl) {

@@ -79,6 +79,10 @@ const props = defineProps({
     type: Array,
     default: () => ["video/mp4", "video/omg"],
   },
+  replaceUrl: {
+    type: Function,
+    default: {}
+  }
 })
 
 const url = ref('')
@@ -170,9 +174,13 @@ async function handleFileUpload() {
     }
   })
   proxy.$modal.msgSuccess('上传成功')
-  url.value = import.meta.env.VITE_APP_BASE_API + res.fileName
+  url.value = res.fileName.indexOf('http') > -1 ? res.fileName : import.meta.env.VITE_APP_BASE_API + res.fileName
+  props.replaceUrl && (url.value = props.replaceUrl(url.value))
   isUploadSuccess.value = true
-  proxy.$emit("on-success", { ...res, ...videoInfo });
+  proxy.$emit("on-success", {
+    ...res,
+    ...videoInfo
+  });
 
   proxy.$refs.fileInput.value = "";
 }
