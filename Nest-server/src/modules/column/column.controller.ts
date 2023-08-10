@@ -18,11 +18,14 @@ import { Public } from '../../common/decorators/public.decorator';
 import { ApiException } from '../../common/exceptions/api.exception';
 import { PaginationPipe } from '../../common/pipes/pagination.pipe';
 import { QueryColumnDto } from './dto/query-column.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('焦点图管理')
 @Controller('column')
 export class ColumnController {
   constructor(private readonly columnService: ColumnService) {}
 
+  @ApiOperation({ summary: '新增' })
   @Post()
   async create(
     @Body() createColumnDto: CreateColumnDto,
@@ -36,12 +39,14 @@ export class ColumnController {
     return this.columnService.create(createColumnDto);
   }
 
+  @ApiOperation({ summary: '分页查询' })
   @Public()
   @Get('list')
   list(@Query(PaginationPipe) queryColumnDto: QueryColumnDto) {
     return this.columnService.findPageList(queryColumnDto);
   }
 
+  @ApiOperation({ summary: '查询所有' })
   @Public()
   @Get('all')
   async all(@Query(PaginationPipe) queryColumnDto: QueryColumnDto) {
@@ -49,6 +54,7 @@ export class ColumnController {
     return new DataObj(data);
   }
 
+  @ApiOperation({ summary: '根据条件查询单个' })
   @Public()
   @Get()
   async findOne(@Query() where) {
@@ -56,6 +62,7 @@ export class ColumnController {
     return new DataObj(data);
   }
 
+  @ApiOperation({ summary: '修改' })
   @Put()
   update(
     @Body() updateColumnDto: UpdateColumnDto,
@@ -65,6 +72,7 @@ export class ColumnController {
     return this.columnService.update(updateColumnDto);
   }
 
+  @ApiOperation({ summary: '删除一个或多个' })
   @Delete(':ids')
   remove(@Param('ids') ids: string) {
     return this.columnService.remove(ids);

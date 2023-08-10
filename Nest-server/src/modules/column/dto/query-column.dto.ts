@@ -3,7 +3,7 @@ import { IsOptional } from 'class-validator';
 
 export class QueryColumnDto extends PaginationDto {
   @IsOptional()
-  type: string;
+  type?: string;
 
   @IsOptional()
   status: string;
