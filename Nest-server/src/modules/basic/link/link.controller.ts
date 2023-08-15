@@ -18,11 +18,14 @@ import { DataObj } from '../../../common/class/data-obj.class';
 import { User, UserEnum } from '../../../common/decorators/user.decorator';
 import { UserInfoPipe } from '../../../common/pipes/user-info.pipe';
 import { ApiException } from '../../../common/exceptions/api.exception';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('友情链接')
 @Controller('basic/link')
 export class LinkController {
   constructor(private readonly linkService: LinkService) {}
 
+  @ApiOperation({ summary: '新增' })
   @Post()
   async create(
     @Body() createLinkDto: CreateLinkDto,
@@ -34,6 +37,7 @@ export class LinkController {
     return this.linkService.create(createLinkDto);
   }
 
+  @ApiOperation({ summary: '分页获取数据' })
   @Get('list')
   async list(@Query(PaginationPipe) reqListDot: ReqLinkDto) {
     const [rows, total] = await this.linkService.findPageList(reqListDot);
@@ -43,6 +47,7 @@ export class LinkController {
     };
   }
 
+  @ApiOperation({ summary: '获取全部数据' })
   @Public()
   @Get('all')
   async all() {
@@ -50,6 +55,7 @@ export class LinkController {
     return new DataObj(data);
   }
 
+  @ApiOperation({ summary: '修改' })
   @Put()
   update(
     @Body() updateLinkDto: UpdateLinkDto,
@@ -59,6 +65,7 @@ export class LinkController {
     return this.linkService.update(updateLinkDto);
   }
 
+  @ApiOperation({ summary: '删除' })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.linkService.remove(+id);
