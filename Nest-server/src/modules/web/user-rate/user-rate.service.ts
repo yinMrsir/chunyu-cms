@@ -17,32 +17,45 @@ export class UserRateService {
   async create(createUserRateDto: CreateUserRateDto) {
     const movieRate = await this.movieRateRepository.findOne({
       where: {
-        id: createUserRateDto.movieId,
+        movie: {
+          id: createUserRateDto.movieId,
+        },
       },
-      select: ['rate', 'rateUserCount'],
     });
     if (movieRate === null) {
+      const rate = createUserRateDto.rate * 2;
       await this.movieRateRepository.save({
         movie: {
           id: createUserRateDto.movieId,
         },
-        rate: createUserRateDto.rate * 2,
+        rate,
         rateUserCount: 1,
       });
       return this.userRateRepository.save({
         userId: createUserRateDto.userId,
         movieId: createUserRateDto.movieId,
-        rate: createUserRateDto.rate * 2,
+        rate,
       });
     } else {
       const rateUserCount = movieRate.rateUserCount + 1;
       const rate =
         (movieRate.rate + createUserRateDto.rate * 2) / rateUserCount;
-      await this.movieRateRepository.update(createUserRateDto.movieId, {
+      await this.movieRateRepository.update(
+        {
+          movie: {
+            id: createUserRateDto.movieId,
+          },
+        },
+        {
+          rate,
+          rateUserCount,
+        },
+      );
+      return this.userRateRepository.save({
+        userId: createUserRateDto.userId,
+        movieId: createUserRateDto.movieId,
         rate,
-        rateUserCount,
       });
-      return this.userRateRepository.save(createUserRateDto);
     }
   }
 

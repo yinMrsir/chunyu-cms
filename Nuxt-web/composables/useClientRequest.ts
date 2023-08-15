@@ -1,3 +1,5 @@
+import { isArray } from "~/utils/tool";
+
 type FetchType = typeof $fetch
 type FetchOptions = Parameters<FetchType>[1]
 
@@ -19,7 +21,7 @@ export const useClientRequest = <T= unknown>(url: string, opts?: FetchOptions) =
       }
     },
     onResponseError({ response }) {
-      ElMessage.error(response._data.data.msg)
+      ElMessage.error(isArray(response._data.data.msg) ? response._data.data.msg[0] : response._data.data.msg)
     },
   }
 

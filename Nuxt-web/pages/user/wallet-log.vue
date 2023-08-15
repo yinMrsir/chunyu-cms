@@ -43,12 +43,12 @@
 
 <script setup lang="ts">
 import { IResPage } from "~/global";
-import { useToken } from "~/composables/states";
+import { useClientRequest } from "~/composables/useClientRequest";
 
 const runtimeConfig = useRuntimeConfig()
-const token = useToken()
 const list = ref([])
 const queryParams = reactive({
+  pageNum: 1,
   pageSize: 10
 })
 const count = ref(0)
@@ -68,6 +68,7 @@ async function getList() {
 
 function handleCurrentChange(page: number) {
   currentPage.value = page
+  queryParams.pageNum = page
   getList()
 }
 </script>

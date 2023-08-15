@@ -1,4 +1,5 @@
 import { useFetch, UseFetchOptions } from "#app";
+import { isArray } from "~/utils/tool";
 
 export const useServerRequest = <T= unknown>(url: string, opts?: UseFetchOptions<T, unknown>) => {
   const userInfo = useCookie<{ token: string }>('userInfo')
@@ -18,7 +19,7 @@ export const useServerRequest = <T= unknown>(url: string, opts?: UseFetchOptions
       }
     },
     onResponseError({ response }) {
-      process.client && ElMessage.error(response._data.data.msg)
+      process.client && ElMessage.error(isArray(response._data.data.msg) ? response._data.data.msg[0] : response._data.data.msg)
     },
   }
 

@@ -42,7 +42,7 @@
 <script lang="ts" setup name="LoginPop">
 import { ComponentInternalInstance } from "@vue/runtime-core";
 import { FormInstance } from 'element-plus';
-import { isArray, reactive } from "#imports";
+import { reactive } from "#imports";
 import { useLoginDialogVisible, useRegDialogVisible } from "~/composables/states";
 import { useClientRequest } from "~/composables/useClientRequest";
 
@@ -88,19 +88,13 @@ async function login(formEl: FormInstance | undefined) {
   if (!formEl) return
   await formEl.validate(async (valid) => {
     if (valid) {
-      try {
-        const data = await useClientRequest<{ code: number; token: string; msg?: string }>('/web/user/login', { method: 'post', body: form })
-        if (data.code === 200) {
-          ElMessage({
-            message: '登录成功',
-            type: 'success',
-          })
-          proxy?.$emit('success', data.token)
-        } else {
-          ElMessage.error(data?.msg)
-        }
-      } catch (e: any) {
-        ElMessage.error(isArray(e.data.msg) ? e.data.msg[0] : e.data.msg)
+      const data = await useClientRequest<{ code: number; token: string; msg?: string }>('/web/user/login', { method: 'post', body: form })
+      if (data.code === 200) {
+        ElMessage({
+          message: '登录成功',
+          type: 'success',
+        })
+        proxy?.$emit('success', data.token)
       }
     }
   })
@@ -112,19 +106,13 @@ async function handleReg(formEl: FormInstance | undefined) {
   if (!formEl) return
   await formEl.validate(async (valid) => {
     if (valid) {
-      try {
-        const data = await useClientRequest<{ code: number; msg?: string }>('/web/user/reg', { method: 'post', body: regForm })
-        if (data.code === 200) {
-          ElMessage({
-            message: '注册成功',
-            type: 'success',
-          })
-          regDialogVisible.value = false
-        } else {
-          ElMessage.error(data?.msg)
-        }
-      } catch (e: any) {
-        ElMessage.error(isArray(e.data.msg) ? e.data.msg[0] : e.data.msg)
+      const data = await useClientRequest<{ code: number; msg?: string }>('/web/user/reg', { method: 'post', body: regForm })
+      if (data.code === 200) {
+        ElMessage({
+          message: '注册成功',
+          type: 'success',
+        })
+        regDialogVisible.value = false
       }
     }
   })
