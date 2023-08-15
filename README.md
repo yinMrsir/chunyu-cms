@@ -112,3 +112,7 @@ docker安装mysql：https://www.runoob.com/docker/docker-install-mysql.html
 ## 有任何疑问可添加微信
 
 <img height="120" src="https://gitee.com/chunyu-cms/chunyu-cms/raw/main/wx.jpg" width="120"/>
+
+[Nuxt3教程文档](http://www.yinchunyu.com)
+
+[Nuxt3视频教程](https://www.bilibili.com/video/BV1gu4y1R7Jt/?spm_id_from=333.999.0.0&vd_source=9dbe815ca79d8528e02be1a51583912a)
