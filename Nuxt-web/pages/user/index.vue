@@ -16,7 +16,7 @@
               </div>
               <el-button class="button" text size="small" @click="handleGoWalletLog">
                 详情
-                <el-icon><ArrowRight /></el-icon>
+                <el-icon><ElIconArrowRight /></el-icon>
               </el-button>
             </div>
           </template>
@@ -37,10 +37,11 @@
 
 <script setup lang="ts">
 import { ElMessage } from "element-plus"
-import { ArrowRight } from '@element-plus/icons-vue'
 import CollectData from '@/components/user/CollectData.vue'
 import UserInfoData from "~/components/user/UserInfoData.vue";
-import {useToken} from "~/composables/states";
+import { useToken } from "~/composables/states";
+import { useServerRequest } from "~/composables/useServerRequest";
+import { useClientRequest } from "~/composables/useClientRequest";
 
 definePageMeta({
   middleware: ["auth"]
@@ -48,31 +49,28 @@ definePageMeta({
 const runtimeConfig = useRuntimeConfig()
 const token = useToken()
 const activeName = ref<string>('collect')
-const headers = {
-  Authorization: token.value
-}
 
 const [
   { data: signData, refresh },
   { data: goldData, refresh: refreshGold }
 ] = await Promise.all([
   // 获取用户是否签到
-  useFetch<{ data: null | number }>(runtimeConfig.public.apiBase + '/user-sign/getSign', { headers }),
+  useServerRequest<{ data: null | number }>('/user-sign/getSign'),
   // 获取用户金币数量
-  useFetch<{ data: { gold: number } }>(runtimeConfig.public.apiBase + '/user-wallet/findGold', { headers })
+  useServerRequest<{ data: { gold: number } }>('/user-wallet/findGold')
 ])
 
 // 用户签到
 async function handleSign() {
   if (signData.value?.data) return;
-  const { code, msg, data } = await $fetch<{ code: number; msg: string; data: any }>(runtimeConfig.public.apiBase + '/user-sign/sign', { headers })
-  ElMessage({
-    message: code === 200 ? `签到成功, ${data.signReward}` : msg,
-    type: code === 200 ? 'success' : 'error'
-  })
+  const { code, data } = await useClientRequest<{ code: number; msg: string; data: any }>('/user-sign/sign')
   if (code === 200) {
     refresh();
     refreshGold()
+    ElMessage({
+      message: `签到成功, ${data.signReward}`,
+      type: 'success'
+    })
   }
 }
 

@@ -1,8 +1,8 @@
 <template>
   <div class="container mt-20 show">
     <Head>
-      <Title>{{ title }}{{ info.name }} - {{ globalTitle }}</Title>
-      <Meta name="description" :content="`最新最全的${title}${info.name}尽在淳渔影视。`" />
+      <Title>{{ title }}{{ info.data.name }} - {{ globalTitle }}</Title>
+      <Meta name="description" :content="`最新最全的${title}${info.data.name}尽在淳渔影视。`" />
     </Head>
 
     <el-row :gutter="40">
@@ -10,7 +10,7 @@
         <div class="panel_hd between items-center">
           <div class="panel_hd__left">
             <h3 class="title items-center">
-              <el-icon><VideoCamera /></el-icon><a href="/">筛选</a>
+              <el-icon><ElIconVideoCamera /></el-icon><a href="/">筛选</a>
             </h3>
           </div>
         </div>
@@ -20,7 +20,7 @@
               <li :class="route.query.t === '' || route.query.t === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, t: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="(item, index) in genreList.data" :class="route.query.t === item.name ? 'active' : ''">
+              <li v-for="(item, index) in genreList.data" :class="route.query.t === item.name ? 'active' : ''" :key="index">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, t: item.name } }">{{ item.name }}</nuxt-link>
               </li>
             </ul>
@@ -65,9 +65,9 @@
           <el-row :gutter="20" v-if="movieList.total !== 0">
             <el-col :sm="4" :xs="8" v-for="item in movieList.rows">
               <div class="video-list__block">
-                <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="img-box">
+                <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="img-box">
                   <el-image class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
-                  <span>{{ +item.rate === 0 ? '暂无评分' : item.rate.toFixed(1) }}</span>
+                  <span v-if="item.movieRate">{{ +item.movieRate.rate === 0 ? '暂无评分' : item.movieRate.rate.toFixed(1) }}</span>
                 </nuxt-link>
                 <div class="video-list__detail">
                   <h4 class="title text-overflow">{{ item.title }}</h4>
@@ -103,7 +103,7 @@
         </div>
         <ul class="col-pd mb-20">
           <li v-for="(item, index) in weekList.rows">
-            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
+            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
@@ -120,7 +120,7 @@
         </div>
         <ul class="col-pd">
           <li v-for="(item, index) in monthList.rows">
-            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
+            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
@@ -135,17 +135,19 @@
 </template>
 
 <script setup lang="ts">
-import { VideoCamera } from '@element-plus/icons-vue'
-import dayjs from "dayjs";
-import {IResData, IResPage} from "~/global";
+import { IResData, IResPage } from "~/global";
+import {useServerRequest} from "~/composables/useServerRequest";
+import {useClientRequest} from "~/composables/useClientRequest";
+
+const dayjs = useDayjs()
 
 definePageMeta({
   key: route => route.fullPath
 })
 
 const runtimeConfig = useRuntimeConfig()
-const {public: publicConfig} = runtimeConfig
-const {apiBase, globalTitle} = publicConfig
+const { public: publicConfig } = runtimeConfig
+const { globalTitle } = publicConfig
 const route = useRoute()
 const { query } = route
 const currentPage = ref<number>((route.query.page && +route.query.page) || 1)
@@ -182,14 +184,14 @@ const [
   { data: info },
   { data: movieList, pending, refresh }
 ] = await Promise.all([
-  useFetch<IResData<{name: string; id: number}[]>>(apiBase + '/basic/genre/all', {
+  useServerRequest<IResData<{name: string; id: number}[]>>('/basic/genre/all', {
     query: {
       columnValue: query.columnValue
     }
   }),
-  useFetch<IResData<{name: string; id: number}[]>>(apiBase + '/basic/country/all'),
-  useFetch<IResData<{name: string; id: number}[]>>(apiBase + '/basic/language/all'),
-  useFetch<IResPage<any[]>>(apiBase + '/movie/list', {
+  useServerRequest<IResData<{name: string; id: number}[]>>('/basic/country/all'),
+  useServerRequest<IResData<{name: string; id: number}[]>>('/basic/language/all'),
+  useServerRequest<IResPage<any[]>>('/movie/list', {
     query: {
       columnValue: query.columnValue,
       pageNum: query.page || 1,
@@ -198,7 +200,7 @@ const [
       date: [weekStartTime, currTime]
     }
   }),
-  useFetch<IResPage<any[]>>(apiBase + '/movie/list', {
+  useServerRequest<IResPage<any[]>>('/movie/list', {
     query: {
       columnValue: query.columnValue,
       pageNum: query.page || 1,
@@ -207,12 +209,12 @@ const [
       date: [mouthStartTime, currTime]
     }
   }),
-  useFetch<any>(apiBase + `/column`, {
+  useServerRequest<any>(`/column`, {
     query: {
       value: query.columnValue
     }
   }),
-  useAsyncData<IResPage<any[]>>('data', () => $fetch(apiBase + '/movie/list', {
+  useAsyncData<IResPage<any[]>>('data', () => useClientRequest('/movie/list', {
     query: {
       columnValue: query.columnValue,
       genres: query.t,

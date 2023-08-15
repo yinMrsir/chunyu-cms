@@ -10,10 +10,11 @@ import { CastModule } from '../cast/cast.module';
 import { RoleActorModule } from '../role-actor/role-actor.module';
 import { MovieVideosModule } from '../videos/movie-videos.module';
 import { UserCollectModule } from '../../web/user-collect/user-collect.module';
+import { MovieRate } from './entities/movie-rate.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([MovieBasic, MoviePv]),
+    TypeOrmModule.forFeature([MovieBasic, MoviePv, MovieRate]),
     PubDateModule,
     MovieLevelModule,
     CastModule,

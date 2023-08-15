@@ -18,7 +18,7 @@
                 <el-table-column prop="gold" label="金币" />
                 <el-table-column prop="createTime" label="创建时间">
                   <template #default="scope">
-                    {{ dayjs(scope.row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+                    {{ $dayjs(scope.row.createTime).format('YYYY-MM-DD HH:mm:ss') }}
                   </template>
                 </el-table-column>
               </el-table>
@@ -42,9 +42,8 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from "dayjs";
-import {IResPage} from "~/global";
-import {useToken} from "~/composables/states";
+import { IResPage } from "~/global";
+import { useToken } from "~/composables/states";
 
 const runtimeConfig = useRuntimeConfig()
 const token = useToken()
@@ -55,18 +54,13 @@ const queryParams = reactive({
 const count = ref(0)
 const currentPage = ref<number>(1)
 
-const headers = {
-  Authorization: token.value
-}
-
 onMounted(() => {
   getList()
 })
 
 async function getList() {
-  const { rows, total } = await $fetch<IResPage<any>>(runtimeConfig.public.apiBase + '/user-wallet/logs', {
-    query: queryParams,
-    headers
+  const { rows, total } = await useClientRequest<IResPage<any>>('/user-wallet/logs', {
+    query: queryParams
   })
   list.value = rows
   count.value = total

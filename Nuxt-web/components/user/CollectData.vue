@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :sm="4" :xs="8" v-for="item in movieList">
             <div class="video-list__block">
-              <nuxt-link :to="`/c-${item.movie.columnValue}/movie/${item.movie.id}`">
+              <nuxt-link :to="`/column/${item.movie.columnValue}/movie/${item.movie.id}`">
                 <el-image class="video-list__block__img" :src="item.movie.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
               </nuxt-link>
               <div class="video-list__detail">
@@ -32,34 +32,23 @@
 </template>
 
 <script lang="ts" setup>
-import {ElMessage} from "element-plus";
-import {useToken} from "~/composables/states";
+import { useServerRequest } from "~/composables/useServerRequest";
 
-const token = useToken()
 const runtimeConfig = useRuntimeConfig()
 const movieList = ref<any[]>([])
 const currentPage = ref<number>(1)
 const total = ref(0)
 
 async function getList() {
-  const { data: collectData, error } = await useFetch<{ rows:any[]; total: number;  code: number }>(runtimeConfig.public.apiBase + '/user-collect/findByPage', {
+  const { data: collectData, error } = await useServerRequest<{ rows:any[]; total: number;  code: number }>('/user-collect/findByPage', {
     query: {
       pageNum: currentPage.value,
       pageSize: 12
-    },
-    headers: {
-      Authorization: token.value
     }
   })
   if (!error.value && collectData.value?.code === 200) {
     movieList.value = collectData.value.rows
     total.value = collectData.value.total
-  }
-  if (error.value) {
-    ElMessage({
-      message: error.value?.statusMessage,
-      type: 'error'
-    })
   }
 }
 getList()

@@ -14,7 +14,7 @@
     </div>
     <movie-box type="index" :category-item="item" v-for="item in movie.data" />
     <div class="friendly-link flex items-center mt-20">
-      <img src="../assets/images/icon_26.png">
+      <img src="../assets/images/icon_26.png" alt="友情链接">
       友情链接
     </div>
     <div class="friendly-link__content">
@@ -24,17 +24,15 @@
 </template>
 
 <script setup lang="ts">
-import {IResData, IResPage} from "~/global";
-const runtimeConfig = useRuntimeConfig()
-const {public: publicConfig} = runtimeConfig
-const {apiBase} = publicConfig
+import { IResData, IResPage } from "~/global";
+import { useServerRequest } from "~/composables/useServerRequest";
 
 // banner数据
-const getBannerRequest = useFetch<IResPage<any>>(apiBase + '/basic/banner/list')
+const getBannerRequest = useServerRequest<IResPage<any>>('/basic/banner/list')
 // 影视数据
-const getMovieRequest = useFetch<IResData<any>>(apiBase + '/web/index')
+const getMovieRequest = useServerRequest<IResData<any>>('/web/index')
 // 获取友情链接
-const getLinks = useFetch<IResData<any>>(apiBase + '/basic/link/all')
+const getLinks = useServerRequest<IResData<any>>('/basic/link/all')
 
 const [{ data: banner }, { data:movie }, { data: links }] = await Promise.all([getBannerRequest, getMovieRequest, getLinks])
 </script>

@@ -9,7 +9,7 @@
             <ul>
               <li :class="route.path === '/' ? 'active' : ''"><NuxtLink to="/">首页</NuxtLink></li>
               <li v-for="item in navigation.data" :class="route.params.column === item.value ? 'active' : ''">
-                <nuxt-link :to="`/c-${item.value}`" v-if="+item.type === 1">{{item.name}}</nuxt-link>
+                <nuxt-link :to="`/column/${item.value}`" v-if="+item.type === 1">{{item.name}}</nuxt-link>
                 <nuxt-link :to="item.value" target="_blank" v-if="+item.type === 2">{{item.name}}</nuxt-link>
               </li>
             </ul>
@@ -19,14 +19,14 @@
           <el-input
               class="w-50 m-2 mr-20"
               placeholder="请输入搜索的影视名"
-              :suffix-icon="Search"
+              :suffix-icon="ElIconSearch"
               v-model="searchValue"
               @keyup.enter.native="handleSearch"
           />
           <ClientOnly>
             <template v-if="userInfo">
               <el-dropdown @command="handleCommand">
-                <el-button circle :icon="UserFilled" color="#155FAA"></el-button>
+                <el-button circle :icon="ElIconUserFilled" color="#155FAA"></el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item command="user">个人中心</el-dropdown-item>
@@ -36,7 +36,7 @@
               </el-dropdown>
             </template>
             <template v-else>
-              <el-button circle :icon="UserFilled" @click="goLogin"></el-button>
+              <el-button circle :icon="ElIconUserFilled" @click="goLogin"></el-button>
             </template>
           </ClientOnly>
         </div>
@@ -44,7 +44,7 @@
       <div class="mobile-nav hidden-sm-only hidden-sm-and-up" v-if="route.path.indexOf('/user') === -1">
         <ul>
           <li :class="route.params.column === item.value ? 'active' : ''" :key="index" v-for="(item, index) in navigation.data">
-            <nuxt-link :to="`/c-${item.value}`" v-if="+item.type === 1">{{item.name}}</nuxt-link>
+            <nuxt-link :to="`/column/${item.value}`" v-if="+item.type === 1">{{item.name}}</nuxt-link>
             <nuxt-link :to="item.value" target="_blank" v-if="+item.type === 2">{{item.name}}</nuxt-link>
           </li>
         </ul>
@@ -56,7 +56,7 @@
       若本站收录的节目无意侵犯了贵司版权,请给542968439@qq.com留言,我们会及时逐步删除和规避程序自动搜索采集到的不提供分享的版权影视。<br/>
       本站仅供测试和学习交流。请大家支持正版。</div>
     <footer>
-      Copyright {{ year }} 淳渔影视网 Inc. All Rights Reserved.
+      Copyright {{ $dayjs().format('YYYY') }} 淳渔影视网 Inc. All Rights Reserved.
     </footer>
     <LoginPop ref="loginPopRef" @success="handleSuccess"/>
     <el-backtop />
@@ -65,14 +65,9 @@
 
 <script setup lang="ts">
 import { ComponentInternalInstance } from 'vue'
-import { Search, UserFilled} from '@element-plus/icons-vue'
-import { useFetch} from "nuxt/app";
-import dayjs from "dayjs";
 import LoginPop from "~/components/LoginPop.vue";
+import {useServerRequest} from "~/composables/useServerRequest";
 
-const runtimeConfig = useRuntimeConfig()
-const {public: publicConfig} = runtimeConfig
-const {apiBase} = publicConfig
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const userInfo = useCookie<{token: string} | null>('userInfo')
@@ -81,9 +76,8 @@ const route = useRoute()
 
 const loginPopRef = ref<InstanceType<typeof LoginPop> | null>(null)
 const searchValue = ref('')
-const year = dayjs().format('YYYY')
 
-const { data: navigation } = await useFetch(apiBase + '/column/all', {
+const { data: navigation } = await useServerRequest('/column/all', {
   query: { status: 0 }
 })
 function handleSearch() {

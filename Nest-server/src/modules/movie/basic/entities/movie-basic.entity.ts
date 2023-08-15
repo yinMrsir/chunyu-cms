@@ -10,6 +10,7 @@ import { BaseEntity } from '../../../../common/entities/base.entity';
 import { MovieVideos } from '../../videos/entities/movie-videos.entity';
 import { MoviePv } from './movie-pv.entity';
 import { UserCollect } from '../../../web/user-collect/entities/user-collect.entity';
+import { MovieRate } from './movie-rate.entity';
 
 @Entity('movie_basic')
 export class MovieBasic extends BaseEntity {
@@ -281,22 +282,6 @@ export class MovieBasic extends BaseEntity {
   @IsOptional()
   freeDuration: number;
 
-  @Column('int', {
-    name: 'rate',
-    default: 0,
-    comment: '评分',
-  })
-  @IsOptional()
-  rate: number;
-
-  @Column('int', {
-    name: 'rate_user_count',
-    default: 0,
-    comment: '评分人数',
-  })
-  @IsOptional()
-  rateUserCount: number;
-
   // 关联的视频
   @OneToMany(() => MovieVideos, (movieVideos) => movieVideos.movieId)
   movieVideos: MovieVideos[];
@@ -304,6 +289,10 @@ export class MovieBasic extends BaseEntity {
   // 访问量
   @OneToOne(() => MoviePv, (moviePv) => moviePv.movie, { cascade: true })
   moviePv: MoviePv;
+
+  // 访问量
+  @OneToOne(() => MovieRate, (MovieRate) => MovieRate.movie, { cascade: true })
+  movieRate: MovieRate;
 
   // 关联的收藏
   @OneToMany(() => UserCollect, (userCollect) => userCollect.movieId)

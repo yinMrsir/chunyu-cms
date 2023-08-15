@@ -17,8 +17,8 @@
           <div class="panel_hd__right items-center">
             <ul class="items-center">
               <li>
-                <nuxt-link :to="`/c-${route.params.column}/show?t=${categoryItem.name}`" class="items-center">
-                  更多 <el-icon><ArrowRight /></el-icon>
+                <nuxt-link :to="`/column/${route.params.column}/show?t=${categoryItem.name}`" class="items-center">
+                  更多 <el-icon><ElIconArrowRight /></el-icon>
                 </nuxt-link>
               </li>
             </ul>
@@ -28,9 +28,9 @@
           <el-row :gutter="20">
             <el-col :sm="4" :xs="8" v-for="item in categoryItem.rows">
               <div class="video-list__block">
-                <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="img-box">
+                <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="img-box">
                   <el-image lazy class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
-                  <span>{{ +item.rate === 0 ? '暂无评分' : item.rate.toFixed(1) }}</span>
+                  <span v-if="item.movieRate">{{ +item.movieRate.rate === 0 ? '暂无评分' : item.movieRate.rate.toFixed(1) }}</span>
                 </nuxt-link>
                 <div class="video-list__detail">
                   <h4 class="title text-overflow">{{ item.title }}</h4>
@@ -48,13 +48,13 @@
       <el-col :sm="6" class="hidden-sm-and-down">
         <div class="panel_hd items-center">
           <h3 class="title items-center">
-            <img src="../../assets/images/icon_12.png" alt="">
+            <img src="../../../assets/images/icon_12.png" alt="">
             {{ categoryItem.name }}榜单
           </h3>
         </div>
         <ul class="col-pd">
           <li v-for="(item, index) in categoryItem.ranks">
-            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
+            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
@@ -69,9 +69,8 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowRight } from '@element-plus/icons-vue'
-import { useFetch } from "nuxt/app";
-import {IResData} from "~/global";
+import { IResData } from "~/global";
+import { useServerRequest } from "~/composables/useServerRequest";
 
 const runtimeConfig = useRuntimeConfig()
 const {public: publicConfig} = runtimeConfig
@@ -79,8 +78,8 @@ const {apiBase, globalTitle} = publicConfig
 const route = useRoute()
 
 const [{data: res}, { data: info }] = await Promise.all([
-  useFetch<IResData<any[]>>( `${apiBase}/web/type/${route.params.column}`),
-  useFetch<any>(`${apiBase}/column?value=${route.params.column}`)
+  useServerRequest<IResData<any[]>>( `/web/type/${route.params.column}`),
+  useServerRequest<any>(`/column?value=${route.params.column}`)
 ])
 
 if (!info.value.data) {

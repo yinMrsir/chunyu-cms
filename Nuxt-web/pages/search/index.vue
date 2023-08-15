@@ -19,9 +19,9 @@
                 <el-row :gutter="20">
                   <el-col :sm="4" :xs="8" v-for="item in movieList">
                     <div class="video-list__block">
-                      <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="img-box">
+                      <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="img-box">
                         <el-image class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
-                        <span>{{ +item.rate === 0 ? '暂无评分' : item.rate.toFixed(1) }}</span>
+                        <span v-if="item.movieRate">{{ +item.movieRate === 0 ? '暂无评分' : item.movieRate.toFixed(1) }}</span>
                       </nuxt-link>
                       <div class="video-list__detail">
                         <h4 class="title text-overflow">{{ item.title }}</h4>
@@ -57,7 +57,7 @@
           </div>
           <ul class="col-pd mb-20">
             <li v-for="(item, index) in newList">
-              <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
+              <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
                 <div>
                   <span class="badge">{{ index + 1 }}</span>
                   {{ item.title }}
@@ -73,7 +73,6 @@
 </template>
 
 <script setup lang="ts">
-import {useFetch} from "nuxt/app";
 import {IResPage} from "~/global";
 
 const route = useRoute()
@@ -98,8 +97,8 @@ definePageMeta({
 
 handleSearch()
 async function handleSearch() {
-  const { data } = await useFetch<IResPage<any>>(
-      runtimeConfig.public.apiBase + '/movie/list',
+  const { data } = await useServerRequest<IResPage<any>>(
+      '/movie/list',
       {
         query: {
           keyword: form.keyword,

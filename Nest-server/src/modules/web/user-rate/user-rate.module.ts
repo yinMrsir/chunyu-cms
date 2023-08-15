@@ -3,10 +3,10 @@ import { UserRateService } from './user-rate.service';
 import { UserRateController } from './user-rate.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRate } from './entities/user-rate.entity';
-import { MovieBasic } from '../../movie/basic/entities/movie-basic.entity';
+import { MovieRate } from '../../movie/basic/entities/movie-rate.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserRate, MovieBasic])],
+  imports: [TypeOrmModule.forFeature([UserRate, MovieRate])],
   controllers: [UserRateController],
   providers: [UserRateService],
 })

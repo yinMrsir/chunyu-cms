@@ -10,16 +10,10 @@
 </template>
 
 <script setup lang="ts">
-import {useToken} from "~/composables/states";
-
-const runtimeConfig = useRuntimeConfig()
-const token = useToken()
-const headers = {
-  Authorization: token.value
-}
+import { useServerRequest } from "~/composables/useServerRequest";
 
 // 获取用户信息
-const { data: userData } = await useFetch<{ data: { email: string; userId: number } }>(runtimeConfig.public.apiBase + '/web/user/info', { headers })
+const { data: userData } = await useServerRequest<{ data: { email: string; userId: number } }>('/web/user/info')
 </script>
 
 <style lang="scss">

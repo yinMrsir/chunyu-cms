@@ -58,6 +58,7 @@ export class MovieVideosService {
         'movieBasic',
         'movieVideos.movieId = movieBasic.id',
       )
+      .leftJoinAndSelect('movieBasic.movieRate', 'movieRate')
       .leftJoinAndMapMany(
         'movieVideos.country',
         Country,
@@ -91,11 +92,10 @@ export class MovieVideosService {
         'movieBasic.genres',
         'movieBasic.columnValue',
         'movieBasic.summary',
-        'movieBasic.rateUserCount',
-        'movieBasic.rate',
         'movieBasic.isPay',
         'movieBasic.freeDuration',
         'movieBasic.paymentAmount',
+        'movieRate',
         'country.name',
         'videos.id',
         'videos.title',

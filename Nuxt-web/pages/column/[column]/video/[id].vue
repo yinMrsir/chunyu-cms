@@ -9,8 +9,8 @@
       <span class="mr-10">当前位置</span>
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: `/c-${detail.movie.columnValue}/show`, query: { t: detail.movie.genres.split(',')[0] } }">{{ detail.movie.genres.split(',')[0] }}</el-breadcrumb-item>
-        <el-breadcrumb-item>{{ detail.movie.title }} - {{ detail.title }}</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: `/column/${detail.movie.columnValue}/show`, query: { t: detail.movie.genres.split(',')[0] } }">{{ detail.movie.genres.split(',')[0] }}</el-breadcrumb-item>
+        <el-breadcrumb-item class="hidden-sm-and-down">{{ detail.title }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <el-row :gutter="40" class="mt-20">
@@ -19,7 +19,9 @@
         <div>
           <h1 class="mb-10 mt-10 video-detail__title">
             {{ detail.title }}
-            <span :class="detail.movie.rateUserCount > 0 ? 'rate' : ''">{{ detail.movie.rateUserCount > 0 ? detail.movie.rate.toFixed(1) : '暂无评分' }}</span>
+            <span :class="detail.movie.movieRate?.rateUserCount > 0 ? 'rate' : ''">
+              {{ detail.movie.movieRate?.rateUserCount > 0 ? detail.movie.movieRate.rate.toFixed(1) : '暂无评分' }}
+            </span>
           </h1>
           <el-form :inline="true">
             <el-form-item label="类型:">{{ detail.movie.genres }}</el-form-item>
@@ -33,14 +35,14 @@
           <div class="panel_hd between items-center">
             <div class="panel_hd__left">
               <h3 class="title items-center">
-                <el-icon><VideoCamera /></el-icon>相关视频
+                <el-icon><ElIconVideoCamera /></el-icon>相关视频
               </h3>
             </div>
           </div>
           <div class="related_video" v-if="detail.videos.length">
             <ul class="clearfix">
               <li v-for="item in detail.videos">
-                <nuxt-link :to="`/c-${detail.movie.columnValue}/video/${item.id}`">
+                <nuxt-link :to="`/column/${detail.movie.columnValue}/video/${item.id}`">
                   <el-image class="img" fit="cover" :src="item.cover || item.video?.poster"></el-image>
                   <p :title="item.title"><span :class="+item.id === +route.params.id ? 'animate' : ''">{{+item.id === +route.params.id ? '正在播放: ' : '' }}{{ item.title }}</span></p>
                 </nuxt-link>
@@ -52,7 +54,7 @@
           <div class="panel_hd between items-center">
             <div class="panel_hd__left">
               <h3 class="title items-center">
-                <el-icon><VideoCamera /></el-icon><a href="/">猜你喜欢</a>
+                <el-icon><ElIconVideoCamera /></el-icon><a href="/">猜你喜欢</a>
               </h3>
             </div>
           </div>
@@ -60,8 +62,8 @@
             <el-row :gutter="20">
               <el-col :sm="4" :xs="8" v-for="item in likeRows.rows">
                 <div class="video-list__block">
-                  <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`">
-                    <el-image class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
+                  <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`">
+                    <el-image class="video-list__block__img" :src="item.poster || apiBase + '/default.jpg'" fit="cover" />
                   </nuxt-link>
                   <div class="video-list__detail">
                     <h4 class="title text-overflow">{{ item.title }}</h4>
@@ -90,7 +92,7 @@
         </div>
         <ul class="col-pd mb-20">
           <li v-for="(item, index) in weekList.rows">
-            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
+            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
@@ -107,7 +109,7 @@
         </div>
         <ul class="col-pd">
           <li v-for="(item, index) in monthList.rows">
-            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
+            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
@@ -123,22 +125,22 @@
 
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { VideoCamera } from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
-import {useFetch} from "nuxt/app";
-import dayjs from "dayjs";
-import {IResData, IResPage} from "~/global";
+import { IResData, IResPage } from "~/global";
 import 'xgplayer/dist/index.min.css'
 import 'xgplayer/es/plugins/danmu/index.css'
-import '../../../plugins/xgplayerPlugins/payTipPlugin.css'
+import '../../../../plugins/xgplayerPlugins/payTipPlugin.css'
 import PresetPlayer from "xgplayer";
+import { useServerRequest } from "~/composables/useServerRequest";
+import { useClientRequest } from "~/composables/useClientRequest";
 
+const dayjs = useDayjs()
 const token = useToken()
 const loginDialogVisible = useLoginDialogVisible()
 
 const runtimeConfig = useRuntimeConfig()
-const {public: publicConfig} = runtimeConfig
-const {apiBase, globalTitle} = publicConfig
+const { public: publicConfig } = runtimeConfig
+const { apiBase, globalTitle } = publicConfig
 
 const route = useRoute()
 const id = route.params.id
@@ -154,7 +156,7 @@ const currTime = dayjs().format('YYYY-MM-DD')
 const weekStartTime = dayjs().subtract(7, 'day').format('YYYY-MM-DD')
 const mouthStartTime = dayjs().subtract(30, 'day').format('YYYY-MM-DD')
 
-const { data: detailRes } = await useFetch<IResData<any>>(apiBase + `/movie/videos/${id}`)
+const { data: detailRes } = await useServerRequest<IResData<any>>(`/movie/videos/${id}`)
 if (!detailRes.value) {
   throw createError({
     statusCode: 404,
@@ -168,11 +170,8 @@ const detail = detailRes.value.data
 getUserMovie()
 async function getUserMovie() {
   if (token.value) {
-    const { data: userBuy } = await useFetch<IResData<any>>(apiBase + `/user-movie`, {
-      query: { movieId: detail.movieId },
-      headers: {
-        Authorization: token.value
-      },
+    const { data: userBuy } = await useServerRequest<IResData<any>>(`/user-movie`, {
+      query: { movieId: detail.movieId }
     })
     isUserBuy.value = !!userBuy.value?.data
   }
@@ -274,12 +273,9 @@ function buyMovie(player: any, callback: { (): void; (): void; }) {
       type: 'warning',
     }
   ).then(async () => {
-    const { code, msg } = await $fetch<IResData<any>>(apiBase + `/user-movie`, {
+    const { code, msg } = await useClientRequest<IResData<any>>(`/user-movie`, {
       method: 'post',
-      body: { movieId: detail.movieId },
-      headers: {
-        Authorization: token.value
-      },
+      body: { movieId: detail.movieId }
     })
     if (code === 200) {
       isUserBuy.value = true
@@ -304,14 +300,14 @@ const [
   { data: weekList },
   { data: monthList }
 ] = await Promise.all([
-  useFetch<IResPage<any[]>>(`${apiBase}/movie/list`, {
+  useServerRequest<IResPage<any[]>>(`/movie/list`, {
     query: {
       genres: detail.movie.genres.split(',')[0],
       pageNum: 1,
       pageSize: 18,
     }
   }),
-  useFetch<IResPage<any[]>>(`${apiBase}/movie/list`, {
+  useServerRequest<IResPage<any[]>>(`/movie/list`, {
     query: {
       columnValue: detail.movie.columnValue,
       pageNum: 1,
@@ -320,7 +316,7 @@ const [
       date: [weekStartTime, currTime]
     }
   }),
-  useFetch<IResPage<any[]>>(`${apiBase}/movie/list`, {
+  useServerRequest<IResPage<any[]>>(`/movie/list`, {
     query: {
       columnValue: detail.movie.columnValue,
       pageNum: 1,

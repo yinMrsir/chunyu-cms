@@ -8,8 +8,6 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.0.10",
-    "dayjs": "^1.11.7",
     "element-plus": "^2.2.28",
     "qrcode.vue": "^3.3.3",
     "sass": "^1.57.1",
@@ -17,7 +15,9 @@
     "xgplayer-mp4": "^3.0.5"
   },
   "devDependencies": {
+    "@element-plus/nuxt": "^1.0.5",
     "@nuxt/devtools": "^0.6.1",
-    "nuxt": "^3.5.2"
+    "dayjs-nuxt": "^1.1.2",
+    "nuxt": "^3.6.5"
   }
 }

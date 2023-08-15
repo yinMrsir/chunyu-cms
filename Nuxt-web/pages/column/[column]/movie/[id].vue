@@ -10,7 +10,7 @@
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item
-            :to="{ path: `/c-${detailRes.data.columnValue}/show`, query: { t: detailRes.data.genres?.split(',')[0] } }">
+            :to="{ path: `/column/${detailRes.data.columnValue}/show`, query: { t: detailRes.data.genres?.split(',')[0] } }">
           {{ detailRes.data.genres?.split(',')[0] }}
         </el-breadcrumb-item>
         <el-breadcrumb-item>
@@ -20,19 +20,25 @@
     </div>
     <el-row :gutter="40" class="mt-20">
       <el-col :span="18" :xs="24">
-        <h1 class="movie-detail-title hidden-sm-and-up">{{ detailRes.data.title }} <span
-            :class="detailRes.data.rateUserCount > 0 ? 'rate' : ''">{{
-            detailRes.data.rateUserCount > 0 ? detailRes.data.rate.toFixed(1) : '暂无评分'
-          }}</span></h1>
+        <h1 class="movie-detail-title hidden-sm-and-up">
+          {{ detailRes.data.title }}
+          <span
+            :class="detailRes.data.movieRate?.rateUserCount > 0 ? 'rate' : ''">
+            {{detailRes.data.movieRate?.rateUserCount > 0 ? detailRes.data.movieRate.rate.toFixed(1) : '暂无评分' }}
+          </span>
+        </h1>
         <div class="clearfix">
           <div class="movies-pic">
             <el-image :src="detailRes.data.poster" fit="cover" style="width: 100%"></el-image>
           </div>
           <div class="movies-info">
-            <h1 class="hidden-sm-and-down">{{ detailRes.data.title }} <span
-                :class="detailRes.data.rateUserCount > 0 ? 'rate' : ''">{{
-                detailRes.data.rateUserCount > 0 ? detailRes.data.rate.toFixed(1) : '暂无评分'
-              }}</span></h1>
+            <h1 class="hidden-sm-and-down">
+              {{ detailRes.data.title }}
+              <span
+                :class="detailRes.data.movieRate?.rateUserCount > 0 ? 'rate' : ''">
+                {{detailRes.data.movieRate?.rateUserCount > 0 ? detailRes.data.movieRate.rate.toFixed(1) : '暂无评分' }}
+              </span>
+            </h1>
             <el-form :inline="true" label-position="right">
               <el-form-item label="类型:">{{ detailRes.data.genres }}</el-form-item>
               <el-form-item label="地区:">
@@ -50,18 +56,18 @@
                 <div class="text-overflow">{{ detailRes.data.tags.split(',').join('/') }}</div>
               </el-form-item>
               <div>
-                <nuxt-link :to="`/c-${detailRes.data.columnValue}/video/${detailRes.data.movieVideos[0].id}`"
-                           v-if="detailRes.data.movieVideos[0]">
-                  <el-button :icon="VideoPlay" type="primary" class="mr-10">播放</el-button>
+                <nuxt-link :to="`/column/${detailRes.data.columnValue}/video/${detailRes.data.movieVideos[0].id}`" v-if="detailRes.data.movieVideos[0]">
+                  <el-button :icon="ElIconVideoPlay" type="primary" class="mr-10">播放</el-button>
                 </nuxt-link>
-                <el-button :icon="isCollect ? StarFilled : Star" @click="handleCollect">{{
+                <el-button :icon="isCollect ? ElIconStarFilled : ElIconStar" @click="handleCollect">
+                  {{
                     isCollect ? '已收藏' : '收藏'
                   }}
                 </el-button>
                 <ClientOnly>
                   <el-popover v-if="!userRateData" placement="right" trigger="click">
                     <template #reference>
-                      <el-button :icon="Edit">评分</el-button>
+                      <el-button :icon="ElIconEdit">评分</el-button>
                     </template>
                     <el-rate allow-half v-model="rate" @change="onRatechange"/>
                   </el-popover>
@@ -81,7 +87,7 @@
           <div class="related_video">
             <ul class="clearfix">
               <li v-for="item in detailRes.data.movieVideos">
-                <nuxt-link :to="`/c-${detailRes.data.columnValue}/video/${item.id}`">
+                <nuxt-link :to="`/column/${detailRes.data.columnValue}/video/${item.id}`">
                   <el-image class="img" :src="item.cover || item.video?.poster"></el-image>
                   <p :title="item.title">{{ item.title }}</p>
                 </nuxt-link>
@@ -151,7 +157,7 @@
         </div>
         <ul class="col-pd mb-20">
           <li v-for="(item, index) in weekListRes.rows">
-            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
+            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
@@ -168,7 +174,7 @@
         </div>
         <ul class="col-pd">
           <li v-for="(item, index) in monthListRes.rows">
-            <nuxt-link :to="`/c-${item.columnValue}/movie/${item.id}`" class="between">
+            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
               <div>
                 <span class="badge">{{ index + 1 }}</span>
                 {{ item.title }}
@@ -183,18 +189,15 @@
 </template>
 
 <script setup lang="ts">
-import {Star, StarFilled, VideoPlay, Edit} from '@element-plus/icons-vue'
 import QrcodeVue from 'qrcode.vue'
-import {useFetch} from "nuxt/app";
-import {ElMessage} from "element-plus";
-import {useLoginDialogVisible, useToken} from "~/composables/states";
-import dayjs from "dayjs";
-import {IResData, IResPage} from "~/global";
-import {escapeHtml} from '~/utils/tool'
+import { useLoginDialogVisible, useToken } from "~/composables/states";
+import { IResData, IResPage } from "~/global";
+import { escapeHtml } from '~/utils/tool'
+import {useServerRequest} from "~/composables/useServerRequest";
+import {useClientRequest} from "~/composables/useClientRequest";
 
+const dayjs = useDayjs()
 const runtimeConfig = useRuntimeConfig()
-const {public: publicConfig} = runtimeConfig
-const {apiBase} = publicConfig
 
 const route = useRoute()
 const token = useToken()
@@ -215,17 +218,17 @@ onMounted(() => {
 })
 
 const [
-  {data: detailRes, refresh},
-  {data: rolesRes},
-  {data: castsRes},
+  { data: detailRes, refresh },
+  { data: rolesRes },
+  { data: castsRes },
 ] = await Promise.all([
-  useFetch<IResData<any>>(`${apiBase}/movie/${id}`),
-  useFetch<IResPage<any[]>>(`${apiBase}/movie/role-actor/list?movieId=${id}&pageNum=1&pageSize=50`),
-  useFetch<IResPage<any[]>>(`${apiBase}/movie/cast/list?movieId=${id}&pageNum=1&pageSize=50`)
+  useServerRequest<IResData<any>>(`/movie/${id}`),
+  useServerRequest<IResPage<any[]>>(`/movie/role-actor/list?movieId=${id}&pageNum=1&pageSize=50`),
+  useServerRequest<IResPage<any[]>>(`/movie/cast/list?movieId=${id}&pageNum=1&pageSize=50`)
 ])
 
 const [{data: weekListRes}, {data: monthListRes}] = await Promise.all([
-  useFetch<IResPage<any[]>>(`${apiBase}/movie/list`, {
+  useServerRequest<IResPage<any[]>>(`/movie/list`, {
     query: {
       columnValue: detailRes.value?.data.columnValue,
       pageNum: 1,
@@ -234,7 +237,7 @@ const [{data: weekListRes}, {data: monthListRes}] = await Promise.all([
       date: [weekStartTime, currTime]
     }
   }),
-  useFetch<IResPage<any[]>>(`${apiBase}/movie/list`, {
+  useServerRequest<IResPage<any[]>>(`/movie/list`, {
     query: {
       columnValue: detailRes.value?.data.columnValue,
       pageNum: 1,
@@ -254,7 +257,7 @@ if (!detailRes.value) {
 }
 
 /** 更新访问量 */
-useFetch(`${apiBase}/movie/updatePv/${id}`)
+useServerRequest(`/movie/updatePv/${id}`)
 
 /** 登录状态发生改变 重新获取收藏和评分状态 */
 watch(token, () => {
@@ -265,13 +268,17 @@ watch(token, () => {
 /** 获取用户收藏状态 */
 getUserCollect()
 async function getUserCollect() {
-  const {data: userCollect} = await useFetch<{ data: any }>(apiBase + '/user-collect/find', {
-    query: {movieId: id},
-    headers: {
-      Authorization: token.value
-    },
-  })
-  isCollect.value = !!userCollect.value?.data
+  if (!token.value) {
+    isCollect.value = false
+  } else {
+    const {data: userCollect} = await useServerRequest<{ data: any }>('/user-collect/find', {
+      query: {movieId: id},
+      headers: {
+        Authorization: token.value
+      },
+    })
+    isCollect.value = !!userCollect.value?.data
+  }
 }
 
 /** 收藏 */
@@ -280,34 +287,20 @@ async function handleCollect() {
     loginDialogVisible.value = true
   } else {
     let code: number
-    let msg = ''
     if (isCollect.value) {
-      let {code: codeRes, msg: msgRes} = await $fetch<{ code: number; msg: string }>(apiBase + `/user-collect/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: token.value
-        },
+      let { code: codeRes } = await useClientRequest<{ code: number; msg: string }>(`/user-collect/${id}`, {
+        method: 'DELETE'
       })
       code = codeRes
-      msg = msgRes
     } else {
-      let {code: codeRes, msg: msgRes} = await $fetch<{ code: number; msg: string }>(apiBase + `/user-collect`, {
+      let { code: codeRes } = await useClientRequest<{ code: number; msg: string }>(`/user-collect`, {
         body: {movieId: id},
-        method: 'POST',
-        headers: {
-          Authorization: token.value
-        },
+        method: 'POST'
       })
       code = codeRes
-      msg = msgRes
     }
     if (code === 200) {
       isCollect.value = !isCollect.value
-    } else {
-      ElMessage({
-        message: msg,
-        type: 'error'
-      })
     }
   }
 }
@@ -315,13 +308,14 @@ async function handleCollect() {
 /** 获取用户评分状态 */
 getUserRate()
 async function getUserRate() {
-  const {data: userRate} = await useFetch<{ data: any }>(apiBase + '/user-rate', {
-    query: {movieId: id},
-    headers: {
-      Authorization: token.value
-    },
-  })
-  userRateData.value = !!userRate.value?.data
+  if (!token.value) {
+    userRateData.value = false
+  } else {
+    const { data: userRate } = await useServerRequest<{ data: any | null }>('/user-rate', {
+      query: {movieId: id},
+    })
+    userRateData.value = !!userRate.value?.data
+  }
 }
 
 /** 设置评分 */
@@ -331,21 +325,13 @@ async function onRatechange(value: string) {
     loginDialogVisible.value = true
     rate.value = 0
   } else {
-    const {code, msg} = await $fetch<{ code: number; msg: string }>(apiBase + '/user-rate', {
+    const { code } = await useClientRequest<{ code: number; msg: string }>('/user-rate', {
       method: 'post',
-      body: {movieId: id, rate: rate.value},
-      headers: {
-        Authorization: token.value
-      },
+      body: {movieId: id, rate: rate.value}
     })
     if (code === 200) {
       refresh()
       userRateData.value = true
-    } else {
-      ElMessage({
-        message: msg,
-        type: 'error'
-      })
     }
   }
 }

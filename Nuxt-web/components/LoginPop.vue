@@ -20,13 +20,13 @@
     <el-dialog title="注册" width="360" v-model="regDialogVisible">
       <el-form ref="formRegRef" :model="regForm" :rules="regRules">
         <el-form-item prop="email">
-          <el-input v-model="regForm.email" placeholder="请输入邮箱" :prefix-icon="UserFilled"></el-input>
+          <el-input v-model="regForm.email" placeholder="请输入邮箱" :prefix-icon="ElIconUserFilled"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input type="password" v-model="regForm.password" placeholder="请输入密码" :prefix-icon="Lock"></el-input>
         </el-form-item>
         <el-form-item prop="twoPassword">
-          <el-input type="password" v-model="regForm.twoPassword" placeholder="请再次输入密码" :prefix-icon="Lock"></el-input>
+          <el-input type="password" v-model="regForm.twoPassword" placeholder="请再次输入密码" :prefix-icon="ElIconLock"></el-input>
         </el-form-item>
         <el-form-item style="text-align: right">
           已有账号？去<a href="javascript:void(0)" class="link-color" @click="handleShowLoginDialog">登录</a>
@@ -41,14 +41,10 @@
 
 <script lang="ts" setup name="LoginPop">
 import { ComponentInternalInstance } from "@vue/runtime-core";
-import { ElMessage, FormInstance } from 'element-plus';
-import { UserFilled, Lock } from '@element-plus/icons-vue';
-import {isArray, reactive} from "#imports";
-import {useLoginDialogVisible, useRegDialogVisible} from "~/composables/states";
-
-const runtimeConfig = useRuntimeConfig()
-const {public: publicConfig} = runtimeConfig
-const {apiBase} = publicConfig
+import { FormInstance } from 'element-plus';
+import { isArray, reactive } from "#imports";
+import { useLoginDialogVisible, useRegDialogVisible } from "~/composables/states";
+import { useClientRequest } from "~/composables/useClientRequest";
 
 const regDialogVisible = useRegDialogVisible()
 const loginDialogVisible = useLoginDialogVisible()
@@ -93,7 +89,7 @@ async function login(formEl: FormInstance | undefined) {
   await formEl.validate(async (valid) => {
     if (valid) {
       try {
-        const data = await $fetch<any>(apiBase + '/web/user/login', { method: 'post', body: form })
+        const data = await useClientRequest<{ code: number; token: string; msg?: string }>('/web/user/login', { method: 'post', body: form })
         if (data.code === 200) {
           ElMessage({
             message: '登录成功',
@@ -117,7 +113,7 @@ async function handleReg(formEl: FormInstance | undefined) {
   await formEl.validate(async (valid) => {
     if (valid) {
       try {
-        const data = await $fetch<any>(apiBase + '/web/user/reg', { method: 'post', body: regForm })
+        const data = await useClientRequest<{ code: number; msg?: string }>('/web/user/reg', { method: 'post', body: regForm })
         if (data.code === 200) {
           ElMessage({
             message: '注册成功',

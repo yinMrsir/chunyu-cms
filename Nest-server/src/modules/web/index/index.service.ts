@@ -53,6 +53,7 @@ export class IndexService {
           'cast',
           'movieBasic.id = cast.movieId',
         )
+        .leftJoinAndSelect('movieBasic.movieRate', 'movieRate')
         .leftJoinAndMapOne(
           'cast.actor',
           Actor,
@@ -67,7 +68,7 @@ export class IndexService {
           'movieBasic.columnValue',
           'movieBasic.updateTime',
           'movieBasic.createTime',
-          'movieBasic.rate',
+          'movieRate',
           'cast.id',
           'actor.name',
         ])
@@ -128,6 +129,7 @@ export class IndexService {
           'cast',
           'movieBasic.id = cast.movieId',
         )
+        .leftJoinAndSelect('movieBasic.movieRate', 'movieRate')
         .leftJoinAndMapOne(
           'cast.actor',
           Actor,
@@ -142,7 +144,7 @@ export class IndexService {
           'movieBasic.columnValue',
           'movieBasic.updateTime',
           'movieBasic.createTime',
-          'movieBasic.rate',
+          'movieRate',
           'cast.id',
           'actor.name',
         ])

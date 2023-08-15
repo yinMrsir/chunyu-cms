@@ -61,9 +61,11 @@ export class MovieBasicService {
         'movieBasic.userCollects',
       )
       .leftJoinAndSelect('movieBasic.moviePv', 'moviePv')
+      .leftJoinAndSelect('movieBasic.movieRate', 'movieRate')
       .select([
         'movieBasic',
         'moviePv.pv',
+        'movieRate',
         'country.id',
         'country.name',
         'cast.id',
@@ -113,7 +115,7 @@ export class MovieBasicService {
     if (reqListMovieListDto.orderBy === 'pv') {
       queryBuilder.orderBy('moviePv.pv', 'DESC');
     } else if (reqListMovieListDto.orderBy === 'rate') {
-      queryBuilder.orderBy('movieBasic.rate', 'DESC');
+      queryBuilder.orderBy('movieRate.rate', 'DESC');
     } else {
       queryBuilder.orderBy('movieBasic.updateTime', 'DESC');
     }
@@ -142,6 +144,7 @@ export class MovieBasicService {
         'country',
         'FIND_IN_SET(country.id, movieBasic.countryIds)',
       )
+      .leftJoinAndSelect('movieBasic.movieRate', 'movieRate')
       .leftJoinAndSelect('movieBasic.movieVideos', 'movieVideos')
       .leftJoinAndSelect('movieVideos.video', 'video')
       .select([
@@ -149,6 +152,7 @@ export class MovieBasicService {
         'movieVideos.id',
         'movieVideos.title',
         'movieVideos.cover',
+        'movieRate',
         'country',
         'video.id',
         'video.poster',

@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     experimental: {
         inlineSSRStyles: false,
     },
+    modules: ['@element-plus/nuxt', 'dayjs-nuxt'],
     css: [
         '@/assets/css/main.css',
         'element-plus/dist/index.css',
@@ -33,9 +34,8 @@ export default defineNuxtConfig({
         }
     },
     runtimeConfig: {
-        baseUrl: process.env.BASE_URL || 'http://[::1]:4000',
         public: {
-            apiBase: process.env.BASE_URL || 'http://[::1]:4000',
+            apiBase: '/server',
             globalTitle: '淳渔影视'
         }
     },
