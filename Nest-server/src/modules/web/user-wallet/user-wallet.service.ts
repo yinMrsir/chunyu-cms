@@ -5,7 +5,7 @@ import { UpdateUserWalletDto } from './dto/update-user-wallet.dto';
 import { UserWallet } from './entities/user-wallet.entity';
 import { ApiException } from '../../../common/exceptions/api.exception';
 import { UserWalletLog } from './entities/user-wallet-log.entity';
-import {ReqUserWalletDto} from "./dto/req-user-wallet.dto";
+import { ReqUserWalletDto } from './dto/req-user-wallet.dto';
 
 @Injectable()
 export class UserWalletService {

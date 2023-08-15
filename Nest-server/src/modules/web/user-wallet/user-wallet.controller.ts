@@ -1,10 +1,11 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { UserWalletService } from './user-wallet.service';
 import { Public } from '../../../common/decorators/public.decorator';
 import { JwtWebAuthGuard } from '../../../common/guards/jwt-web-auth.guard';
 import { User, UserEnum } from '../../../common/decorators/user.decorator';
 import { DataObj } from '../../../common/class/data-obj.class';
-import { ReqUserWalletDto } from './dto/req-user-wallet.dto';
+import { PaginationPipe } from '../../../common/pipes/pagination.pipe';
+import { PaginationDto } from '../../../common/dto/pagination.dto';
 
 @Controller('user-wallet')
 export class UserWalletController {
@@ -25,8 +26,14 @@ export class UserWalletController {
   @Public()
   @Get('logs')
   @UseGuards(JwtWebAuthGuard)
-  async logs(@User(UserEnum.userId) reqUserWalletDto: ReqUserWalletDto) {
-    const [rows, total] = await this.userWalletService.logs(reqUserWalletDto);
+  async logs(
+    @User(UserEnum.userId) userId: number,
+    @Query(PaginationPipe) pagination: PaginationDto,
+  ) {
+    const [rows, total] = await this.userWalletService.logs({
+      ...pagination,
+      userId,
+    });
     return {
       rows,
       total,
