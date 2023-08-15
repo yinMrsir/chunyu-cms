@@ -20,7 +20,7 @@ import { PaginationPipe } from '../../common/pipes/pagination.pipe';
 import { QueryColumnDto } from './dto/query-column.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('焦点图管理')
+@ApiTags('栏目管理')
 @Controller('column')
 export class ColumnController {
   constructor(private readonly columnService: ColumnService) {}
