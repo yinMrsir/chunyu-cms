@@ -1,5 +1,4 @@
 import { useFetch, UseFetchOptions } from "#app";
-import { merge } from 'lodash'
 
 export const useServerRequest = <T= unknown>(url: string, opts?: UseFetchOptions<T, unknown>) => {
   const userInfo = useCookie<{ token: string }>('userInfo')
@@ -23,5 +22,5 @@ export const useServerRequest = <T= unknown>(url: string, opts?: UseFetchOptions
     },
   }
 
-  return useFetch<T>( url, merge(defaultOptions, opts) as any)
+  return useFetch<T>( url, {...defaultOptions, ...opts} as any)
 }

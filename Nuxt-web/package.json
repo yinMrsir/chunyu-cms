@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "element-plus": "^2.2.28",
-    "lodash": "^4.17.21",
     "qrcode.vue": "^3.3.3",
     "sass": "^1.57.1",
     "xgplayer": "^3.0.5",

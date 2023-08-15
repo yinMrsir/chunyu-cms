@@ -1,4 +1,3 @@
-import { merge } from 'lodash'
 type FetchType = typeof $fetch
 type FetchOptions = Parameters<FetchType>[1]
 
@@ -24,5 +23,5 @@ export const useClientRequest = <T= unknown>(url: string, opts?: FetchOptions) =
     },
   }
 
-  return $fetch<T>( url, merge(defaultOptions, opts))
+  return $fetch<T>( url, {...defaultOptions, ...opts})
 }
