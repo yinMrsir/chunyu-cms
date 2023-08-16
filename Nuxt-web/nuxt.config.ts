@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+const isDev = process.env.NODE_ENV === 'development'
+
 export default defineNuxtConfig({
     devtools: { enabled: process.env.DEV_TOOLS || true },
     // css单独文件引用，不使用内联
@@ -53,7 +56,7 @@ export default defineNuxtConfig({
         // 该配置用于服务端请求转发
         routeRules: {
             '/server/**': {
-                proxy: 'http://[::1]:4000/**'
+                proxy: process.env.BASE_URL || 'http://[::1]:4000' + '/**'
             }
         }
     },

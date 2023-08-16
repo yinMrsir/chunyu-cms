@@ -197,7 +197,7 @@ onMounted(async () => {
     id: 'mse',
     autoplay: true,
     volume: 0.3,
-    url: `/server/common/stream/${detail.videoInfo?.name}`,
+    url: process.env.NODE_ENV === 'development' ? `${apiBase}/upload/videos/${detail.videoInfo?.name}` : `/${detail.videoInfo?.name}`,
     playsinline: true,
     height: '100%',
     width: '100%',
@@ -209,9 +209,6 @@ onMounted(async () => {
       reqOptions:{
         mode: 'cors',
         method: 'GET',
-        headers: {
-          'Authorization': token.value
-        },
       }
     },
     danmu: {
@@ -265,13 +262,13 @@ onMounted(async () => {
 /** 购买影视 */
 function buyMovie(player: any, callback: { (): void; (): void; }) {
   ElMessageBox.confirm(
-    `确定要支付${detail.movie.paymentAmount}金币购买此影片吗？`,
-    '提示',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
+      `确定要支付${detail.movie.paymentAmount}金币购买此影片吗？`,
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
   ).then(async () => {
     const { code, msg } = await useClientRequest<IResData<any>>(`/user-movie`, {
       method: 'post',
