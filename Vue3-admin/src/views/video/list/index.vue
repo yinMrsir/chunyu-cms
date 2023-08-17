@@ -148,7 +148,7 @@ function getCurrentTime() {
 
   let dataURL = '';
   let video = document.createElement("video");
-  video.setAttribute('src', baseUrl + form.url);
+  video.setAttribute('src', replaceUrl(form.url));
   video.setAttribute('width', form.width);
   video.setAttribute('height', form.height);
   video.setAttribute('controls', 'controls');
@@ -176,6 +176,10 @@ function uploadSuccessHandle(video) {
 }
 
 function replaceUrl(str) {
+  const aliOssUrl = 'http://yinchunyu.oss-cn-shenzhen.aliyuncs.com'
+  if (str.indexOf(aliOssUrl) > -1) {
+    return str.replace(aliOssUrl, '/oss')
+  }
   if (import.meta.env.VITE_APP_ENV === 'production') {
     return str.replace('cms.yinchunyu.com/server', 'cms-admin.yinchunyu.com/api')
   }
@@ -188,15 +192,15 @@ function posterChangeHandle(posterUrl) {
 
 function createVideoMethod(formData) {
   return createVideo({
-    ...form,
     ...formData,
+    ...form,
   })
 }
 
 function updateVideoMethod(formData) {
   return updateVideo({
-    ...form,
     ...formData,
+    ...form,
   })
 }
 

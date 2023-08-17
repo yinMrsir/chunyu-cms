@@ -45,7 +45,7 @@ export interface IConfig {
   /**
    * 默认图片地址
    */
-  defaultImg?: string
+  defaultImg?: string;
 
   /**
    * 数据库配置
@@ -81,4 +81,12 @@ export interface IConfig {
 
   /* 是否演示环境 */
   isDemoEnvironment?: boolean;
+
+  /* 阿里oss */
+  aliOss?: {
+    region: string;
+    accessKeyId: string;
+    accessKeySecret: string;
+    bucket: string;
+  };
 }

@@ -34,6 +34,11 @@ export default defineConfig(({ mode, command }) => {
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/dev-api/, '')
         },
+        '/oss': {
+          target: 'http://yinchunyu.oss-cn-shenzhen.aliyuncs.com',
+          changeOrigin: true,
+          rewrite: (p) => p.replace(/^\/oss/, '')
+        },
         '/external': {
           target: 'http://cms.yinchunyu.com/external',
           changeOrigin: true,

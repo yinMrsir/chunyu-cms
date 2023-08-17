@@ -85,6 +85,7 @@ const props = defineProps({
   }
 })
 
+const params = import.meta.env.VITE_APP_ALI_OSS === true ? { type: 'ali' } : {}
 const url = ref('')
 const isUploading = ref(false)
 const isUploadSuccess = ref(false)
@@ -164,6 +165,9 @@ function cancleUpload() {
 async function handleFileUpload() {
   const formData = new FormData()
   formData.append('file', file.value)
+  Object.keys(params).forEach(key => {
+    formData.append(key, params[key])
+  })
   const res = await request({
     url: '/common/upload',
     method: 'post',

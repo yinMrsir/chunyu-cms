@@ -16,6 +16,7 @@
       :file-list="fileList"
       :on-preview="handlePictureCardPreview"
       :class="{ hide: fileList.length >= limit }"
+      :data="params"
     >
       <el-icon class="avatar-uploader-icon"><plus /></el-icon>
     </el-upload>
@@ -86,6 +87,7 @@ const originalFileList = ref([])
 const showTip = computed(
   () => props.isShowTip && (props.fileType || props.fileSize)
 );
+const params = import.meta.env.VITE_APP_ALI_OSS === true ? { type: 'ali' } : {}
 
 watch(() => props.modelValue, val => {
   if (val) {

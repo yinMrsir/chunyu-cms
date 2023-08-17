@@ -3,12 +3,12 @@ https://docs.nestjs.com/controllers#controllers
 */
 
 import {
+  Body,
   Controller,
   Get,
   Param,
   Post,
   Query,
-  Req,
   Res,
   UploadedFile,
   UploadedFiles,
@@ -17,13 +17,20 @@ import {
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import sizeOf from 'image-size';
+import * as OSS from 'ali-oss';
 import configuration from 'src/config/configuration';
-import { join } from 'path';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { Public } from '../../../common/decorators/public.decorator';
 import { Keep } from '../../../common/decorators/keep.decorator';
+import { ApiException } from '../../../common/exceptions/api.exception';
+
+const aliOssConfig = configuration().aliOss;
+let client: any;
+if (aliOssConfig) {
+  client = new OSS();
+}
 
 @ApiTags('文件上传')
 @Controller('common')
@@ -34,35 +41,70 @@ export class UploadController {
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @Query('fileName') fileName,
+    @Body() body,
   ) {
     if (file.mimetype === 'video/mp4') {
-      const filePath =
-        path.join(__dirname, '../../../../public/upload/videos/') +
-        file.filename;
-      await fs.move(file.path, filePath);
+      if (body.type === 'ali') {
+        try {
+          const result = await client.put(fileName, path.normalize(file.path));
+          // 异步删除本地文件
+          fs.unlink(file.path);
+          return {
+            fileName: result.url,
+            originalname: file.originalname,
+            mimetype: file.mimetype,
+            size: file.size,
+            name: fileName,
+            path: result.url,
+          };
+        } catch (e) {
+          throw new ApiException(e);
+        }
+      } else {
+        const filePath =
+          path.join(__dirname, '../../../../public/upload/videos/') +
+          file.filename;
+        await fs.move(file.path, filePath);
+        return {
+          fileName:
+            configuration().publicPath + '/upload/videos/' + file.filename,
+          originalname: file.originalname,
+          mimetype: file.mimetype,
+          size: file.size,
+          name: file.filename,
+          path: filePath,
+        };
+      }
+    }
+    const dimensions = sizeOf(file.path);
+    if (body.type === 'ali') {
+      try {
+        const result = await client.put(fileName, path.normalize(file.path));
+        // 删除本地文件
+        fs.unlinkSync(file.path);
+        return {
+          fileName: result.url,
+          originalname: file.originalname,
+          mimetype: file.mimetype,
+          size: file.size,
+          width: dimensions.width,
+          height: dimensions.height,
+          name: fileName,
+        };
+      } catch (e) {
+        throw new ApiException(e);
+      }
+    } else {
       return {
-        fileName:
-          configuration().publicPath + '/upload/videos/' + file.filename,
+        fileName: configuration().publicPath + fileName,
         originalname: file.originalname,
         mimetype: file.mimetype,
         size: file.size,
-        name: file.filename,
-        path: filePath,
+        width: dimensions.width,
+        height: dimensions.height,
+        name: fileName,
       };
     }
-    const dimensions = sizeOf(
-      join(__dirname, '../../../../public/') + fileName,
-    );
-    return {
-      fileName: configuration().publicPath + fileName,
-      originalname: file.originalname,
-      mimetype: file.mimetype,
-      size: file.size,
-      width: dimensions.width,
-      height: dimensions.height,
-      name: fileName,
-      path: file.path,
-    };
   }
 
   /* 数组文件上传 */

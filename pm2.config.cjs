@@ -12,7 +12,11 @@ module.exports = {
         MYSQL_PASSWORD: '',
         MYSQL_DATABASE: '',
         REDIS_HOST: '',
-        DEV_TOOLS: false
+        DEV_TOOLS: false,
+        REGION: '',
+        ACCESS_KEY_Id: '',
+        ACCESS_KEY_SECRET: '',
+        BUCKET: '',
       }
     },
     {
