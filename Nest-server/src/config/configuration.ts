@@ -88,5 +88,7 @@ export interface IConfig {
     accessKeyId: string;
     accessKeySecret: string;
     bucket: string;
+    cname?: boolean;
+    endpoint?: string;
   };
 }

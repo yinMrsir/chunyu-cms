@@ -85,7 +85,7 @@ const props = defineProps({
   }
 })
 
-const params = import.meta.env.VITE_APP_ALI_OSS === true ? { type: 'ali' } : {}
+const params = import.meta.env.VITE_APP_ALI_OSS === 'true' ? { type: 'ali' } : {}
 const url = ref('')
 const isUploading = ref(false)
 const isUploadSuccess = ref(false)

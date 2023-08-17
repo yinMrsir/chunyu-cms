@@ -65,11 +65,15 @@ export default defineConfig({
   // 阿里云oss配置
   // aliOss: {
   //   // 填写Bucket所在地域。以华东1（杭州）为例，Region填写为oss-cn-hangzhou。
-  //   region: process.env.REGION,
+  //   region: '',
   //   // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
-  //   accessKeyId: process.env.ACCESS_KEY_Id,
-  //   accessKeySecret: process.env.ACCESS_KEY_SECRET,
+  //   accessKeyId: '',
+  //   accessKeySecret: '',
   //   // 填写Bucket名称。
-  //   bucket: process.env.BUCKET,
+  //   bucket: '',
+  //   // 是否支持上传自定义域名
+  //   cname: true,
+  //   // OSS访问域名
+  //   endpoint: '',
   // },
 });

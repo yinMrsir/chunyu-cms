@@ -15,7 +15,8 @@
     </div>
     <el-row :gutter="40" class="mt-20">
       <el-col :span="18" :xs="24">
-        <div id="mse"></div>
+        <video :src="detail.videoInfo?.url" style="width: 100%; height: 400px" controls></video>
+<!--        <div id="mse"></div>-->
         <div>
           <h1 class="mb-10 mt-10 video-detail__title">
             {{ detail.title }}
@@ -183,7 +184,6 @@ watch(token, async () => {
   player?.play()
 })
 
-
 onMounted(async () => {
   qrcodeUrl.value = window.location.href
 
@@ -197,15 +197,12 @@ onMounted(async () => {
     id: 'mse',
     autoplay: true,
     volume: 0.3,
-    url: process.env.NODE_ENV === 'development' ? `${apiBase}/upload/videos/${detail.videoInfo?.name}` : `/${detail.videoInfo?.name}`,
+    url: detail.videoInfo?.url,
     playsinline: true,
     height: '100%',
     width: '100%',
     plugins: [Mp4Plugin.default, Danmu.default, PayTip.default],
     mp4plugin: {
-      maxBufferLength: 30,
-      minBufferLength: 5,
-      chunkSize: 5000,
       reqOptions:{
         mode: 'cors',
         method: 'GET',

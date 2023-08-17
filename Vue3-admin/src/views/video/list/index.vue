@@ -176,7 +176,7 @@ function uploadSuccessHandle(video) {
 }
 
 function replaceUrl(str) {
-  const aliOssUrl = 'http://yinchunyu.oss-cn-shenzhen.aliyuncs.com'
+  const aliOssUrl = 'http://oss.yinchunyu.com'
   if (str.indexOf(aliOssUrl) > -1) {
     return str.replace(aliOssUrl, '/oss')
   }

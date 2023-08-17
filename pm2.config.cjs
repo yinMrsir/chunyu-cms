@@ -17,6 +17,8 @@ module.exports = {
         ACCESS_KEY_Id: '',
         ACCESS_KEY_SECRET: '',
         BUCKET: '',
+        CNAME: false,
+        ENDPOINT: ''
       }
     },
     {

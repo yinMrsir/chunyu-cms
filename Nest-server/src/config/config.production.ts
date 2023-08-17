@@ -51,5 +51,9 @@ export default defineConfig({
     accessKeySecret: process.env.ACCESS_KEY_SECRET,
     // 填写Bucket名称。
     bucket: process.env.BUCKET,
+    // 是否支持上传自定义域名
+    cname: !!process.env.CNAME,
+    // OSS访问域名
+    endpoint: process.env.ENDPOINT,
   },
 });

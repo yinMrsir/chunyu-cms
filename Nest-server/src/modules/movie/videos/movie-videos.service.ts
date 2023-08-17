@@ -102,7 +102,7 @@ export class MovieVideosService {
         'videos.cover',
         'videoList.poster',
         'videoList.name',
-        'videoInfo.name',
+        'videoInfo.url',
       ])
       .where({ id });
 

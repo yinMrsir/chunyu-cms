@@ -87,7 +87,7 @@ const originalFileList = ref([])
 const showTip = computed(
   () => props.isShowTip && (props.fileType || props.fileSize)
 );
-const params = import.meta.env.VITE_APP_ALI_OSS === true ? { type: 'ali' } : {}
+const params = import.meta.env.VITE_APP_ALI_OSS === 'true' ? { type: 'ali' } : {}
 
 watch(() => props.modelValue, val => {
   if (val) {

@@ -29,7 +29,7 @@ import { ApiException } from '../../../common/exceptions/api.exception';
 const aliOssConfig = configuration().aliOss;
 let client: any;
 if (aliOssConfig) {
-  client = new OSS();
+  client = new OSS(aliOssConfig);
 }
 
 @ApiTags('文件上传')
