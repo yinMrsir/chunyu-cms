@@ -60,6 +60,8 @@ export class UploadController {
       size: file.size,
       width: dimensions.width,
       height: dimensions.height,
+      name: fileName,
+      path: file.path,
     };
   }
 

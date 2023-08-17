@@ -3,10 +3,10 @@
     <el-dialog title="登录" width="360" v-model="loginDialogVisible">
       <el-form ref="formRef" :model="form" :rules="rules">
         <el-form-item prop="email">
-          <el-input v-model="form.email" placeholder="请输入邮箱" :prefix-icon="UserFilled"></el-input>
+          <el-input v-model="form.email" placeholder="请输入邮箱" :prefix-icon="ElIconUserFilled"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" v-model="form.password" placeholder="请输入密码" :prefix-icon="Lock"></el-input>
+          <el-input type="password" v-model="form.password" placeholder="请输入密码" :prefix-icon="ElIconLock"></el-input>
         </el-form-item>
         <el-form-item style="text-align: right">
           还没有账号？去<a href="javascript:void(0)" class="link-color" @click="handleShowRegDialog">注册</a>
@@ -23,7 +23,7 @@
           <el-input v-model="regForm.email" placeholder="请输入邮箱" :prefix-icon="ElIconUserFilled"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" v-model="regForm.password" placeholder="请输入密码" :prefix-icon="Lock"></el-input>
+          <el-input type="password" v-model="regForm.password" placeholder="请输入密码" :prefix-icon="ElIconLock"></el-input>
         </el-form-item>
         <el-form-item prop="twoPassword">
           <el-input type="password" v-model="regForm.twoPassword" placeholder="请再次输入密码" :prefix-icon="ElIconLock"></el-input>

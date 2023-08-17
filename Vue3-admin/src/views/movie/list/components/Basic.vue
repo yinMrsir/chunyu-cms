@@ -237,7 +237,7 @@ import { scrollTo } from '@/utils/scroll-to'
 import ImageUpload from "@/components/ImageUpload";
 import { getGenreAll } from "@/views/basic/genre/services";
 import { createMovie, getMovie, updateMovie } from '../services'
-import {getColumnAll} from "@/views/column/services";
+import { getColumnAll } from "@/views/column/services";
 
 const { proxy } = getCurrentInstance()
 const emit = defineEmits()
@@ -305,7 +305,7 @@ onMounted(async () => {
   } else {
     clearMovieData()
   }
-  await getGenresSimple
+  await getGenresSimple()
   isMounted.value = false
 })
 

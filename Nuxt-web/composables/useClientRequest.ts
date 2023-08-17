@@ -16,7 +16,7 @@ export const useClientRequest = <T= unknown>(url: string, opts?: FetchOptions) =
       }
     },
     onResponse({ response }) {
-      if (+response._data.code !== 200) {
+      if (+response._data.statusCode === 200 && +response._data.code !== 200) {
         ElMessage.error(response._data.msg)
       }
     },
