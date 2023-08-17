@@ -43,6 +43,7 @@ export default defineConfig({
   isDemoEnvironment: true,
 
   // 阿里云oss配置
+  isAliOss: !!process.env.IS_ALI_OSS,
   aliOss: {
     // 填写Bucket所在地域。以华东1（杭州）为例，Region填写为oss-cn-hangzhou。
     region: process.env.REGION,

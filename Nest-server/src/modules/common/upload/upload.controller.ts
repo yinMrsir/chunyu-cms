@@ -26,10 +26,10 @@ import { Public } from '../../../common/decorators/public.decorator';
 import { Keep } from '../../../common/decorators/keep.decorator';
 import { ApiException } from '../../../common/exceptions/api.exception';
 
-const aliOssConfig = configuration().aliOss;
+const config = configuration();
 let client: any;
-if (aliOssConfig) {
-  client = new OSS(aliOssConfig);
+if (config.isAliOss) {
+  client = new OSS(config.aliOss);
 }
 
 @ApiTags('文件上传')
@@ -41,10 +41,9 @@ export class UploadController {
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @Query('fileName') fileName,
-    @Body() body,
   ) {
     if (file.mimetype === 'video/mp4') {
-      if (body.type === 'ali') {
+      if (config.isAliOss) {
         try {
           const result = await client.put(fileName, path.normalize(file.path));
           // 异步删除本地文件
@@ -77,7 +76,7 @@ export class UploadController {
       }
     }
     const dimensions = sizeOf(file.path);
-    if (body.type === 'ali') {
+    if (config.isAliOss) {
       try {
         const result = await client.put(fileName, path.normalize(file.path));
         // 删除本地文件

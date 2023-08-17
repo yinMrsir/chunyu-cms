@@ -83,6 +83,7 @@ export interface IConfig {
   isDemoEnvironment?: boolean;
 
   /* 阿里oss */
+  isAliOss?: boolean;
   aliOss?: {
     region: string;
     accessKeyId: string;
