@@ -55,7 +55,7 @@ export class UploadController {
             mimetype: file.mimetype,
             size: file.size,
             name: fileName,
-            path: result.url,
+            path: file.path,
           };
         } catch (e) {
           throw new ApiException(e);

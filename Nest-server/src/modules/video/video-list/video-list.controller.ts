@@ -49,7 +49,6 @@ export class VideoController {
     const data = await this.videoService.findByIds(ids);
     const deleteIds = [];
     data.forEach((value) => {
-      fs.existsSync(value.path);
       // 检测文件是否存在
       if (fs.existsSync(value.path)) {
         fs.unlinkSync(value.path);
