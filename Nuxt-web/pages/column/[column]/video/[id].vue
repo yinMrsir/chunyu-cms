@@ -15,8 +15,7 @@
     </div>
     <el-row :gutter="40" class="mt-20">
       <el-col :span="18" :xs="24">
-        <video :src="detail.videoInfo?.url" style="width: 100%; height: 400px" controls></video>
-<!--        <div id="mse"></div>-->
+        <div id="mse"></div>
         <div>
           <h1 class="mb-10 mt-10 video-detail__title">
             {{ detail.title }}
