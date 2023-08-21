@@ -12,5 +12,6 @@ import { SysConfig } from './entities/sys-config.entity';
   imports: [TypeOrmModule.forFeature([SysConfig])],
   controllers: [SysConfigController],
   providers: [SysConfigService],
+  exports: [SysConfigService],
 })
 export class SysConfigModule {}

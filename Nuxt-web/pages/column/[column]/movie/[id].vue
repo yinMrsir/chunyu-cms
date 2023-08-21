@@ -119,26 +119,8 @@
               <li v-for="item in castsRes.rows">
                 <el-image style="width: 110px; height: 156px;" fit="cover" :src="item.actorAvatar"></el-image>
                 <div>{{ item.actorName }}</div>
-                <div class="grey">{{ item.professionName }}</div>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <!--  角色   -->
-        <div class="mt-20" v-if="rolesRes.rows && rolesRes.rows.length">
-          <div class="panel_hd between items-center">
-            <div class="panel_hd__left">
-              <h3 class="title items-center">
-                <i class="icon-movie-box"></i>角色
-              </h3>
-            </div>
-          </div>
-          <div class="actor">
-            <ul>
-              <li v-for="item in rolesRes.rows">
-                <el-image style="width: 110px; height: 156px;" fit="cover"
-                          :src="item.avatar || item.role.avatar"></el-image>
-                <div>{{ item.role.name }}</div>
+                <div class="grey" v-if="item.role">饰 {{ item.role }}</div>
+                <div class="grey" v-else>{{ item.professionName }}</div>
               </li>
             </ul>
           </div>
@@ -150,39 +132,9 @@
           <p class="mt-10">扫描二维码用手机观看</p>
         </div>
         <!--   周榜单     -->
-        <div class="panel_hd items-center">
-          <h3 class="title items-center">
-            周榜单
-          </h3>
-        </div>
-        <ul class="col-pd mb-20">
-          <li v-for="(item, index) in weekListRes.rows">
-            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
-              <div>
-                <span class="badge">{{ index + 1 }}</span>
-                {{ item.title }}
-              </div>
-              <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
-            </nuxt-link>
-          </li>
-        </ul>
+        <Ranking title="周榜单" :list="weekListRes.rows" />
         <!--   月榜单     -->
-        <div class="panel_hd items-center">
-          <h3 class="title items-center">
-            月榜单
-          </h3>
-        </div>
-        <ul class="col-pd">
-          <li v-for="(item, index) in monthListRes.rows">
-            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
-              <div>
-                <span class="badge">{{ index + 1 }}</span>
-                {{ item.title }}
-              </div>
-              <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
-            </nuxt-link>
-          </li>
-        </ul>
+        <Ranking title="月榜单" :list="monthListRes.rows" />
       </el-col>
     </el-row>
   </div>
@@ -193,8 +145,8 @@ import QrcodeVue from 'qrcode.vue'
 import { useLoginDialogVisible, useToken } from "~/composables/states";
 import { IResData, IResPage } from "~/global";
 import { escapeHtml } from '~/utils/tool'
-import {useServerRequest} from "~/composables/useServerRequest";
-import {useClientRequest} from "~/composables/useClientRequest";
+import { useServerRequest } from "~/composables/useServerRequest";
+import { useClientRequest } from "~/composables/useClientRequest";
 
 const dayjs = useDayjs()
 const runtimeConfig = useRuntimeConfig()
@@ -219,11 +171,9 @@ onMounted(() => {
 
 const [
   { data: detailRes, refresh },
-  { data: rolesRes },
   { data: castsRes },
 ] = await Promise.all([
   useServerRequest<IResData<any>>(`/movie/${id}`),
-  useServerRequest<IResPage<any[]>>(`/movie/role-actor/list?movieId=${id}&pageNum=1&pageSize=50`),
   useServerRequest<IResPage<any[]>>(`/movie/cast/list?movieId=${id}&pageNum=1&pageSize=50`)
 ])
 

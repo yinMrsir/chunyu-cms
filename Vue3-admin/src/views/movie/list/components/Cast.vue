@@ -32,6 +32,7 @@ const columns = ref([
   { title: '出生日期', field: 'actorBirthday', type: 'date' },
   { title: '影人名称', field: 'actorId', type: 'actor', add: true, hidden: true },
   { title: '影人职务', field: 'professionId', type: 'cascader', options: [], formProps: { props: { label: 'name', value: 'id' } }, add: true, hidden: true },
+  { title: '饰演', field: 'role', add: true },
   {
     actions: [
       {

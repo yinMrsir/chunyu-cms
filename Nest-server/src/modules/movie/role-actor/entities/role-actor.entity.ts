@@ -1,6 +1,6 @@
-import { IsOptional, IsNumber } from "class-validator";
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { BaseEntity } from "../../../../common/entities/base.entity";
+import { IsOptional, IsNumber } from 'class-validator';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { BaseEntity } from '../../../../common/entities/base.entity';
 
 @Entity('movie_role_actor')
 export class RoleActor extends BaseEntity {

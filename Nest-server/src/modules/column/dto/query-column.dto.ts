@@ -6,5 +6,8 @@ export class QueryColumnDto extends PaginationDto {
   type?: string;
 
   @IsOptional()
-  status: string;
+  status?: string;
+
+  @IsOptional()
+  value?: string;
 }

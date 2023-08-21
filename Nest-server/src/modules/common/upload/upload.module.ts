@@ -7,6 +7,7 @@ import * as multer from 'multer';
 import * as MIMEType from 'whatwg-mimetype';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
+import { SysConfigModule } from '../../system/sys-config/sys-config.module';
 
 export function storage(uploadPath) {
   return multer.diskStorage({
@@ -62,6 +63,7 @@ export function storage(uploadPath) {
       },
       inject: [ConfigService],
     }),
+    SysConfigModule,
   ],
   controllers: [UploadController],
   providers: [MulterModule],

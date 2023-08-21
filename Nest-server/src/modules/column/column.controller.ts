@@ -57,7 +57,7 @@ export class ColumnController {
   @ApiOperation({ summary: '根据条件查询单个' })
   @Public()
   @Get()
-  async findOne(@Query() where) {
+  async findOne(@Query() where: QueryColumnDto) {
     const data = await this.columnService.findOne(where);
     return new DataObj(data);
   }

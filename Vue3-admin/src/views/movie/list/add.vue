@@ -13,14 +13,11 @@
       <el-tab-pane label="影人列表" v-if="id">
         <cast v-if="+currTab === 3" />
       </el-tab-pane>
-      <el-tab-pane label="角色列表" v-if="id">
-        <role v-if="+currTab === 4" />
-      </el-tab-pane>
       <el-tab-pane label="相关视频" v-if="id">
-        <videos v-if="+currTab === 5" />
+        <videos v-if="+currTab === 4" />
       </el-tab-pane>
       <el-tab-pane label="影片相册" v-if="id">
-        <photos v-if="+currTab === 6" />
+        <photos v-if="+currTab === 5" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -33,7 +30,6 @@ import Level from './components/Level'
 import Videos from './components/Videos'
 import Photos from './components/Photos'
 import Cast from './components/Cast'
-import Role from './components/Role'
 
 const { proxy } = getCurrentInstance()
 const id = ref(null)

@@ -18,7 +18,7 @@
         <div id="mse"></div>
         <div>
           <h1 class="mb-10 mt-10 video-detail__title">
-            {{ detail.title }}
+            {{ detail.movie.title }} {{ detail.title }}
             <span :class="detail.movie.movieRate?.rateUserCount > 0 ? 'rate' : ''">
               {{ detail.movie.movieRate?.rateUserCount > 0 ? detail.movie.movieRate.rate.toFixed(1) : '暂无评分' }}
             </span>
@@ -85,39 +85,9 @@
           <p class="mt-10">扫描二维码用手机观看</p>
         </div>
         <!--   周榜单     -->
-        <div class="panel_hd items-center">
-          <h3 class="title items-center">
-            周榜单
-          </h3>
-        </div>
-        <ul class="col-pd mb-20">
-          <li v-for="(item, index) in weekList.rows">
-            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
-              <div>
-                <span class="badge">{{ index + 1 }}</span>
-                {{ item.title }}
-              </div>
-              <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
-            </nuxt-link>
-          </li>
-        </ul>
+        <Ranking title="周榜单" :list="weekList.rows" />
         <!--   月榜单     -->
-        <div class="panel_hd items-center">
-          <h3 class="title items-center">
-            月榜单
-          </h3>
-        </div>
-        <ul class="col-pd">
-          <li v-for="(item, index) in monthList.rows">
-            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
-              <div>
-                <span class="badge">{{ index + 1 }}</span>
-                {{ item.title }}
-              </div>
-              <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
-            </nuxt-link>
-          </li>
-        </ul>
+        <Ranking title="月榜单" :list="monthList.rows" />
       </el-col>
     </el-row>
   </div>

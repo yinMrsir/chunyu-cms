@@ -29,7 +29,7 @@
             <el-col :sm="4" :xs="8" v-for="item in categoryItem.rows">
               <div class="video-list__block">
                 <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="img-box">
-                  <el-image lazy class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
+                  <el-image lazy class="video-list__block__img" :src="item.poster" fit="cover" />
                   <span v-if="item.movieRate">{{ +item.movieRate.rate === 0 ? '暂无评分' : item.movieRate.rate.toFixed(1) }}</span>
                 </nuxt-link>
                 <div class="video-list__detail">
@@ -46,23 +46,7 @@
         </div>
       </el-col>
       <el-col :sm="6" class="hidden-sm-and-down">
-        <div class="panel_hd items-center">
-          <h3 class="title items-center">
-            <img src="../../../assets/images/icon_12.png" alt="">
-            {{ categoryItem.name }}榜单
-          </h3>
-        </div>
-        <ul class="col-pd">
-          <li v-for="(item, index) in categoryItem.ranks">
-            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
-              <div>
-                <span class="badge">{{ index + 1 }}</span>
-                {{ item.title }}
-              </div>
-              <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
-            </nuxt-link>
-          </li>
-        </ul>
+        <Ranking :title="categoryItem.name + '榜单'" :list="categoryItem.ranks" />
       </el-col>
     </el-row>
   </div>
@@ -73,8 +57,8 @@ import { IResData } from "~/global";
 import { useServerRequest } from "~/composables/useServerRequest";
 
 const runtimeConfig = useRuntimeConfig()
-const {public: publicConfig} = runtimeConfig
-const {apiBase, globalTitle} = publicConfig
+const { public: publicConfig } = runtimeConfig
+const { globalTitle } = publicConfig
 const route = useRoute()
 
 const [{data: res}, { data: info }] = await Promise.all([
@@ -85,7 +69,7 @@ const [{data: res}, { data: info }] = await Promise.all([
 if (!info.value.data) {
   throw createError({
     statusCode: 404,
-    statusMessage: 'Page Not Found+99',
+    statusMessage: 'Page Not Found',
     fatal: true
   })
 }

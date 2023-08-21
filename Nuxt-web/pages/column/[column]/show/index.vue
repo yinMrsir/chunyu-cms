@@ -20,7 +20,7 @@
               <li :class="route.query.t === '' || route.query.t === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, t: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="(item, index) in genreList.data" :class="route.query.t === item.name ? 'active' : ''" :key="index">
+              <li v-for="item in genreList.data" :class="route.query.t === item.name ? 'active' : ''" :key="item.id">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, t: item.name } }">{{ item.name }}</nuxt-link>
               </li>
             </ul>
@@ -30,7 +30,7 @@
               <li :class="route.query.c === '' || route.query.c === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, c: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="(item, index) in countryList.data" :class="+route.query.c === +item.id ? 'active' : ''">
+              <li v-for="item in countryList.data" :class="+route.query.c === +item.id ? 'active' : ''" :key="item.id">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, c: item.id } }">{{ item.name }}</nuxt-link>
               </li>
             </ul>
@@ -40,7 +40,7 @@
               <li :class="route.query.y === '' || route.query.y === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, y: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="(item, index) in yearList" :class="+route.query.y === item ? 'active' : ''">
+              <li v-for="item in yearList" :class="+route.query.y === item ? 'active' : ''" :key="item">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, y: item } }">{{ item }}</nuxt-link>
               </li>
             </ul>
@@ -50,7 +50,7 @@
               <li :class="route.query.l === '' || route.query.l === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, l: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="(item, index) in languageList.rows" :class="route.query.l === item.name ? 'active' : ''">
+              <li v-for="item in languageList.data" :class="route.query.l === item.name ? 'active' : ''" :key="item.id">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, l: item.name } }">{{ item.name }}</nuxt-link>
               </li>
             </ul>
@@ -96,39 +96,9 @@
       </el-col>
       <el-col :span="6" class="hidden-sm-and-down">
         <!--   周榜单     -->
-        <div class="panel_hd items-center">
-          <h3 class="title items-center">
-            周榜单
-          </h3>
-        </div>
-        <ul class="col-pd mb-20">
-          <li v-for="(item, index) in weekList.rows">
-            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
-              <div>
-                <span class="badge">{{ index + 1 }}</span>
-                {{ item.title }}
-              </div>
-              <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
-            </nuxt-link>
-          </li>
-        </ul>
+        <Ranking title="周榜单" :list="weekList.rows" />
         <!--   月榜单     -->
-        <div class="panel_hd items-center">
-          <h3 class="title items-center">
-            月榜单
-          </h3>
-        </div>
-        <ul class="col-pd">
-          <li v-for="(item, index) in monthList.rows">
-            <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
-              <div>
-                <span class="badge">{{ index + 1 }}</span>
-                {{ item.title }}
-              </div>
-              <span class="text-muted">{{ +item.theEnd === 0 ? '未完结' : '已完结' }}</span>
-            </nuxt-link>
-          </li>
-        </ul>
+        <Ranking title="月榜单" :list="monthList.rows" />
       </el-col>
     </el-row>
   </div>
@@ -149,7 +119,7 @@ const runtimeConfig = useRuntimeConfig()
 const { public: publicConfig } = runtimeConfig
 const { globalTitle } = publicConfig
 const route = useRoute()
-const { query } = route
+const { query, params } = route
 const currentPage = ref<number>((route.query.page && +route.query.page) || 1)
 const orderBy = ref(route.query.orderBy || 'createTime')
 const yearList = ref<number[]>([])
@@ -186,14 +156,14 @@ const [
 ] = await Promise.all([
   useServerRequest<IResData<{name: string; id: number}[]>>('/basic/genre/all', {
     query: {
-      columnValue: query.columnValue
+      columnValue: params.column
     }
   }),
   useServerRequest<IResData<{name: string; id: number}[]>>('/basic/country/all'),
   useServerRequest<IResData<{name: string; id: number}[]>>('/basic/language/all'),
   useServerRequest<IResPage<any[]>>('/movie/list', {
     query: {
-      columnValue: query.columnValue,
+      columnValue: params.column,
       pageNum: query.page || 1,
       pageSize: 20,
       orderBy: 'pv',
@@ -202,7 +172,7 @@ const [
   }),
   useServerRequest<IResPage<any[]>>('/movie/list', {
     query: {
-      columnValue: query.columnValue,
+      columnValue: params.column,
       pageNum: query.page || 1,
       pageSize: 20,
       orderBy: 'pv',
@@ -211,12 +181,12 @@ const [
   }),
   useServerRequest<any>(`/column`, {
     query: {
-      value: query.columnValue
+      value: params.column
     }
   }),
   useAsyncData<IResPage<any[]>>('data', () => useClientRequest('/movie/list', {
     query: {
-      columnValue: query.columnValue,
+      columnValue: params.column,
       genres: query.t,
       country: query.c,
       language: query.l,

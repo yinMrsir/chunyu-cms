@@ -63,7 +63,6 @@ export default defineConfig({
   isDemoEnvironment: false,
 
   // 阿里云oss配置
-  isAliOss: false,
   aliOss: {
     // 填写Bucket所在地域。以华东1（杭州）为例，Region填写为oss-cn-hangzhou。
     region: '',
@@ -76,5 +75,7 @@ export default defineConfig({
     cname: true,
     // OSS访问域名
     endpoint: '',
+    // 超时 5分钟
+    timeout: 1000 * 60 * 5,
   },
 });

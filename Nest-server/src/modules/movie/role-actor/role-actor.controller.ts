@@ -1,12 +1,21 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { RoleActorService } from './role-actor.service';
 import { CreateRoleActorDto } from './dto/create-role-actor.dto';
 import { UpdateRoleActorDto } from './dto/update-role-actor.dto';
-import { User, UserEnum } from "../../../common/decorators/user.decorator";
-import { UserInfoPipe } from "../../../common/pipes/user-info.pipe";
-import {PaginationPipe} from "../../../common/pipes/pagination.pipe";
-import {QueryRoleActorDto} from "./dto/query-role-actor.dto";
-import {Public} from "../../../common/decorators/public.decorator";
+import { User, UserEnum } from '../../../common/decorators/user.decorator';
+import { UserInfoPipe } from '../../../common/pipes/user-info.pipe';
+import { PaginationPipe } from '../../../common/pipes/pagination.pipe';
+import { QueryRoleActorDto } from './dto/query-role-actor.dto';
+import { Public } from '../../../common/decorators/public.decorator';
 
 @Controller('movie/role-actor')
 export class RoleActorController {
@@ -15,7 +24,7 @@ export class RoleActorController {
   @Post()
   async create(
     @Body() createRoleActorDto: CreateRoleActorDto,
-    @User(UserEnum.userName, UserInfoPipe) userName: string
+    @User(UserEnum.userName, UserInfoPipe) userName: string,
   ) {
     createRoleActorDto.createBy = createRoleActorDto.updateBy = userName;
     await this.roleActorService.create(createRoleActorDto);
@@ -30,7 +39,7 @@ export class RoleActorController {
   @Put()
   update(
     @Body() updateRoleActorDto: UpdateRoleActorDto,
-    @User(UserEnum.userName, UserInfoPipe) userName: string
+    @User(UserEnum.userName, UserInfoPipe) userName: string,
   ) {
     updateRoleActorDto.updateBy = userName;
     return this.roleActorService.update(updateRoleActorDto);

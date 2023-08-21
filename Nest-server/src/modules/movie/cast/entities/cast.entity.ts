@@ -1,4 +1,4 @@
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '../../../../common/entities/base.entity';
 
@@ -27,4 +27,11 @@ export class Cast extends BaseEntity {
   })
   @IsNumber()
   professionId: number;
+
+  @Column('varchar', {
+    name: 'role',
+    comment: '饰演的角色',
+  })
+  @IsOptional()
+  role?: string;
 }

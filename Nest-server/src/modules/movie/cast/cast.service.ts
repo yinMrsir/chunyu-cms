@@ -43,6 +43,7 @@ export class CastService {
         'cast.professionId = profession.id',
       )
       .select('cast.id', 'id')
+      .addSelect('cast.role', 'role')
       .addSelect('actor.id', 'actorId')
       .addSelect('actor.avatar', 'actorAvatar')
       .addSelect('actor.name', 'actorName')

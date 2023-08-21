@@ -25,16 +25,15 @@ import * as path from 'path';
 import { Public } from '../../../common/decorators/public.decorator';
 import { Keep } from '../../../common/decorators/keep.decorator';
 import { ApiException } from '../../../common/exceptions/api.exception';
+import { SysConfigService } from '../../system/sys-config/sys-config.service';
 
 const config = configuration();
-let client: any;
-if (config.isAliOss) {
-  client = new OSS(config.aliOss);
-}
 
 @ApiTags('文件上传')
 @Controller('common')
 export class UploadController {
+  constructor(private readonly sysConfigService: SysConfigService) {}
+
   /* 单文件上传 */
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
@@ -42,8 +41,15 @@ export class UploadController {
     @UploadedFile() file: Express.Multer.File,
     @Query('fileName') fileName,
   ) {
+    const sysConfig = await this.sysConfigService.lazyFindByConfigKey(
+      'uploadAliYun',
+    );
+    let client;
+    if (+sysConfig === 1) {
+      client = new OSS(config.aliOss);
+    }
     if (file.mimetype === 'video/mp4') {
-      if (config.isAliOss) {
+      if (+sysConfig === 1) {
         try {
           const result = await client.put(fileName, path.normalize(file.path));
           // 异步删除本地文件
@@ -76,7 +82,7 @@ export class UploadController {
       }
     }
     const dimensions = sizeOf(file.path);
-    if (config.isAliOss) {
+    if (+sysConfig === 1) {
       try {
         const result = await client.put(fileName, path.normalize(file.path));
         // 删除本地文件

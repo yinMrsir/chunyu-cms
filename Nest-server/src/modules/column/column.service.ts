@@ -47,7 +47,7 @@ export class ColumnService {
     return this.columnsRepository.findBy(where);
   }
 
-  findOne(where) {
+  findOne(where: FindOptionsWhere<Columns>) {
     return this.columnsRepository.findOneBy(where);
   }
 

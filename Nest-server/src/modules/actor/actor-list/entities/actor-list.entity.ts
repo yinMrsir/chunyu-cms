@@ -48,7 +48,7 @@ export class Actor extends BaseEntity {
   @IsOptional()
   bornPlace: string;
 
-  @Column('varchar', { name: 'brief', comment: '简介', default: '' })
+  @Column('text', { name: 'brief', comment: '简介' })
   @IsOptional()
   brief: string;
 }

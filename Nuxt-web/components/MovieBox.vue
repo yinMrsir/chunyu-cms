@@ -10,10 +10,12 @@
         </div>
         <div class="panel_hd__right items-center">
           <ul class="items-center">
-            <li class="hidden-sm-and-down" v-for="item in categoryItem.genres"><nuxt-link :to="`/column/${categoryItem.value}/show?t=${item.name}`">{{ item.name }}</nuxt-link></li>
+            <li class="hidden-sm-and-down" v-for="item in categoryItem.genres">
+              <nuxt-link :to="`/column/${categoryItem.value}/show?t=${item.name}`">{{ item.name }}</nuxt-link>
+            </li>
             <li>
               <nuxt-link :to="`/column/${categoryItem.value}`" class="items-center">
-                更多 <el-icon><ArrowRight /></el-icon>
+                更多 <el-icon><ElIconArrowRight /></el-icon>
               </nuxt-link>
             </li>
           </ul>
@@ -24,7 +26,7 @@
           <el-col :sm="4" :xs="8" v-for="item in categoryItem.rows">
             <div class="video-list__block">
               <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="img-box">
-                <el-image lazy class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
+                <el-image lazy class="video-list__block__img" :src="item.poster" fit="cover" />
                 <span v-if="item.movieRate">{{ +item.movieRate.rate === 0 ? '暂无评分' : item.movieRate.rate.toFixed(1) }}</span>
               </nuxt-link>
               <div class="video-list__detail">
@@ -41,47 +43,18 @@
       </div>
     </el-col>
     <el-col :span="6" class="hidden-sm-and-down">
-      <div class="panel_hd items-center">
-        <h3 class="title items-center">
-          <img src="../assets/images/icon_12.png" alt="">
-          {{ categoryItem.name }}榜单
-        </h3>
-      </div>
-      <ul class="col-pd">
-        <li v-for="(item, index) in categoryItem.ranks">
-          <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="between">
-            <div>
-              <span class="badge">{{ index + 1 }}</span>
-              {{ item.title }}
-            </div>
-            <span class="text-muted">{{ processingState(item) }}</span>
-          </nuxt-link>
-        </li>
-      </ul>
+      <Ranking :title="categoryItem.name + '榜单'" :list="categoryItem.ranks" />
     </el-col>
   </el-row>
 </template>
 
-<script setup name="MovieBox">
-import { ArrowRight } from '@element-plus/icons-vue'
-
+<script setup name="MovieBox" lang="ts">
 const props = defineProps({
   categoryItem: {
     type: Object,
     default: () => ({})
   }
 })
-
-const runtimeConfig = useRuntimeConfig()
-
-function processingState(data) {
-  if (+data.theEnd === 1) {
-    return '已完结'
-  }
-  return `更新至${data.episodeCount || 0}集`
-}
-
-
 </script>
 
 <style lang="scss">
