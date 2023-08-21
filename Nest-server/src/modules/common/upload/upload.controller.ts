@@ -86,7 +86,7 @@ export class UploadController {
       try {
         const result = await client.put(fileName, path.normalize(file.path));
         // 删除本地文件
-        fs.unlinkSync(file.path);
+        fs.unlink(file.path);
         return {
           fileName: result.url,
           originalname: file.originalname,

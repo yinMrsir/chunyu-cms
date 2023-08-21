@@ -4,10 +4,10 @@
       <el-carousel :interval="5000" arrow="always">
         <el-carousel-item v-for="item in banner.rows">
           <nuxt-link v-if="+item.urlType === 0" :to="item.url">
-            <el-image :src="item.img" fit="cover" />
+            <el-image :src="item.img" style="width: 100%" fit="cover" />
           </nuxt-link>
           <a v-else :href="item.url">
-            <el-image :src="item.img" fit="cover" />
+            <el-image :src="item.img" style="width: 100%" fit="cover" />
           </a>
         </el-carousel-item>
       </el-carousel>

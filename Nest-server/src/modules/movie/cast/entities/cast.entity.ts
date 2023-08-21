@@ -31,6 +31,7 @@ export class Cast extends BaseEntity {
   @Column('varchar', {
     name: 'role',
     comment: '饰演的角色',
+    default: null,
   })
   @IsOptional()
   role?: string;
