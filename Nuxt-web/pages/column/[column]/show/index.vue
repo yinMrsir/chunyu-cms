@@ -120,7 +120,7 @@ const { public: publicConfig } = runtimeConfig
 const { globalTitle } = publicConfig
 const route = useRoute()
 const { query, params } = route
-const currentPage = ref<number>((route.query.page && +route.query.page) || 1)
+const currentPage = ref<number>(1)
 const orderBy = ref(route.query.orderBy || 'createTime')
 const yearList = ref<number[]>([])
 const y = new Date().getFullYear();
@@ -164,7 +164,7 @@ const [
   useServerRequest<IResPage<any[]>>('/movie/list', {
     query: {
       columnValue: params.column,
-      pageNum: query.page || 1,
+      pageNum: 1,
       pageSize: 20,
       orderBy: 'pv',
       date: [weekStartTime, currTime]
@@ -173,13 +173,13 @@ const [
   useServerRequest<IResPage<any[]>>('/movie/list', {
     query: {
       columnValue: params.column,
-      pageNum: query.page || 1,
+      pageNum: 1,
       pageSize: 20,
       orderBy: 'pv',
       date: [mouthStartTime, currTime]
     }
   }),
-  useServerRequest<any>(`/column`, {
+  useServerRequest<IResData<{ name: string }>>(`/column`, {
     query: {
       value: params.column
     }
@@ -191,7 +191,7 @@ const [
       country: query.c,
       language: query.l,
       year: query.y,
-      pageNum: query.page || 1,
+      pageNum: currentPage.value,
       pageSize: 30,
       orderBy: orderBy.value
     }
@@ -199,21 +199,15 @@ const [
 ])
 
 async function handleCurrentChange(page: number) {
-  await navigateTo({
-    path: route.path,
-    query: {
-      ...route.query,
-      orderBy: orderBy.value,
-      page
-    }
-  })
+  currentPage.value = page
+  refresh()
   if (process.client) {
     window.scrollTo(0, 0)
   }
 }
 
 async function handleTabChange() {
-  refreshNuxtData('data')
+  refresh()
 }
 
 </script>
