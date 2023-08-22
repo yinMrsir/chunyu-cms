@@ -22,8 +22,8 @@
             @click="chosenFileHandle"
         >选择视频</el-button
         >
-        <p>视频大小不超过500MB，时长不超过15分钟</p>
-        <p>当前只支持 mp4、mov 格式视频</p>
+        <p>视频大小不超过{{ maxSize }}MB</p>
+        <p>当前只支持 {{ acceptTypeStr }} 格式视频</p>
       </div>
 
       <!-- 文件选择器 -->
@@ -62,6 +62,7 @@
 
 <script setup name="VideoUpload">
 import request from '@/utils/request'
+import {computed} from "vue";
 const { proxy } = getCurrentInstance()
 
 const props = defineProps({
@@ -77,12 +78,16 @@ const props = defineProps({
   },
   acceptType: {
     type: Array,
-    default: () => ["video/mp4", "video/omg"],
+    default: () => ["video/mp4"],
   },
   replaceUrl: {
     type: Function,
     default: {}
   }
+})
+
+const acceptTypeStr = computed(() => {
+  return props.acceptType.map(value => value.substring(value.lastIndexOf('/') + 1)).join('、')
 })
 
 const url = ref('')
@@ -116,9 +121,8 @@ function fileChangeHandle(evt) {
     proxy.$modal.msgWarning(`视频大小不超过${props.maxSize}MB`)
     return;
   }
-
   if (props.acceptType.indexOf(_file.type) === -1) {
-    proxy.$modal.msgWarning(`只能上传 mp4、mov 格式视频!`);
+    proxy.$modal.msgWarning(`只能上传 ${acceptTypeStr} 格式视频!`);
     return;
   }
 
