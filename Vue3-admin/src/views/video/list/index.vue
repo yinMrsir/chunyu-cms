@@ -13,14 +13,14 @@
     >
       <template #video="props">
         <div style="width: 100%">
-          <!-- 视频编辑不可更换视频 -->
+          <!-- 视频编辑 -->
           <div class="preview-video" v-if="isEdit">
             <video controls class="video" preload="auto" ref="videoRef" :src="form.url" />
-
             <div class="tool">
-              <el-button type="primary" size="small" @click="getCurrentTime()">
+              <el-button type="primary" size="small" v-if="form.url" @click="getCurrentTime()">
                 设置当前画面为封面
               </el-button>
+              <el-button type="link" size="small" @click="handleReUpload">重新上传</el-button>
             </div>
           </div>
           <div class="upload-field" v-else>
@@ -220,6 +220,11 @@ function closeModal() {
   form.width = 0
   form.height = 0
   form.size = 0
+}
+
+// 重新上传
+function handleReUpload() {
+  isEdit.value = false
 }
 
 </script>
