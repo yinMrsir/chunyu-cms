@@ -139,6 +139,7 @@ export class MovieBasicService {
         'movieBasic.title',
         'movieBasic.theEnd',
         'movieBasic.id',
+        'movieBasic.updateTime',
         'movieBasic.currentEpisode',
         'movieBasic.columnValue',
         'moviePv.pv',
