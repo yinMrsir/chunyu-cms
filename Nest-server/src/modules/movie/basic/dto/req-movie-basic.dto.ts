@@ -38,3 +38,19 @@ export class ReqListMovieListDto extends PaginationDto {
   @IsOptional()
   isPay?: number;
 }
+
+export class ReqListMovieBasicListDto extends PaginationDto {
+  @IsOptional()
+  columnValue?: string;
+
+  @IsOptional()
+  orderBy?: string;
+
+  @IsOptional()
+  date?: string[];
+}
+
+export class LeaderboardDto extends PaginationDto {
+  @IsOptional()
+  columnValue?: string;
+}

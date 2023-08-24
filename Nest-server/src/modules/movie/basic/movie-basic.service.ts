@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
   ReqCreateMovieListDto,
+  ReqListMovieBasicListDto,
   ReqListMovieListDto,
   ReqUpdateMovieListDto,
 } from './dto/req-movie-basic.dto';
@@ -127,6 +128,40 @@ export class MovieBasicService {
       rows,
       total,
     };
+  }
+
+  /* 榜单 */
+  async findBasicList(reqListMovieListDto: ReqListMovieBasicListDto) {
+    const queryBuilder = this.movieBasicRepository
+      .createQueryBuilder('movieBasic')
+      .leftJoinAndSelect('movieBasic.moviePv', 'moviePv')
+      .select([
+        'movieBasic.title',
+        'movieBasic.theEnd',
+        'movieBasic.id',
+        'movieBasic.currentEpisode',
+        'movieBasic.columnValue',
+        'moviePv.pv',
+      ]);
+    if (reqListMovieListDto.date) {
+      queryBuilder.andWhere(
+        'movieBasic.updateTime BETWEEN :startTime AND :endTime',
+        {
+          startTime: reqListMovieListDto.date[0] + ' 00:00:00',
+          endTime: reqListMovieListDto.date[1] + ' 23:59:59',
+        },
+      );
+    }
+    if (reqListMovieListDto.orderBy === 'pv') {
+      queryBuilder.orderBy('moviePv.pv', 'DESC');
+    } else {
+      queryBuilder.orderBy('movieBasic.updateTime', 'DESC');
+    }
+    return queryBuilder
+      .skip(reqListMovieListDto.skip)
+      .take(reqListMovieListDto.take)
+      .cache(60000 * 30)
+      .getMany();
   }
 
   /* 通过中文名查询 */

@@ -11,6 +11,7 @@ import {
 
 import { MovieBasicService } from './movie-basic.service';
 import {
+  LeaderboardDto,
   ReqCreateMovieListDto,
   ReqListMovieListDto,
   ReqUpdateMovieListDto,
@@ -27,6 +28,7 @@ import { PubDateService } from '../pub-date/pub-date.service';
 import { MovieLevelService } from '../movie-level/movie-level.service';
 import { RoleActorService } from '../role-actor/role-actor.service';
 import { UserCollectService } from '../../web/user-collect/user-collect.service';
+import * as dayjs from 'dayjs';
 
 @Controller('movie')
 export class MovieBasicController {
@@ -58,6 +60,38 @@ export class MovieBasicController {
   @Get('list')
   list(@Query(PaginationPipe) reqListMovieListDto: ReqListMovieListDto) {
     return this.movieBasicService.findPageList(reqListMovieListDto);
+  }
+
+  /** 周榜单，月榜单 */
+  @Public()
+  @Get('leaderboard')
+  async leaderboard(@Query(PaginationPipe) leaderboardDto: LeaderboardDto) {
+    const currTime = dayjs().format('YYYY-MM-DD');
+    const weekStartTime = dayjs().subtract(7, 'day').format('YYYY-MM-DD');
+    const mouthStartTime = dayjs().subtract(30, 'day').format('YYYY-MM-DD');
+
+    const weekRequest = this.movieBasicService.findBasicList({
+      columnValue: leaderboardDto.columnValue,
+      skip: leaderboardDto.skip,
+      take: leaderboardDto.take,
+      orderBy: 'pv',
+      date: [weekStartTime, currTime],
+    });
+    const mouthRequest = this.movieBasicService.findBasicList({
+      columnValue: leaderboardDto.columnValue,
+      skip: leaderboardDto.skip,
+      take: leaderboardDto.take,
+      orderBy: 'pv',
+      date: [mouthStartTime, currTime],
+    });
+    const [weekRank, mouthRank] = await Promise.all([
+      weekRequest,
+      mouthRequest,
+    ]);
+    return DataObj.create({
+      weekRank,
+      mouthRank,
+    });
   }
 
   @Public()
