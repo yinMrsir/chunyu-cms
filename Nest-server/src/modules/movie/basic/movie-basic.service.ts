@@ -144,6 +144,11 @@ export class MovieBasicService {
         'movieBasic.columnValue',
         'moviePv.pv',
       ]);
+    if (reqListMovieListDto.columnValue) {
+      queryBuilder.andWhere('movieBasic.columnValue = :columnValue', {
+        columnValue: reqListMovieListDto.columnValue,
+      });
+    }
     if (reqListMovieListDto.date) {
       queryBuilder.andWhere(
         'movieBasic.updateTime BETWEEN :startTime AND :endTime',
