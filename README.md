@@ -117,7 +117,7 @@ docker安装mysql：https://www.runoob.com/docker/docker-install-mysql.html
 [Nuxt3视频教程](https://www.bilibili.com/video/BV1gu4y1R7Jt/?spm_id_from=333.999.0.0&vd_source=9dbe815ca79d8528e02be1a51583912a)
 
 ## 如何使用阿里云Oss上传文件
-**第一步** 修改`pm2.config.cjs`
+**第一步** 修改`pm2.config.cjs` 或直接修改 `Nest-server/src/config`目录对应配置文件
 ```ts
 // 1、pm2.config.js
 module.exports = {
