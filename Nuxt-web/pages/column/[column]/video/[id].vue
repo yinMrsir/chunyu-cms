@@ -96,7 +96,6 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
 import QrcodeVue from 'qrcode.vue'
-import { IResData, IResPage } from "~/global";
 import 'xgplayer/dist/index.min.css'
 import 'xgplayer/es/plugins/danmu/index.css'
 import '../../../../plugins/xgplayerPlugins/payTipPlugin.css'

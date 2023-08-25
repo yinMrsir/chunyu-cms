@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { IResData } from "~/global";
+import { IWebType } from "~/types/column";
 import { useServerRequest } from "~/composables/useServerRequest";
 
 const runtimeConfig = useRuntimeConfig()
@@ -62,11 +62,11 @@ const { globalTitle } = publicConfig
 const route = useRoute()
 
 const [{data: res}, { data: info }] = await Promise.all([
-  useServerRequest<IResData<any[]>>( `/web/type/${route.params.column}`),
-  useServerRequest<any>(`/column?value=${route.params.column}`)
+  useServerRequest<IWebType>( `/web/type/${route.params.column}`),
+  useServerRequest<IColumn>(`/column?value=${route.params.column}`)
 ])
 
-if (!info.value.data) {
+if (!info.value?.data) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page Not Found',

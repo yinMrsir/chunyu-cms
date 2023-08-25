@@ -143,7 +143,6 @@
 <script setup lang="ts">
 import QrcodeVue from 'qrcode.vue'
 import { useLoginDialogVisible, useToken } from "~/composables/states";
-import { IResData, IResPage } from "~/global";
 import { escapeHtml } from '~/utils/tool'
 import { useServerRequest } from "~/composables/useServerRequest";
 import { useClientRequest } from "~/composables/useClientRequest";

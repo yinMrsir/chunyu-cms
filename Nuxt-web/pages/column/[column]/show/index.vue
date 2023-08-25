@@ -105,9 +105,9 @@
 </template>
 
 <script setup lang="ts">
-import { IResData, IResPage } from "~/global";
-import {useServerRequest} from "~/composables/useServerRequest";
-import {useClientRequest} from "~/composables/useClientRequest";
+import { ImovieLeaderboard } from "~/types/column/show";
+import { useServerRequest } from "~/composables/useServerRequest";
+import { useClientRequest } from "~/composables/useClientRequest";
 
 definePageMeta({
   key: route => route.fullPath
@@ -140,6 +140,8 @@ const title = computed(() => {
   return html
 })
 
+type TType = {name: string; id: number}
+
 const [
   { data: genreList },
   { data: countryList },
@@ -148,26 +150,26 @@ const [
   { data: info },
   { data: movieList, pending, refresh }
 ] = await Promise.all([
-  useServerRequest<IResData<{name: string; id: number}[]>>('/basic/genre/all', {
+  useServerRequest<IResData<TType[]>>('/basic/genre/all', {
     query: {
       columnValue: params.column
     }
   }),
-  useServerRequest<IResData<{name: string; id: number}[]>>('/basic/country/all'),
-  useServerRequest<IResData<{name: string; id: number}[]>>('/basic/language/all'),
-  useServerRequest<IResPage<any[]>>('/movie/leaderboard', {
+  useServerRequest<IResData<TType[]>>('/basic/country/all'),
+  useServerRequest<IResData<TType[]>>('/basic/language/all'),
+  useServerRequest<ImovieLeaderboard>('/movie/leaderboard', {
     query: {
       columnValue: params.column,
       pageNum: 1,
       pageSize: 20,
     }
   }),
-  useServerRequest<IResData<{ name: string }>>(`/column`, {
+  useServerRequest<IColumn>(`/column`, {
     query: {
       value: params.column
     }
   }),
-  useAsyncData<IResPage<any[]>>('data', () => useClientRequest('/movie/list', {
+  useAsyncData<IMovieList>('data', () => useClientRequest('/movie/list', {
     query: {
       columnValue: params.column,
       genres: query.t,

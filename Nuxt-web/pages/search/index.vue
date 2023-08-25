@@ -58,7 +58,6 @@
 </template>
 
 <script setup lang="ts">
-import {IResPage} from "~/global";
 import {useClientRequest} from "~/composables/useClientRequest";
 import {useAsyncData} from "#app";
 import {useServerRequest} from "~/composables/useServerRequest";

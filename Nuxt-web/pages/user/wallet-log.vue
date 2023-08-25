@@ -42,7 +42,6 @@
 </template>
 
 <script setup lang="ts">
-import { IResPage } from "~/global";
 import { useClientRequest } from "~/composables/useClientRequest";
 
 const runtimeConfig = useRuntimeConfig()
