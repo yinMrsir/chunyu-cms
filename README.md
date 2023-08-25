@@ -91,7 +91,8 @@ yarn build:prod
 - [x] 用户签到
 - [x] 用户签到获得金币
 - [x] 视频支持支付付费观看
-- [x] 支持图片、视频上传至阿里云oss
+- [x] [支持图片、视频上传至阿里云oss](#如何使用阿里云Oss上传文件)
+
 
 ### 待完成
 - [ ] 用户购买金币
@@ -114,3 +115,32 @@ docker安装mysql：https://www.runoob.com/docker/docker-install-mysql.html
 [Nuxt3教程文档](http://www.yinchunyu.com)
 
 [Nuxt3视频教程](https://www.bilibili.com/video/BV1gu4y1R7Jt/?spm_id_from=333.999.0.0&vd_source=9dbe815ca79d8528e02be1a51583912a)
+
+## 如何使用阿里云Oss上传文件
+**第一步** 修改`pm2.config.cjs`
+```ts
+// 1、pm2.config.js
+module.exports = {
+  apps : [
+    {
+      env: {
+        // ...
+        // 填写Bucket所在地域。以华东1（杭州）为例，Region填写为oss-cn-hangzhou。
+        REGION: '',
+        // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
+        ACCESS_KEY_Id: '',
+        ACCESS_KEY_SECRET: '',
+        // 填写Bucket名称。
+        BUCKET: '',
+        // 是否支持上传自定义域名
+        CNAME: false,
+        // OSS访问域名
+        ENDPOINT: ''
+      }
+    }
+  ]
+};
+```
+**第二步** 进入后台系统管理-参数配置，将*是否开启文件上传至阿里云*参数键值修改为`1`
+
+> 注意：管理端通过视频截取封面存在跨域问题，所以需要配置代理转发，并修改`Vue3-admin/src/views/video/list/index.vue`中的`replaceUrl`方法中的域名。

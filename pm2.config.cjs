@@ -13,7 +13,6 @@ module.exports = {
         MYSQL_DATABASE: '',
         REDIS_HOST: '',
         DEV_TOOLS: false,
-        IS_ALI_OSS: false,
         REGION: '',
         ACCESS_KEY_Id: '',
         ACCESS_KEY_SECRET: '',

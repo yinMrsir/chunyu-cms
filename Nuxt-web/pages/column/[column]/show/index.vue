@@ -96,9 +96,9 @@
       </el-col>
       <el-col :span="6" class="hidden-sm-and-down">
         <!--   周榜单     -->
-        <Ranking title="周榜单" :list="weekList.rows" />
+        <Ranking title="周榜单" :list="rank.data.weekRank" />
         <!--   月榜单     -->
-        <Ranking title="月榜单" :list="monthList.rows" />
+        <Ranking title="月榜单" :list="rank.data.mouthRank" />
       </el-col>
     </el-row>
   </div>
@@ -109,8 +109,6 @@ import { IResData, IResPage } from "~/global";
 import {useServerRequest} from "~/composables/useServerRequest";
 import {useClientRequest} from "~/composables/useClientRequest";
 
-const dayjs = useDayjs()
-
 definePageMeta({
   key: route => route.fullPath
 })
@@ -120,8 +118,8 @@ const { public: publicConfig } = runtimeConfig
 const { globalTitle } = publicConfig
 const route = useRoute()
 const { query, params } = route
-const currentPage = ref<number>(1)
-const orderBy = ref(route.query.orderBy || 'createTime')
+const currentPage = ref<number>((route.query.page && +route.query.page) || 1)
+const orderBy = ref(query.orderBy || 'createTime')
 const yearList = ref<number[]>([])
 const y = new Date().getFullYear();
 for (let i = 0 ; i <= 15; i++){
@@ -130,27 +128,23 @@ for (let i = 0 ; i <= 15; i++){
 
 const title = computed(() => {
   let html = ''
-  if (route.query.y) {
-    html += route.query.y
-    html += '_'
+  if (query.y) {
+    html += query.y
+    html += '年'
   }
-  if (route.query.t) {
-    html += route.query.t
-    html += '_'
+  if (query.t) {
+    html += '最新最全的'
+    html += query.t
+    html += '在线观看'
   }
   return html
 })
-
-const currTime = dayjs().format('YYYY-MM-DD')
-const weekStartTime = dayjs().subtract(7, 'day').format('YYYY-MM-DD')
-const mouthStartTime = dayjs().subtract(30, 'day').format('YYYY-MM-DD')
 
 const [
   { data: genreList },
   { data: countryList },
   { data: languageList },
-  { data: weekList },
-  { data: monthList },
+  { data: rank },
   { data: info },
   { data: movieList, pending, refresh }
 ] = await Promise.all([
@@ -161,22 +155,11 @@ const [
   }),
   useServerRequest<IResData<{name: string; id: number}[]>>('/basic/country/all'),
   useServerRequest<IResData<{name: string; id: number}[]>>('/basic/language/all'),
-  useServerRequest<IResPage<any[]>>('/movie/list', {
+  useServerRequest<IResPage<any[]>>('/movie/leaderboard', {
     query: {
       columnValue: params.column,
       pageNum: 1,
       pageSize: 20,
-      orderBy: 'pv',
-      date: [weekStartTime, currTime]
-    }
-  }),
-  useServerRequest<IResPage<any[]>>('/movie/list', {
-    query: {
-      columnValue: params.column,
-      pageNum: 1,
-      pageSize: 20,
-      orderBy: 'pv',
-      date: [mouthStartTime, currTime]
     }
   }),
   useServerRequest<IResData<{ name: string }>>(`/column`, {
@@ -199,8 +182,15 @@ const [
 ])
 
 async function handleCurrentChange(page: number) {
-  currentPage.value = page
-  refresh()
+  const route = useRoute()
+  await navigateTo({
+    path: route.path,
+    query: {
+      ...route.query,
+      orderBy: orderBy.value,
+      page
+    }
+  })
   if (process.client) {
     window.scrollTo(0, 0)
   }
