@@ -5,7 +5,7 @@
 ## 在线体验
   - [用户端演示地址](http://cms.yinchunyu.com)
   - [管理端演示地址](http://cms-admin.yinchunyu.com)
-  - [文档地址](https://yinMrsir.github.io/#/)
+  - [Nuxt3教程](http://www.yinchunyu.com)
   - [码源地址](https://github.com/yinMrsir/chunyu-cms)
 
 
