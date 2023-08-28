@@ -122,7 +122,7 @@ function fileChangeHandle(evt) {
     return;
   }
   if (props.acceptType.indexOf(_file.type) === -1) {
-    proxy.$modal.msgWarning(`只能上传 ${acceptTypeStr} 格式视频!`);
+    proxy.$modal.msgWarning(`只能上传 ${acceptTypeStr.value} 格式视频!`);
     return;
   }
 

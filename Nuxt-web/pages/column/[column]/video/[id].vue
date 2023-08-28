@@ -160,7 +160,7 @@ onMounted(async () => {
     id: 'mse',
     autoplay: true,
     volume: 0.3,
-    url: detail.videoInfo?.url,
+    url: process.env.NODE_ENV === 'development' ? detail.videoInfo?.url.replace('http://[::1]:4000', '/server') : detail.videoInfo?.url,
     playsinline: true,
     height: '100%',
     width: '100%',

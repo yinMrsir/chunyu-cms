@@ -50,6 +50,8 @@ import useClipboard from "vue-clipboard3";
 const baseUrl = import.meta.env.VITE_APP_BASE_API;
 import VideoUpload from '@/components/VideoUpload'
 import { createVideo, getVideoList, updateVideo, deleteVideo } from './services'
+import request from "@/utils/request";
+import { base64toFile } from "@/utils";
 
 const { toClipboard } = useClipboard();
 const { proxy } = getCurrentInstance()
@@ -161,7 +163,7 @@ function getCurrentTime() {
     canvas.height = height;
     canvas.getContext("2d").drawImage(video, 0, 0, width, height); //绘制canvas
     dataURL = canvas.toDataURL('image/jpeg',0.8); //转换为base64
-    form.poster = dataURL
+    uploadPoster(dataURL)
   });
 }
 
@@ -187,7 +189,23 @@ function replaceUrl(str) {
 }
 
 function posterChangeHandle(posterUrl) {
-  form.poster = posterUrl
+  uploadPoster(posterUrl)
+}
+
+
+
+async function uploadPoster(base64) {
+  let imgFile = base64toFile(base64)
+
+  const formData = new FormData()
+  formData.append('file', imgFile)
+  const res = await request({
+    url: '/common/upload',
+    method: 'post',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    data: formData,
+  })
+  form.poster = res.fileName
 }
 
 function createVideoMethod(formData) {

@@ -5,12 +5,12 @@ import { parseTime } from './ruoyi'
  */
 export function formatDate(cellValue) {
   if (cellValue == null || cellValue == "") return "";
-  var date = new Date(cellValue) 
+  var date = new Date(cellValue)
   var year = date.getFullYear()
   var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
-  var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate() 
-  var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours() 
-  var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes() 
+  var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+  var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+  var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
   var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
   return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
 }
@@ -330,7 +330,7 @@ export function makeMap(str, expectsLowerCase) {
     ? val => map[val.toLowerCase()]
     : val => map[val]
 }
- 
+
 export const exportDefault = 'export default '
 
 export const beautifierConf = {
@@ -387,4 +387,19 @@ export function camelCase(str) {
 export function isNumberStr(str) {
   return /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g.test(str)
 }
- 
+
+// base64转文件
+export function base64toFile(base64Data) {
+  //去掉base64的头部信息，并转换为byte
+  let split = base64Data.split(',');
+  let bytes = window.atob(split[1]);
+  //获取文件类型
+  let fileType = split[0].match(/:(.*?);/)[1];
+  //处理异常,将ascii码小于0的转换为大于0
+  let ab = new ArrayBuffer(bytes.length);
+  let ia = new Uint8Array(ab);
+  for (let i = 0; i < bytes.length; i++) {
+    ia[i] = bytes.charCodeAt(i);
+  }
+  return new Blob([ab], { type: fileType});
+}
