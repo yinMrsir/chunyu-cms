@@ -2,7 +2,7 @@
   <div class="container index">
     <div class="banner">
       <el-carousel :interval="5000" arrow="always">
-        <el-carousel-item v-for="item in banner.rows">
+        <el-carousel-item v-for="item in banner?.rows" :key="item.id">
           <nuxt-link v-if="+item.urlType === 0" :to="item.url">
             <el-image :src="item.img" style="width: 100%" fit="cover" />
           </nuxt-link>
@@ -12,13 +12,13 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-    <movie-box type="index" :category-item="item" v-for="item in movie.data" />
+    <movie-box type="index" :category-item="item" v-for="item in movie?.data" :key="item.value" />
     <div class="friendly-link flex items-center mt-20">
       <img src="../assets/images/icon_26.png" alt="友情链接">
       友情链接
     </div>
     <div class="friendly-link__content">
-      <a v-for="item in links.data" :href="item.url" target="_blank">{{ item.text }}</a>
+      <a v-for="item in links?.data" :href="item.url" target="_blank" :key="item.id">{{ item.text }}</a>
     </div>
   </div>
 </template>

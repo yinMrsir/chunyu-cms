@@ -25,4 +25,4 @@ interface ColumnItem {
   rows: MovieItem[];
 }
 
-export interface WebType extends ResPage<ColumnItem[]>{}
+export interface WebType extends ResData<ColumnItem[]>{}

@@ -90,6 +90,6 @@ declare global {
     mouthRank: RankMovieItem[];
   }
 
-  type MovieLeaderboard = ResData<LeaderboardItem[]>
+  type MovieLeaderboard = ResData<LeaderboardItem>
 }
 

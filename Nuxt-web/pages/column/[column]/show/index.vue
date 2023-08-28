@@ -1,8 +1,8 @@
 <template>
   <div class="container mt-20 show">
     <Head>
-      <Title>{{ title }}{{ info.data.name }} - {{ globalTitle }}</Title>
-      <Meta name="description" :content="`最新最全的${title}${info.data.name}尽在淳渔影视。`" />
+      <Title>{{ title }}{{ info?.data?.name }} - {{ globalTitle }}</Title>
+      <Meta name="description" :content="`最新最全的${title}${info?.data?.name}尽在淳渔影视。`" />
     </Head>
 
     <el-row :gutter="40">
@@ -20,7 +20,7 @@
               <li :class="route.query.t === '' || route.query.t === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, t: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="item in genreList.data" :class="route.query.t === item.name ? 'active' : ''" :key="item.id">
+              <li v-for="item in genreList?.data" :class="route.query.t === item.name ? 'active' : ''" :key="item.id">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, t: item.name } }">{{ item.name }}</nuxt-link>
               </li>
             </ul>
@@ -30,7 +30,7 @@
               <li :class="route.query.c === '' || route.query.c === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, c: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="item in countryList.data" :class="+route.query.c === +item.id ? 'active' : ''" :key="item.id">
+              <li v-for="item in countryList?.data" :class="route.query.c && +route.query.c === +item.id ? 'active' : ''" :key="item.id">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, c: item.id } }">{{ item.name }}</nuxt-link>
               </li>
             </ul>
@@ -40,7 +40,7 @@
               <li :class="route.query.y === '' || route.query.y === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, y: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="item in yearList" :class="+route.query.y === item ? 'active' : ''" :key="item">
+              <li v-for="item in yearList" :class="route.query.y && +route.query.y === item ? 'active' : ''" :key="item">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, y: item } }">{{ item }}</nuxt-link>
               </li>
             </ul>
@@ -50,7 +50,7 @@
               <li :class="route.query.l === '' || route.query.l === undefined ? 'active' : ''">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, l: '' } }">全部</nuxt-link>
               </li>
-              <li v-for="item in languageList.data" :class="route.query.l === item.name ? 'active' : ''" :key="item.id">
+              <li v-for="item in languageList?.data" :class="route.query.l === item.name ? 'active' : ''" :key="item.id">
                 <nuxt-link :to="{ path: route.path, query: { ...route.query, l: item.name } }">{{ item.name }}</nuxt-link>
               </li>
             </ul>
@@ -62,8 +62,8 @@
           <el-tab-pane label="按评分" name="rate" :disabled="pending"></el-tab-pane>
         </el-tabs>
         <div class="video-list" v-loading="pending">
-          <el-row :gutter="20" v-if="movieList.total !== 0">
-            <el-col :sm="4" :xs="8" v-for="item in movieList.rows">
+          <el-row :gutter="20" v-if="movieList?.total !== 0">
+            <el-col :sm="4" :xs="8" v-for="item in movieList?.rows" :key="item.id">
               <div class="video-list__block">
                 <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="img-box">
                   <el-image class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
@@ -80,25 +80,25 @@
               </div>
             </el-col>
           </el-row>
-          <div class="pagination" v-if="movieList.total !== 0">
+          <div class="pagination" v-if="movieList?.total !== 0">
             <el-pagination
                 background
                 layout="prev, pager, next"
                 :current-page="currentPage"
                 :page-size="30"
                 :pager-count="5"
-                :total="movieList.total"
+                :total="movieList?.total"
                 @current-change="handleCurrentChange"
             />
           </div>
-          <el-empty description="未找到相关数据" v-if="movieList.total === 0"></el-empty>
+          <el-empty description="未找到相关数据" v-if="movieList?.total === 0"></el-empty>
         </div>
       </el-col>
       <el-col :span="6" class="hidden-sm-and-down">
         <!--   周榜单     -->
-        <Ranking title="周榜单" :list="rank.data.weekRank" />
+        <Ranking title="周榜单" :list="rank?.data.weekRank" />
         <!--   月榜单     -->
-        <Ranking title="月榜单" :list="rank.data.mouthRank" />
+        <Ranking title="月榜单" :list="rank?.data.mouthRank" />
       </el-col>
     </el-row>
   </div>
