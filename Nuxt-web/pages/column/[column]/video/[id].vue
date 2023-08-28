@@ -85,9 +85,9 @@
           <p class="mt-10">扫描二维码用手机观看</p>
         </div>
         <!--   周榜单     -->
-        <Ranking title="周榜单" :list="weekList.rows" />
+        <Ranking title="周榜单" :list="rank.data.weekRank" />
         <!--   月榜单     -->
-        <Ranking title="月榜单" :list="monthList.rows" />
+        <Ranking title="月榜单" :list="rank.data.mouthRank" />
       </el-col>
     </el-row>
   </div>
@@ -103,7 +103,6 @@ import PresetPlayer from "xgplayer";
 import { useServerRequest } from "~/composables/useServerRequest";
 import { useClientRequest } from "~/composables/useClientRequest";
 
-const dayjs = useDayjs()
 const token = useToken()
 const loginDialogVisible = useLoginDialogVisible()
 
@@ -121,11 +120,7 @@ let payTipInstance: { hidden: () => void; } | null = null
 // 视频组件
 let player: PresetPlayer | null = null
 
-const currTime = dayjs().format('YYYY-MM-DD')
-const weekStartTime = dayjs().subtract(7, 'day').format('YYYY-MM-DD')
-const mouthStartTime = dayjs().subtract(30, 'day').format('YYYY-MM-DD')
-
-const { data: detailRes } = await useServerRequest<IResData<any>>(`/movie/videos/${id}`)
+const { data: detailRes } = await useServerRequest<ResData<any>>(`/movie/videos/${id}`)
 if (!detailRes.value) {
   throw createError({
     statusCode: 404,
@@ -139,7 +134,7 @@ const detail = detailRes.value.data
 getUserMovie()
 async function getUserMovie() {
   if (token.value) {
-    const { data: userBuy } = await useServerRequest<IResData<any>>(`/user-movie`, {
+    const { data: userBuy } = await useServerRequest<ResData<any>>(`/user-movie`, {
       query: { movieId: detail.movieId }
     })
     isUserBuy.value = !!userBuy.value?.data
@@ -235,7 +230,7 @@ function buyMovie(player: any, callback: { (): void; (): void; }) {
         type: 'warning',
       }
   ).then(async () => {
-    const { code, msg } = await useClientRequest<IResData<any>>(`/user-movie`, {
+    const { code, msg } = await useClientRequest<ResData<any>>(`/user-movie`, {
       method: 'post',
       body: { movieId: detail.movieId }
     })
@@ -259,32 +254,20 @@ function buyMovie(player: any, callback: { (): void; (): void; }) {
 /** 获取猜你喜欢、周榜单、月榜单数据 */
 const [
   { data: likeRows },
-  { data: weekList },
-  { data: monthList }
+  { data: rank },
 ] = await Promise.all([
-  useServerRequest<IResPage<any[]>>(`/movie/list`, {
+  useServerRequest<MovieList>(`/movie/list`, {
     query: {
       genres: detail.movie.genres.split(',')[0],
       pageNum: 1,
       pageSize: 18,
     }
   }),
-  useServerRequest<IResPage<any[]>>(`/movie/list`, {
+  useServerRequest<MovieLeaderboard>('/movie/leaderboard', {
     query: {
       columnValue: detail.movie.columnValue,
       pageNum: 1,
       pageSize: 20,
-      orderBy: 'pv',
-      date: [weekStartTime, currTime]
-    }
-  }),
-  useServerRequest<IResPage<any[]>>(`/movie/list`, {
-    query: {
-      columnValue: detail.movie.columnValue,
-      pageNum: 1,
-      pageSize: 20,
-      orderBy: 'pv',
-      date: [mouthStartTime, currTime]
     }
   })
 ])

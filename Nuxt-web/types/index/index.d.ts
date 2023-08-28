@@ -1,4 +1,4 @@
-interface IBannerRows {
+interface BannerItem {
   createTime: string;
   updateTime: string;
   createBy: string;
@@ -11,9 +11,9 @@ interface IBannerRows {
   urlType: string;
 }
 
-export interface IBasicBannerList extends IResPage<IBannerRows[]> {}
+export interface BasicBannerList extends ResPage<BannerItem[]> {}
 
-interface ILinkData {
+interface LinkItem {
   createTime: string;
   updateTime: string;
   createBy: string;
@@ -24,14 +24,14 @@ interface ILinkData {
   url: string;
 }
 
-export interface IBasicLinkAll extends IResData<ILinkData[]> {}
+export interface BasicLinkAll extends ResData<LinkItem[]> {}
 
-interface IGenres {
+interface GenreItem {
   id: number;
   name: string;
 }
 
-interface IRanks {
+interface RankItem {
   id: number;
   title: string;
   columnValue: string;
@@ -40,7 +40,7 @@ interface IRanks {
   moviePv: IMoviePv;
 }
 
-interface IMovieRows {
+interface MovieItem {
   createTime: string;
   updateTime: string;
   id: number;
@@ -51,13 +51,13 @@ interface IMovieRows {
   movieRate?: any;
 }
 
-interface IMovieData {
+interface MovieData {
   name: string;
   type: string;
   value: string;
-  genres: IGenres[];
-  ranks: IRanks[];
-  rows: IMovieRows[];
+  genres: GenreItem[];
+  ranks: RankItem[];
+  rows: MovieItem[];
 }
 
-export interface IWebIndex extends IResData<IMovieData[]> {}
+export interface WebIndex extends ResData<MovieData[]> {}

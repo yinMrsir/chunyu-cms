@@ -1,7 +1,7 @@
 import { useFetch, UseFetchOptions } from "#app";
 import { isArray } from "~/utils/tool";
 
-export const useServerRequest = <T= unknown>(url: string, opts?: UseFetchOptions<T, unknown>) => {
+export const useServerRequest = <T>(url: string, opts?: UseFetchOptions<T, unknown>) => {
   const userInfo = useCookie<{ token: string }>('userInfo')
   const runtimeConfig = useRuntimeConfig()
 

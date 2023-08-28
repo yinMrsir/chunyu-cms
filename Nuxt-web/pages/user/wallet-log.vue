@@ -58,7 +58,7 @@ onMounted(() => {
 })
 
 async function getList() {
-  const { rows, total } = await useClientRequest<IResPage<any>>('/user-wallet/logs', {
+  const { rows, total } = await useClientRequest<ResPage<any>>('/user-wallet/logs', {
     query: queryParams
   })
   list.value = rows

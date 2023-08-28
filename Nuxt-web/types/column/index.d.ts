@@ -1,4 +1,4 @@
-interface IRanks {
+interface RankItem {
   id: number;
   title: string;
   columnValue: string;
@@ -7,7 +7,7 @@ interface IRanks {
   moviePv: IMoviePv;
 }
 
-interface IRows {
+interface MovieItem {
   createTime: string;
   updateTime: string;
   id: number;
@@ -18,11 +18,11 @@ interface IRows {
   movieRate?: any;
 }
 
-interface Data {
+interface ColumnItem {
   id: number;
   name: string;
-  ranks: IRanks[];
-  rows: IRows[];
+  ranks: RankItem[];
+  rows: MovieItem[];
 }
 
-export interface IWebType extends IResPage<Data[]>{}
+export interface WebType extends ResPage<ColumnItem[]>{}

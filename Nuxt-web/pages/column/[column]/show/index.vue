@@ -105,7 +105,6 @@
 </template>
 
 <script setup lang="ts">
-import { ImovieLeaderboard } from "~/types/column/show";
 import { useServerRequest } from "~/composables/useServerRequest";
 import { useClientRequest } from "~/composables/useClientRequest";
 
@@ -150,26 +149,26 @@ const [
   { data: info },
   { data: movieList, pending, refresh }
 ] = await Promise.all([
-  useServerRequest<IResData<TType[]>>('/basic/genre/all', {
+  useServerRequest<ResData<TType[]>>('/basic/genre/all', {
     query: {
       columnValue: params.column
     }
   }),
-  useServerRequest<IResData<TType[]>>('/basic/country/all'),
-  useServerRequest<IResData<TType[]>>('/basic/language/all'),
-  useServerRequest<ImovieLeaderboard>('/movie/leaderboard', {
+  useServerRequest<ResData<TType[]>>('/basic/country/all'),
+  useServerRequest<ResData<TType[]>>('/basic/language/all'),
+  useServerRequest<MovieLeaderboard>('/movie/leaderboard', {
     query: {
       columnValue: params.column,
       pageNum: 1,
       pageSize: 20,
     }
   }),
-  useServerRequest<IColumn>(`/column`, {
+  useServerRequest<Column>(`/column`, {
     query: {
       value: params.column
     }
   }),
-  useAsyncData<IMovieList>('data', () => useClientRequest('/movie/list', {
+  useAsyncData<MovieList>('data', () => useClientRequest('/movie/list', {
     query: {
       columnValue: params.column,
       genres: query.t,

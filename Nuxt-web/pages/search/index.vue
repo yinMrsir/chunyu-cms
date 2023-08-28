@@ -76,7 +76,7 @@ if (route.query.page) {
 }
 
 const [{ data, refresh }, { data: newMovie }] = await Promise.all([
-  useAsyncData('data', () => useClientRequest<IResPage<any>>(
+  useAsyncData('data', () => useClientRequest<ResPage<any>>(
       'movie/list',
       {
         query: {

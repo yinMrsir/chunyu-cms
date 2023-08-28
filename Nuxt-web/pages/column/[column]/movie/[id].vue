@@ -132,9 +132,9 @@
           <p class="mt-10">扫描二维码用手机观看</p>
         </div>
         <!--   周榜单     -->
-        <Ranking title="周榜单" :list="weekListRes.rows" />
+        <Ranking title="周榜单" :list="rank.data.weekRank" />
         <!--   月榜单     -->
-        <Ranking title="月榜单" :list="monthListRes.rows" />
+        <Ranking title="月榜单" :list="rank.data.mouthRank" />
       </el-col>
     </el-row>
   </div>
@@ -147,7 +147,6 @@ import { escapeHtml } from '~/utils/tool'
 import { useServerRequest } from "~/composables/useServerRequest";
 import { useClientRequest } from "~/composables/useClientRequest";
 
-const dayjs = useDayjs()
 const runtimeConfig = useRuntimeConfig()
 
 const route = useRoute()
@@ -160,10 +159,6 @@ const isCollect = ref<boolean>(false)
 const userRateData = ref<boolean>(false)
 const rate = ref()
 
-const currTime = dayjs().format('YYYY-MM-DD')
-const weekStartTime = dayjs().subtract(7, 'day').format('YYYY-MM-DD')
-const mouthStartTime = dayjs().subtract(30, 'day').format('YYYY-MM-DD')
-
 onMounted(() => {
   qrcodeUrl.value = window.location.href
 })
@@ -172,38 +167,26 @@ const [
   { data: detailRes, refresh },
   { data: castsRes },
 ] = await Promise.all([
-  useServerRequest<IResData<any>>(`/movie/${id}`),
-  useServerRequest<IResPage<any[]>>(`/movie/cast/list?movieId=${id}&pageNum=1&pageSize=50`)
+  useServerRequest<ResData<MovieItem>>(`/movie/${id}`),
+  useServerRequest<ResPage<any[]>>(`/movie/cast/list?movieId=${id}&pageNum=1&pageSize=50`)
 ])
 
-const [{data: weekListRes}, {data: monthListRes}] = await Promise.all([
-  useServerRequest<IResPage<any[]>>(`/movie/list`, {
-    query: {
-      columnValue: detailRes.value?.data.columnValue,
-      pageNum: 1,
-      pageSize: 20,
-      orderBy: 'pv',
-      date: [weekStartTime, currTime]
-    }
-  }),
-  useServerRequest<IResPage<any[]>>(`/movie/list`, {
-    query: {
-      columnValue: detailRes.value?.data.columnValue,
-      pageNum: 1,
-      pageSize: 20,
-      orderBy: 'pv',
-      date: [mouthStartTime, currTime]
-    }
-  })
-])
-
-if (!detailRes.value) {
+if (!detailRes.value?.data) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page Not Found',
     fatal: true
   })
 }
+
+// 获取榜单
+const { data: rank } = await useServerRequest<MovieLeaderboard>('/movie/leaderboard', {
+  query: {
+    columnValue: detailRes.value?.data.columnValue,
+    pageNum: 1,
+    pageSize: 20,
+  }
+})
 
 /** 更新访问量 */
 useServerRequest(`/movie/updatePv/${id}`)
@@ -237,12 +220,12 @@ async function handleCollect() {
   } else {
     let code: number
     if (isCollect.value) {
-      let { code: codeRes } = await useClientRequest<{ code: number; msg: string }>(`/user-collect/${id}`, {
+      let { code: codeRes } = await useClientRequest<Pick<ResOptions<unknown>, 'code' | 'msg'>>(`/user-collect/${id}`, {
         method: 'DELETE'
       })
       code = codeRes
     } else {
-      let { code: codeRes } = await useClientRequest<{ code: number; msg: string }>(`/user-collect`, {
+      let { code: codeRes } = await useClientRequest<Pick<ResOptions<unknown>, 'code' | 'msg'>>(`/user-collect`, {
         body: {movieId: id},
         method: 'POST'
       })
