@@ -1,11 +1,11 @@
 <template>
   <div class="container">
     <Head>
-      <Title>最新{{ info.data.name }}在线观看 - {{ globalTitle }}</Title>
-      <Meta name="description" :content="`最新最全的${info.data.name}在线观看尽在淳渔影视。`" />
+      <Title>最新{{ info?.data?.name }}在线观看 - {{ globalTitle }}</Title>
+      <Meta name="description" :content="`最新最全的${info?.data?.name}在线观看尽在淳渔影视。`" />
     </Head>
 
-    <el-row :gutter="20" class="mt-20" v-for="categoryItem in res.data">
+    <el-row :gutter="20" class="mt-20" v-for="categoryItem in res?.data" :key="categoryItem.id">
       <el-col :sm="18">
         <div class="panel_hd between items-center">
           <div class="panel_hd__left">
@@ -26,7 +26,7 @@
         </div>
         <div class="video-list">
           <el-row :gutter="20">
-            <el-col :sm="4" :xs="8" v-for="item in categoryItem.rows">
+            <el-col :sm="4" :xs="8" v-for="item in categoryItem.rows" :key="item.id">
               <div class="video-list__block">
                 <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="img-box">
                   <el-image lazy class="video-list__block__img" :src="item.poster" fit="cover" />
