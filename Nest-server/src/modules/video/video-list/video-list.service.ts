@@ -18,11 +18,12 @@ export class VideoService {
   }
 
   async findPageList(queryVideoDto: QueryVideoDto) {
-    const queryBuilder = await this.videoRepository
+    const queryBuilder = this.videoRepository
       .createQueryBuilder('video')
       .loadRelationCountAndMap('video.movieVideoCount', 'video.movieVideos')
       .take(queryVideoDto.take)
-      .skip(queryVideoDto.skip);
+      .skip(queryVideoDto.skip)
+      .orderBy('video.createTime', 'DESC');
 
     if (queryVideoDto.title) {
       queryBuilder.where({ title: Like(`%${queryVideoDto.title}%`) });
