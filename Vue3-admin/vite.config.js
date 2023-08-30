@@ -35,12 +35,12 @@ export default defineConfig(({ mode, command }) => {
           rewrite: (p) => p.replace(/^\/dev-api/, '')
         },
         '/oss': {
-          target: 'http://oss.yinchunyu.com',
+          target: 'https://oss.yinchunyu.com',
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/oss/, '')
         },
         '/external': {
-          target: 'http://cms.yinchunyu.com/external',
+          target: 'https://cms.yinchunyu.com/external',
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/external/, '')
         }

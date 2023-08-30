@@ -34,10 +34,10 @@ export default defineConfig({
   uploadPath: '',
 
   //静态文件前缀地址
-  publicPath: `http://cms.yinchunyu.com/server`,
+  publicPath: `https://cms.yinchunyu.com/server`,
 
   // 默认图片地址
-  defaultImg: `http://cms.yinchunyu.com/server/default.jpg`,
+  defaultImg: `https://cms.yinchunyu.com/server/default.jpg`,
 
   // 是否演示环境
   isDemoEnvironment: true,

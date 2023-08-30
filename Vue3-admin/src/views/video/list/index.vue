@@ -178,12 +178,12 @@ function uploadSuccessHandle(video) {
 }
 
 function replaceUrl(str) {
-  const aliOssUrl = 'http://oss.yinchunyu.com'
+  const aliOssUrl = 'https://oss.yinchunyu.com'
   if (str.indexOf(aliOssUrl) > -1) {
     return str.replace(aliOssUrl, '/oss')
   }
   if (import.meta.env.VITE_APP_ENV === 'production') {
-    return str.replace('cms.yinchunyu.com/server', 'cms-admin.yinchunyu.com/api')
+    return str.replace('https://cms.yinchunyu.com/server', '/api')
   }
   return str.replace('[::1]:4000', 'localhost:4001/dev-api')
 }
