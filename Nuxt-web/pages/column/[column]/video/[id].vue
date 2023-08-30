@@ -162,6 +162,9 @@ onMounted(async () => {
   ])
   player = new Player.default({
     id: 'mse',
+    controls: {
+      autoHide: false
+    },
     autoplay: true,
     volume: 0.3,
     url: process.env.NODE_ENV === 'development' ? detail.videoInfo?.url.replace('http://[::1]:4000', '/server') : detail.videoInfo?.url,
