@@ -22,11 +22,11 @@ export class UserCollectController {
   @Public()
   @Post()
   @UseGuards(JwtWebAuthGuard)
-  create(
+  async create(
     @User(UserEnum.userId) userId: number,
     @Body() createUserCollectDto: CreateUserCollectDto,
   ) {
-    return this.userCollectService.create({
+    await this.userCollectService.create({
       userId,
       movieId: createUserCollectDto.movieId,
     });
@@ -63,10 +63,10 @@ export class UserCollectController {
   @Public()
   @Delete(':movieId')
   @UseGuards(JwtWebAuthGuard)
-  remove(
+  async remove(
     @User(UserEnum.userId) userId: number,
     @Param('movieId') movieId: number,
   ) {
-    return this.userCollectService.remove(userId, movieId);
+    await this.userCollectService.remove(userId, movieId);
   }
 }

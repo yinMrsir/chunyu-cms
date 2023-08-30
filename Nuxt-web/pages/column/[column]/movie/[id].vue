@@ -1,8 +1,8 @@
 <template>
   <div class="container mt-20">
     <Head>
-      <Title>{{ detailRes.data.title }}在线观看 - {{ runtimeConfig.public.globalTitle }}</Title>
-      <Meta name="description" :content="detailRes.data.summary"/>
+      <Title>{{ detailRes?.data.title }}在线观看 - {{ runtimeConfig.public.globalTitle }}</Title>
+      <Meta name="description" :content="detailRes?.data.summary"/>
     </Head>
 
     <div class="items-center">
@@ -10,10 +10,10 @@
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item
-            :to="{ path: `/column/${detailRes.data.columnValue}/show`, query: { t: detailRes.data.genres?.split(',')[0] } }">
-          {{ detailRes.data.genres?.split(',')[0] }}
+            :to="{ path: `/column/${detailRes?.data.columnValue}/show`, query: { t: detailRes?.data.genres?.split(',')[0] } }">
+          {{ detailRes?.data.genres?.split(',')[0] }}
         </el-breadcrumb-item>
-        <el-breadcrumb-item>
+        <el-breadcrumb-item v-if="detailRes">
           {{ detailRes.data.title.length > 12 ? detailRes.data.title.substr(0, 12) + '...' : detailRes.data.title }}
         </el-breadcrumb-item>
       </el-breadcrumb>
@@ -21,48 +21,46 @@
     <el-row :gutter="40" class="mt-20">
       <el-col :span="18" :xs="24">
         <h1 class="movie-detail-title hidden-sm-and-up">
-          {{ detailRes.data.title }}
+          {{ detailRes?.data.title }}
           <span
-            :class="detailRes.data.movieRate?.rateUserCount > 0 ? 'rate' : ''">
-            {{detailRes.data.movieRate?.rateUserCount > 0 ? detailRes.data.movieRate.rate.toFixed(1) : '暂无评分' }}
+            :class="detailRes?.data.movieRate?.rateUserCount > 0 ? 'rate' : ''">
+            {{detailRes?.data.movieRate?.rateUserCount > 0 ? detailRes?.data.movieRate.rate.toFixed(1) : '暂无评分' }}
           </span>
         </h1>
         <div class="clearfix">
           <div class="movies-pic">
-            <el-image :src="detailRes.data.poster" fit="cover" style="width: 100%"></el-image>
+            <el-image :src="detailRes?.data.poster" fit="cover" style="width: 100%"></el-image>
           </div>
           <div class="movies-info">
             <h1 class="hidden-sm-and-down">
-              {{ detailRes.data.title }}
+              {{ detailRes?.data.title }}
               <span
-                :class="detailRes.data.movieRate?.rateUserCount > 0 ? 'rate' : ''">
-                {{detailRes.data.movieRate?.rateUserCount > 0 ? detailRes.data.movieRate.rate.toFixed(1) : '暂无评分' }}
+                :class="detailRes?.data.movieRate?.rateUserCount > 0 ? 'rate' : ''">
+                {{detailRes?.data.movieRate?.rateUserCount > 0 ? detailRes?.data.movieRate.rate.toFixed(1) : '暂无评分' }}
               </span>
             </h1>
             <el-form :inline="true" label-position="right">
-              <el-form-item label="类型:">{{ detailRes.data.genres }}</el-form-item>
+              <el-form-item label="类型:">{{ detailRes?.data.genres }}</el-form-item>
               <el-form-item label="地区:">
-                <template v-for="item in detailRes.data.country">
+                <template v-for="item in detailRes?.data.country">
                   {{ item.name }} &nbsp;
                 </template>
               </el-form-item>
-              <el-form-item label="年份:">{{ detailRes.data.year || '-' }}</el-form-item>
+              <el-form-item label="年份:">{{ detailRes?.data.year || '-' }}</el-form-item>
             </el-form>
             <el-form label-position="right">
-              <el-form-item label="别名:" v-if="detailRes.data.akas">
-                <div class="text-overflow">{{ detailRes.data.akas.split(',').join('/') }}</div>
+              <el-form-item label="别名:" v-if="detailRes?.data.akas">
+                <div class="text-overflow">{{ detailRes?.data.akas.split(',').join('/') }}</div>
               </el-form-item>
-              <el-form-item label="标签:" v-if="detailRes.data.tags">
-                <div class="text-overflow">{{ detailRes.data.tags.split(',').join('/') }}</div>
+              <el-form-item label="标签:" v-if="detailRes?.data.tags">
+                <div class="text-overflow">{{ detailRes?.data.tags.split(',').join('/') }}</div>
               </el-form-item>
               <div>
-                <nuxt-link :to="`/column/${detailRes.data.columnValue}/video/${detailRes.data.movieVideos[0].id}`" v-if="detailRes.data.movieVideos[0]">
+                <nuxt-link :to="`/column/${detailRes?.data.columnValue}/video/${detailRes?.data.movieVideos[0].id}`" v-if="detailRes?.data.movieVideos[0]">
                   <el-button :icon="ElIconVideoPlay" type="primary" class="mr-10">播放</el-button>
                 </nuxt-link>
                 <el-button :icon="isCollect ? ElIconStarFilled : ElIconStar" @click="handleCollect">
-                  {{
-                    isCollect ? '已收藏' : '收藏'
-                  }}
+                  {{ isCollect ? '已收藏' : '收藏' }}
                 </el-button>
                 <ClientOnly>
                   <el-popover v-if="!userRateData" placement="right" trigger="click">
@@ -76,7 +74,7 @@
             </el-form>
           </div>
         </div>
-        <div class="mt-20" v-if="detailRes.data.movieVideos && detailRes.data.movieVideos.length">
+        <div class="mt-20" v-if="detailRes?.data.movieVideos && detailRes.data.movieVideos.length">
           <div class="panel_hd between items-center">
             <div class="panel_hd__left">
               <h3 class="title items-center">
@@ -103,10 +101,10 @@
               </h3>
             </div>
           </div>
-          <div class="desc" v-html="escapeHtml(detailRes.data.summary)"></div>
+          <div class="desc" v-html="escapeHtml(detailRes?.data.summary || '')"></div>
         </div>
         <!--  演员    -->
-        <div class="mt-20" v-if="castsRes.rows && castsRes.rows.length">
+        <div class="mt-20" v-if="castsRes?.rows && castsRes?.rows.length">
           <div class="panel_hd between items-center">
             <div class="panel_hd__left">
               <h3 class="title items-center">
@@ -132,9 +130,9 @@
           <p class="mt-10">扫描二维码用手机观看</p>
         </div>
         <!--   周榜单     -->
-        <Ranking title="周榜单" :list="rank.data.weekRank" />
+        <Ranking title="周榜单" :list="rank?.data.weekRank" />
         <!--   月榜单     -->
-        <Ranking title="月榜单" :list="rank.data.mouthRank" />
+        <Ranking title="月榜单" :list="rank?.data.mouthRank" />
       </el-col>
     </el-row>
   </div>
@@ -142,10 +140,11 @@
 
 <script setup lang="ts">
 import QrcodeVue from 'qrcode.vue'
-import { useLoginDialogVisible, useToken } from "~/composables/states";
+import { useLoginDialogVisible, useToken} from "~/composables/states";
 import { escapeHtml } from '~/utils/tool'
 import { useServerRequest } from "~/composables/useServerRequest";
 import { useClientRequest } from "~/composables/useClientRequest";
+import {UserMovieBase, UserRate} from "~/types/column/movie";
 
 const runtimeConfig = useRuntimeConfig()
 
@@ -157,7 +156,7 @@ const id = route.params.id
 const qrcodeUrl = ref<string>('')
 const isCollect = ref<boolean>(false)
 const userRateData = ref<boolean>(false)
-const rate = ref()
+const rate = ref<number>()
 
 onMounted(() => {
   qrcodeUrl.value = window.location.href
@@ -168,7 +167,7 @@ const [
   { data: castsRes },
 ] = await Promise.all([
   useServerRequest<ResData<MovieItem>>(`/movie/${id}`),
-  useServerRequest<ResPage<any[]>>(`/movie/cast/list?movieId=${id}&pageNum=1&pageSize=50`)
+  useServerRequest<ResPage<CastListItem[]>>(`/movie/cast/list?movieId=${id}&pageNum=1&pageSize=50`)
 ])
 
 if (!detailRes.value?.data) {
@@ -180,7 +179,7 @@ if (!detailRes.value?.data) {
 }
 
 // 获取榜单
-const { data: rank } = await useServerRequest<MovieLeaderboard>('/movie/leaderboard', {
+const { data: rank } = await useServerRequest<ResData<LeaderboardItem>>('/movie/leaderboard', {
   query: {
     columnValue: detailRes.value?.data.columnValue,
     pageNum: 1,
@@ -189,7 +188,7 @@ const { data: rank } = await useServerRequest<MovieLeaderboard>('/movie/leaderbo
 })
 
 /** 更新访问量 */
-useServerRequest(`/movie/updatePv/${id}`)
+useServerRequest(`/movie/updatePv/${id}`, { lazy: true })
 
 /** 登录状态发生改变 重新获取收藏和评分状态 */
 watch(token, () => {
@@ -203,11 +202,8 @@ async function getUserCollect() {
   if (!token.value) {
     isCollect.value = false
   } else {
-    const {data: userCollect} = await useServerRequest<{ data: any }>('/user-collect/find', {
-      query: {movieId: id},
-      headers: {
-        Authorization: token.value
-      },
+    const { data: userCollect } = await useServerRequest<ResData<UserMovieBase>>('/user-collect/find', {
+      query: { movieId: id }
     })
     isCollect.value = !!userCollect.value?.data
   }
@@ -226,7 +222,7 @@ async function handleCollect() {
       code = codeRes
     } else {
       let { code: codeRes } = await useClientRequest<Pick<ResOptions<unknown>, 'code' | 'msg'>>(`/user-collect`, {
-        body: {movieId: id},
+        body: { movieId: id },
         method: 'POST'
       })
       code = codeRes
@@ -243,26 +239,26 @@ async function getUserRate() {
   if (!token.value) {
     userRateData.value = false
   } else {
-    const { data: userRate } = await useServerRequest<{ data: any | null }>('/user-rate', {
-      query: {movieId: id},
+    const { data: userRate } = await useServerRequest<ResData<UserRate>>('/user-rate', {
+      query: { movieId: id },
     })
     userRateData.value = !!userRate.value?.data
   }
 }
 
 /** 设置评分 */
-async function onRatechange(value: string) {
+async function onRatechange(value: number) {
   if (!value) return
   if (!token.value) {
     loginDialogVisible.value = true
     rate.value = 0
   } else {
-    const { code } = await useClientRequest<{ code: number; msg: string }>('/user-rate', {
+    const { code } = await useClientRequest<Pick<ResOptions<unknown>, 'code'>>('/user-rate', {
       method: 'post',
-      body: {movieId: id, rate: rate.value}
+      body: { movieId: id, rate: rate.value }
     })
     if (code === 200) {
-      refresh()
+      await refresh()
       userRateData.value = true
     }
   }

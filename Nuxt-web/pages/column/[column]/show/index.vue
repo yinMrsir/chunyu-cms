@@ -118,7 +118,7 @@ const { globalTitle } = publicConfig
 const route = useRoute()
 const { query, params } = route
 const currentPage = ref<number>((route.query.page && +route.query.page) || 1)
-const orderBy = ref(query.orderBy || 'createTime')
+const orderBy = ref<string>(<string>query.orderBy || 'createTime')
 const yearList = ref<number[]>([])
 const y = new Date().getFullYear();
 for (let i = 0 ; i <= 15; i++){
@@ -139,8 +139,6 @@ const title = computed(() => {
   return html
 })
 
-type TType = {name: string; id: number}
-
 const [
   { data: genreList },
   { data: countryList },
@@ -149,26 +147,26 @@ const [
   { data: info },
   { data: movieList, pending, refresh }
 ] = await Promise.all([
-  useServerRequest<ResData<TType[]>>('/basic/genre/all', {
+  useServerRequest<ResData<Item[]>>('/basic/genre/all', {
     query: {
       columnValue: params.column
     }
   }),
-  useServerRequest<ResData<TType[]>>('/basic/country/all'),
-  useServerRequest<ResData<TType[]>>('/basic/language/all'),
-  useServerRequest<MovieLeaderboard>('/movie/leaderboard', {
+  useServerRequest<ResData<Item[]>>('/basic/country/all'),
+  useServerRequest<ResData<Item[]>>('/basic/language/all'),
+  useServerRequest<ResData<LeaderboardItem>>('/movie/leaderboard', {
     query: {
       columnValue: params.column,
       pageNum: 1,
       pageSize: 20,
     }
   }),
-  useServerRequest<Column>(`/column`, {
+  useServerRequest<ResData<ColumnItem>>(`/column`, {
     query: {
       value: params.column
     }
   }),
-  useAsyncData<MovieList>('data', () => useClientRequest('/movie/list', {
+  useAsyncData<ResPage<MovieItem[]>>('data', () => useClientRequest('/movie/list', {
     query: {
       columnValue: params.column,
       genres: query.t,
@@ -198,7 +196,7 @@ async function handleCurrentChange(page: number) {
 }
 
 async function handleTabChange() {
-  refresh()
+  await refresh()
 }
 
 </script>

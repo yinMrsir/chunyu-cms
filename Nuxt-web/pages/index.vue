@@ -24,15 +24,15 @@
 </template>
 
 <script setup lang="ts">
-import { BasicBannerList, BasicLinkAll, WebIndex } from "~/types/index";
 import { useServerRequest } from "~/composables/useServerRequest";
+import { BannerItem, LinkItem } from "~/types/index";
 
 // banner数据
-const getBannerRequest = useServerRequest<BasicBannerList>('/basic/banner/list')
+const getBannerRequest = useServerRequest<ResPage<BannerItem[]>>('/basic/banner/list')
 // 影视数据
-const getMovieRequest = useServerRequest<WebIndex>('/web/index')
+const getMovieRequest = useServerRequest<ResData<ColumnMovieItem[]>>('/web/index')
 // 获取友情链接
-const getLinks = useServerRequest<BasicLinkAll>('/basic/link/all')
+const getLinks = useServerRequest<ResData<LinkItem[]>>('/basic/link/all')
 
 const [{ data: banner }, { data:movie }, { data: links }] = await Promise.all([getBannerRequest, getMovieRequest, getLinks])
 

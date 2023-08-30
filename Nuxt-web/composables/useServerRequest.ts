@@ -20,7 +20,7 @@ export const useServerRequest = <T>(url: string, opts?: UseFetchOptions<T, unkno
     },
     onResponseError({ response }) {
       process.client && ElMessage.error(isArray(response._data.data.msg) ? response._data.data.msg[0] : response._data.data.msg)
-    },
+    }
   }
 
   return useFetch<T>( url, {...defaultOptions, ...opts} as any)

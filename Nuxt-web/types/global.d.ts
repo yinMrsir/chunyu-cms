@@ -30,41 +30,51 @@ declare global {
     status: string;
   }
 
-  type Column = ResData<ColumnItem | null>
+  interface Item { id: number; name: string }
 
-  interface CountryItem {
+  interface MoviePv { pv: number }
+
+  interface Actor { name: string }
+
+  interface CastItem { id: number; actor: Actor }
+
+  interface MovieRate extends ResBase { id: number; movieId: number; rate: number; rateUserCount: number }
+
+  interface MovieVideoItem extends ResBase {
     id: number;
-    name: string;
-  }
-
-  interface MoviePv {
-    pv: number;
+    movieId: number;
+    typeId: number;
+    title: string;
+    videoId: number;
+    cover: string;
+    sort: number;
+    status: string;
   }
 
   interface MovieItem extends ResBase {
     id: number;
     status: number;
     releaseStatus: number;
-    releaseDate?: any;
+    releaseDate: string;
     title: string;
     poster: string;
-    bgColor?: any;
-    titleEn?: any;
+    bgColor: string;
+    titleEn: string;
     titleOriginal: string;
     akas: string;
     columnValue: string;
     genres: string;
-    year?: any;
-    pubdate?: any;
+    year: string;
+    pubdate: string;
     duration: string;
-    durations?: any;
-    versions?: any;
-    eggHunt?: any;
-    color?: any;
-    seasonCount?: any;
-    currentSeason?: any;
-    episodeCount?: any;
-    currentEpisode?: any;
+    durations: string;
+    versions: string;
+    eggHunt: string;
+    color: string;
+    seasonCount: number;
+    currentSeason: number;
+    episodeCount: number;
+    currentEpisode: number;
     theEnd: number;
     countryIds: string;
     languages: string;
@@ -73,23 +83,36 @@ declare global {
     isPay: number;
     paymentAmount: number;
     freeDuration: number;
-    country: CountryItem[];
-    casts?: any[];
+    country: Item[];
+    casts: CastItem[];
     moviePv: MoviePv;
-    movieRate?: any;
+    movieRate: MovieRate | null;
     movieVideosCount: number;
     userCollectsCount: number;
+    movieVideos?: MovieVideoItem[]
   }
-
-  type MovieList = ResPage<MovieItem[]>
-
-  type RankMovieItem = Pick<MovieItem, 'updateTime' | 'id' | 'title' | 'columnValue' | 'currentEpisode' | 'theEnd' | 'moviePv'>
-
+  interface RankMovieItem extends Pick<MovieItem, 'updateTime' | 'id' | 'title' | 'columnValue' | 'currentEpisode' | 'theEnd' | 'moviePv'> {}
   interface LeaderboardItem {
     weekRank: RankMovieItem[];
     mouthRank: RankMovieItem[];
   }
+  interface CastListItem {
+    id: number;
+    role: string;
+    actorId: number;
+    actorAvatar: string;
+    actorName: string;
+    actorGender: string;
+    actorBirthday: string;
+    countryName: string;
+    professionId: number;
+    professionName: string;
+    professionMpath: string;
+  }
+  interface ColumnMovieItem extends Pick<ColumnItem, 'name' | 'type' | 'value'> {
+    genres: Item[];
+    ranks: RankMovieItem[];
+    rows: Pick<MovieItem, 'id' | 'title' | 'poster' | 'columnValue' | 'casts' | 'movieRate'>[];
+  }
 
-  type MovieLeaderboard = ResData<LeaderboardItem>
 }
-

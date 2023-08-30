@@ -43,7 +43,7 @@
             <ul class="clearfix">
               <li v-for="item in detail.videos">
                 <nuxt-link :to="`/column/${detail.movie.columnValue}/video/${item.id}`">
-                  <el-image class="img" fit="cover" :src="item.cover || item.video?.poster"></el-image>
+                  <el-image class="img" fit="cover" :src="item.cover || item.video?.poster || ''"></el-image>
                   <p :title="item.title"><span :class="+item.id === +route.params.id ? 'animate' : ''">{{+item.id === +route.params.id ? '正在播放: ' : '' }}{{ item.title }}</span></p>
                 </nuxt-link>
               </li>
@@ -98,10 +98,13 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import QrcodeVue from 'qrcode.vue'
 import 'xgplayer/dist/index.min.css'
 import 'xgplayer/es/plugins/danmu/index.css'
-import '../../../../plugins/xgplayerPlugins/payTipPlugin.css'
 import PresetPlayer from "xgplayer";
 import { useServerRequest } from "~/composables/useServerRequest";
 import { useClientRequest } from "~/composables/useClientRequest";
+import { MovieVideoInfo } from "~/types/column/video";
+import { UserMovieBase } from "~/types/column/movie";
+import '~/plugins/xgplayer/payTip/index.css'
+import PayTip from "~/plugins/xgplayer/payTip";
 
 const token = useToken()
 const loginDialogVisible = useLoginDialogVisible()
@@ -116,12 +119,13 @@ const qrcodeUrl = ref('')
 // 是否购买了影片
 const isUserBuy = ref(false)
 // 视频支付提示插件
-let payTipInstance: { hidden: () => void; } | null = null
+let payTipInstance: PayTip | null = null
 // 视频组件
 let player: PresetPlayer | null = null
 
-const { data: detailRes } = await useServerRequest<ResData<any>>(`/movie/videos/${id}`)
-if (!detailRes.value) {
+const { data: detailRes } = await useServerRequest<ResData<MovieVideoInfo | null>>(`/movie/videos/${id}`)
+
+if (!detailRes.value?.data) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Page Not Found',
@@ -134,7 +138,7 @@ const detail = detailRes.value.data
 getUserMovie()
 async function getUserMovie() {
   if (token.value) {
-    const { data: userBuy } = await useServerRequest<ResData<any>>(`/user-movie`, {
+    const { data: userBuy } = await useServerRequest<ResData<UserMovieBase>>(`/user-movie`, {
       query: { movieId: detail.movieId }
     })
     isUserBuy.value = !!userBuy.value?.data
@@ -143,7 +147,7 @@ async function getUserMovie() {
 
 watch(token, async () => {
   await getUserMovie()
-  payTipInstance?.hidden()
+  payTipInstance?.hide()
   player?.play()
 })
 
@@ -154,7 +158,7 @@ onMounted(async () => {
     import('xgplayer'),
     import("xgplayer-mp4"),
     import('xgplayer/es/plugins/danmu'),
-    import('~/plugins/xgplayerPlugins/payTipPlugin')
+    import('~/plugins/xgplayer/payTip')
   ])
   player = new Player.default({
     id: 'mse',
@@ -165,12 +169,6 @@ onMounted(async () => {
     height: '100%',
     width: '100%',
     plugins: [Mp4Plugin.default, Danmu.default, PayTip.default],
-    mp4plugin: {
-      reqOptions:{
-        mode: 'cors',
-        method: 'GET',
-      }
-    },
     danmu: {
       comments: [
         {
@@ -194,33 +192,31 @@ onMounted(async () => {
         end: 1
       }
     },
-    payTipPlugin: {
+    payTip: {
       tip: `此为付费视频，支付${detail.movie.paymentAmount}金币继续观看？`,
       lookTime: detail.movie.freeDuration * 60,
-      arriveTime (callback: () => void) {
+      arriveTime () {
         if (isUserBuy.value) return
         // 影片设置了需要购买才能观看并且是正片
         if (+detail.movie.isPay === 1 && +detail.typeId === 1) {
           player?.pause()
-          callback()
+          payTipInstance?.show('flex')
         }
       },
-      clickButton (callback: () => void) {
+      clickButton () {
         if (!token.value) {
           loginDialogVisible.value = true
         } else {
-          buyMovie(player, () => {
-            callback()
-          })
+          player && buyMovie(player)
         }
       }
     }
   })
-  payTipInstance = player.getPlugin('payTipPlugin')
+  payTipInstance = player.getPlugin('payTip')
 })
 
 /** 购买影视 */
-function buyMovie(player: any, callback: { (): void; (): void; }) {
+function buyMovie(player: PresetPlayer) {
   ElMessageBox.confirm(
       `确定要支付${detail.movie.paymentAmount}金币购买此影片吗？`,
       '提示',
@@ -230,14 +226,14 @@ function buyMovie(player: any, callback: { (): void; (): void; }) {
         type: 'warning',
       }
   ).then(async () => {
-    const { code, msg } = await useClientRequest<ResData<any>>(`/user-movie`, {
+    const { code, msg } = await useClientRequest<ResData<UserMovieBase>>(`/user-movie`, {
       method: 'post',
       body: { movieId: detail.movieId }
     })
     if (code === 200) {
       isUserBuy.value = true
       player.play()
-      callback()
+      payTipInstance?.hide()
       ElMessage({
         type: 'success',
         message: '购买成功',
@@ -256,14 +252,14 @@ const [
   { data: likeRows },
   { data: rank },
 ] = await Promise.all([
-  useServerRequest<MovieList>(`/movie/list`, {
+  useServerRequest<ResPage<MovieItem[]>>(`/movie/list`, {
     query: {
       genres: detail.movie.genres.split(',')[0],
       pageNum: 1,
       pageSize: 18,
     }
   }),
-  useServerRequest<MovieLeaderboard>('/movie/leaderboard', {
+  useServerRequest<ResData<LeaderboardItem>>('/movie/leaderboard', {
     query: {
       columnValue: detail.movie.columnValue,
       pageNum: 1,

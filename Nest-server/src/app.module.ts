@@ -46,7 +46,7 @@ import { LinkModule } from './modules/basic/link/link.module';
 import { UserRateModule } from './modules/web/user-rate/user-rate.module';
 import { UserSignModule } from './modules/web/user-sign/user-sign.module';
 import { UserWalletModule } from './modules/web/user-wallet/user-wallet.module';
-import { UserMovieModule } from "./modules/web/user-movie/user-movie.module";
+import { UserMovieModule } from './modules/web/user-movie/user-movie.module';
 
 /* 将 provider的类名作为别名，方便定时器调用 */
 const providers = [JobService];

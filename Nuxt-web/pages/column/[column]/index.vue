@@ -53,7 +53,6 @@
 </template>
 
 <script setup lang="ts">
-import { WebType } from "~/types/column";
 import { useServerRequest } from "~/composables/useServerRequest";
 
 const runtimeConfig = useRuntimeConfig()
@@ -61,9 +60,9 @@ const { public: publicConfig } = runtimeConfig
 const { globalTitle } = publicConfig
 const route = useRoute()
 
-const [{data: res}, { data: info }] = await Promise.all([
-  useServerRequest<WebType>( `/web/type/${route.params.column}`),
-  useServerRequest<Column>(`/column?value=${route.params.column}`)
+const [{ data: res }, { data: info }] = await Promise.all([
+  useServerRequest<ResData<Omit<ColumnMovieItem, 'genres'>[]>>( `/web/type/${route.params.column}`),
+  useServerRequest<ResData<ColumnItem>>(`/column?value=${route.params.column}`)
 ])
 
 if (!info.value?.data) {

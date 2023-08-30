@@ -58,9 +58,8 @@
 </template>
 
 <script setup lang="ts">
-import {useClientRequest} from "~/composables/useClientRequest";
-import {useAsyncData} from "#app";
-import {useServerRequest} from "~/composables/useServerRequest";
+import { useClientRequest } from "~/composables/useClientRequest";
+import { useServerRequest } from "~/composables/useServerRequest";
 
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
@@ -76,7 +75,7 @@ if (route.query.page) {
 }
 
 const [{ data, refresh }, { data: newMovie }] = await Promise.all([
-  useAsyncData('data', () => useClientRequest<ResPage<any>>(
+  useAsyncData('data', () => useClientRequest<ResPage<MovieItem[]>>(
       'movie/list',
       {
         query: {
@@ -86,7 +85,7 @@ const [{ data, refresh }, { data: newMovie }] = await Promise.all([
         }
       }
   )),
-  useServerRequest('movie/list', { query: { pageSize: 15 } })
+  useServerRequest<ResPage<MovieItem[]>>('movie/list', { query: { pageSize: 15 } })
 ])
 
 function handleCurrentChange(page: number) {
