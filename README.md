@@ -5,8 +5,7 @@
 ## 在线体验
   - [用户端演示地址](http://cms.yinchunyu.com)
   - [管理端演示地址](http://cms-admin.yinchunyu.com)
-  - [GitHub](https://github.com/yinMrsir/chunyu-cms)
-  - [Gitee](https://gitee.com/chunyu-cms/chunyu-cms)
+  - 源码地址: [GitHub](https://github.com/yinMrsir/chunyu-cms) | [Gitee](https://gitee.com/chunyu-cms/chunyu-cms)
   - [Nuxt3教程文档](https://www.yinchunyu.com)
   - [Nuxt3视频教程](https://www.bilibili.com/video/BV1gu4y1R7Jt/?spm_id_from=333.999.0.0&vd_source=9dbe815ca79d8528e02be1a51583912a)
 
