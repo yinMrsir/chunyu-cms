@@ -5,9 +5,10 @@
 ## 在线体验
   - [用户端演示地址](http://cms.yinchunyu.com)
   - [管理端演示地址](http://cms-admin.yinchunyu.com)
-  - [Nuxt3教程](http://www.yinchunyu.com)
-  - [码源地址](https://github.com/yinMrsir/chunyu-cms)
-
+  - [GitHub](https://github.com/yinMrsir/chunyu-cms)
+  - [Gitee](https://gitee.com/chunyu-cms/chunyu-cms)
+  - [Nuxt3教程文档](https://www.yinchunyu.com)
+  - [Nuxt3视频教程](https://www.bilibili.com/video/BV1gu4y1R7Jt/?spm_id_from=333.999.0.0&vd_source=9dbe815ca79d8528e02be1a51583912a)
 
 ## 技术要求
   - [Vue](https://cn.vuejs.org/)
@@ -111,10 +112,6 @@ docker安装mysql：https://www.runoob.com/docker/docker-install-mysql.html
 ## 有任何疑问可添加微信
 
 <img height="120" src="https://gitee.com/chunyu-cms/chunyu-cms/raw/main/wx.jpg" width="120"/>
-
-[Nuxt3教程文档](http://www.yinchunyu.com)
-
-[Nuxt3视频教程](https://www.bilibili.com/video/BV1gu4y1R7Jt/?spm_id_from=333.999.0.0&vd_source=9dbe815ca79d8528e02be1a51583912a)
 
 ## 如何使用阿里云Oss上传文件
 **第一步** 修改`pm2.config.cjs` 或直接修改 `Nest-server/src/config`目录对应配置文件
