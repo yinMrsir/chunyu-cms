@@ -32,6 +32,7 @@
     "vue-router": "4.1.4"
   },
   "devDependencies": {
+    "@tinymce/tinymce-vue": "^5",
     "@vitejs/plugin-vue": "3.1.0",
     "@vue/compiler-sfc": "3.2.45",
     "sass": "1.56.1",

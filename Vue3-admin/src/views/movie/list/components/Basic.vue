@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 620px">
+  <div>
     <el-form :model="movie" :rules="rules" ref="formRef" label-width="100px">
       <el-form-item label="状态：" prop="status">
         <el-radio-group v-model="movie.status">
@@ -200,14 +200,7 @@
       </el-form-item>
 
       <el-form-item label="简介：">
-        <el-input
-            type="textarea"
-            v-model="movie.summary"
-            :maxlength="1000"
-            show-word-limit
-            :autosize="{ minRows: 16, maxRows: 30 }"
-            placeholder="影视简介"
-        />
+        <rich-text-editor v-model="movie.summary"></rich-text-editor>
       </el-form-item>
 
       <el-form-item label="是否付费">
@@ -235,6 +228,7 @@
 <script setup name="Basic">
 import { scrollTo } from '@/utils/scroll-to'
 import ImageUpload from "@/components/ImageUpload";
+import RichTextEditor from '@/components/RichTextEditor';
 import { getGenreAll } from "@/views/basic/genre/services";
 import { createMovie, getMovie, updateMovie } from '../services'
 import { getColumnAll } from "@/views/column/services";

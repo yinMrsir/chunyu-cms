@@ -101,7 +101,7 @@
               </h3>
             </div>
           </div>
-          <div class="desc" v-html="escapeHtml(detailRes?.data.summary || '')"></div>
+          <div class="desc" v-html="detailRes?.data.summary || ''"></div>
         </div>
         <!--  演员    -->
         <div class="mt-20" v-if="castsRes?.rows && castsRes?.rows.length">
