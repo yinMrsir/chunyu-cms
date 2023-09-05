@@ -61,6 +61,16 @@ export class UserCollectController {
   }
 
   @Public()
+  @Get('cancel')
+  @UseGuards(JwtWebAuthGuard)
+  async cancel(
+    @User(UserEnum.userId) userId: number,
+    @Query() query: { movieId: number },
+  ) {
+    await this.userCollectService.remove(userId, query.movieId);
+  }
+
+  @Public()
   @Delete(':movieId')
   @UseGuards(JwtWebAuthGuard)
   async remove(

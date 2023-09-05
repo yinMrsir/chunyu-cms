@@ -36,7 +36,6 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from "element-plus"
 import CollectData from '@/components/user/CollectData.vue'
 import UserInfoData from "~/components/user/UserInfoData.vue";
 import { useToken } from "~/composables/states";

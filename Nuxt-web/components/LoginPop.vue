@@ -46,8 +46,10 @@ import { reactive } from "#imports";
 import { useLoginDialogVisible, useRegDialogVisible } from "~/composables/states";
 import { useClientRequest } from "~/composables/useClientRequest";
 
+const token = useToken()
 const regDialogVisible = useRegDialogVisible()
 const loginDialogVisible = useLoginDialogVisible()
+const tokenCookie = useCookie<string | undefined>('token')
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const formRef = ref<FormInstance>()
@@ -94,7 +96,12 @@ async function login(formEl: FormInstance | undefined) {
           message: '登录成功',
           type: 'success',
         })
-        proxy?.$emit('success', data.token)
+        // 设置cookie
+        tokenCookie.value = data.token
+        // 更新state
+        token.value = 'Bearer ' + data.token
+        // 关闭登录弹层
+        loginDialogVisible.value = false
       }
     }
   })
@@ -129,11 +136,5 @@ function handleShowLoginDialog() {
   loginDialogVisible.value = true
   regDialogVisible.value = false
 }
-
-defineExpose({
-  setVisible(value: boolean) {
-    loginDialogVisible.value = value
-  }
-})
 
 </script>

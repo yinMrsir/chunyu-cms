@@ -4,15 +4,15 @@ type FetchType = typeof $fetch
 type FetchOptions = Parameters<FetchType>[1]
 
 export const useClientRequest = <T= unknown>(url: string, opts?: FetchOptions) => {
-  const userInfo = useCookie<{ token: string }>('userInfo')
+  const token = useCookie<string | undefined>('token')
   const runtimeConfig = useRuntimeConfig()
 
   const defaultOptions: FetchOptions = {
     baseURL: runtimeConfig.public.apiBase,
     onRequest({ options }) {
       options.headers = (options.headers || {}) as { [key: string]: string }
-      if (userInfo.value?.token) {
-        options.headers.Authorization = 'Bearer ' + userInfo.value.token
+      if (token.value) {
+        options.headers.Authorization = 'Bearer ' + token.value
       }
     },
     onResponse({ response }) {

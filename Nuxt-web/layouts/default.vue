@@ -24,7 +24,7 @@
               @keyup.enter.native="handleSearch"
           />
           <ClientOnly>
-            <template v-if="userInfo">
+            <template v-if="token">
               <el-dropdown @command="handleCommand">
                 <el-button circle :icon="ElIconUserFilled" color="#155FAA"></el-button>
                 <template #dropdown>
@@ -58,23 +58,21 @@
     <footer>
       Copyright {{ $dayjs().format('YYYY') }} 淳渔影视网 Inc. All Rights Reserved.
     </footer>
-    <LoginPop ref="loginPopRef" @success="handleSuccess"/>
+    <LoginPop />
     <el-backtop />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ComponentInternalInstance } from 'vue'
 import LoginPop from "~/components/LoginPop.vue";
-import {useServerRequest} from "~/composables/useServerRequest";
+import { useServerRequest } from "~/composables/useServerRequest";
 
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
-const userInfo = useCookie<{token: string} | null>('userInfo')
+const tokenCookie = useCookie<string | undefined>('token')
 const token = useToken()
 const route = useRoute()
+const loginDialogVisible = useLoginDialogVisible()
 
-const loginPopRef = ref<InstanceType<typeof LoginPop> | null>(null)
 const searchValue = ref('')
 
 const { data: navigation } = await useServerRequest('/column/all', {
@@ -85,7 +83,7 @@ function handleSearch() {
 }
 
 function goLogin() {
-  loginPopRef.value?.setVisible(true)
+  loginDialogVisible.value = true
 }
 
 function handleCommand(command: string) {
@@ -100,17 +98,11 @@ function handleCommand(command: string) {
 }
 
 function logOut() {
-  userInfo.value = null
+  tokenCookie.value = undefined
   token.value = ''
   if (route.path.indexOf('/user') > -1) {
     navigateTo('/')
   }
-}
-
-async function handleSuccess(tokenString: string) {
-  userInfo.value = { token: tokenString }
-  token.value = 'Bearer ' + tokenString
-  loginPopRef.value?.setVisible(false)
 }
 
 </script>

@@ -1,7 +1,7 @@
 /** 用户信息 **/
 export const useToken = () => useState<string>('token', () => {
-  const userInfo = useCookie<{ token: string }>('userInfo')
-  return userInfo.value ? 'Bearer ' + userInfo.value.token : ''
+  const token = useCookie<string | undefined>('token')
+  return token.value ? 'Bearer ' + token.value : ''
 })
 
 /** 登录弹层显示状态 */
