@@ -1,7 +1,7 @@
 import { isArray } from "~/utils/tool";
 
 type FetchType = typeof $fetch
-type FetchOptions = Parameters<FetchType>[1]
+export type FetchOptions = Parameters<FetchType>[1]
 
 export const useClientRequest = <T= unknown>(url: string, opts?: FetchOptions) => {
   const token = useCookie<string | undefined>('token')

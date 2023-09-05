@@ -56,10 +56,10 @@
                 <div class="text-overflow">{{ detailRes?.data.tags.split(',').join('/') }}</div>
               </el-form-item>
               <div>
-                <nuxt-link :to="`/column/${detailRes?.data.columnValue}/video/${detailRes?.data.movieVideos[0].id}`" v-if="detailRes?.data.movieVideos[0]">
+                <nuxt-link :to="`/column/${detailRes?.data.columnValue}/video/${detailRes?.data.movieVideos?.[0].id}`" v-if="detailRes?.data.movieVideos?.[0]">
                   <el-button :icon="ElIconVideoPlay" type="primary" class="mr-10">播放</el-button>
                 </nuxt-link>
-                <el-button :icon="isCollect ? ElIconStarFilled : ElIconStar" @click="handleCollect">
+                <el-button :loading="collectLoading" :icon="isCollect ? ElIconStarFilled : ElIconStar" @click="handleCollect">
                   {{ isCollect ? '已收藏' : '收藏' }}
                 </el-button>
                 <ClientOnly>
@@ -141,9 +141,8 @@
 <script setup lang="ts">
 import QrcodeVue from 'qrcode.vue'
 import { useLoginDialogVisible, useToken} from "~/composables/states";
-import { escapeHtml } from '~/utils/tool'
 import { useServerRequest } from "~/composables/useServerRequest";
-import { useClientRequest } from "~/composables/useClientRequest";
+import {FetchOptions, useClientRequest} from "~/composables/useClientRequest";
 import {UserMovieBase, UserRate} from "~/types/column/movie";
 
 const runtimeConfig = useRuntimeConfig()
@@ -157,6 +156,7 @@ const qrcodeUrl = ref<string>('')
 const isCollect = ref<boolean>(false)
 const userRateData = ref<boolean>(false)
 const rate = ref<number>()
+const collectLoading = ref<boolean>(false)
 
 onMounted(() => {
   qrcodeUrl.value = window.location.href
@@ -214,21 +214,19 @@ async function handleCollect() {
   if (!token.value) {
     loginDialogVisible.value = true
   } else {
-    let code: number
-    if (isCollect.value) {
-      let { code: codeRes } = await useClientRequest<Pick<ResOptions<unknown>, 'code' | 'msg'>>(`/user-collect/${id}`, {
-        method: 'DELETE'
-      })
-      code = codeRes
-    } else {
-      let { code: codeRes } = await useClientRequest<Pick<ResOptions<unknown>, 'code' | 'msg'>>(`/user-collect`, {
-        body: { movieId: id },
-        method: 'POST'
-      })
-      code = codeRes
-    }
-    if (code === 200) {
-      isCollect.value = !isCollect.value
+    const requestUrl: string = !isCollect.value ? '/user-collect' : `/user-collect/cancel?movieId=${id}`
+    const requestOpts: FetchOptions = !isCollect.value ? {
+          body: { movieId: id },
+          method: 'POST'
+        } : {}
+    collectLoading.value = true
+    try {
+      let { code } = await useClientRequest<Pick<ResOptions<unknown>, 'code' | 'msg'>>(requestUrl, requestOpts)
+      if (code === 200) {
+        isCollect.value = !isCollect.value
+      }
+    } finally {
+      collectLoading.value = false
     }
   }
 }
