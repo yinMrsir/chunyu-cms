@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Head>
-      <Title>最新{{ info?.data?.name }}在线观看 - {{ globalTitle }}</Title>
+      <Title>{{ $titleRender(`最新${info?.data?.name}在线观看`) }}</Title>
       <Meta name="description" :content="`最新最全的${info?.data?.name}在线观看尽在淳渔影视。`" />
     </Head>
 
@@ -55,9 +55,6 @@
 <script setup lang="ts">
 import { useServerRequest } from "~/composables/useServerRequest";
 
-const runtimeConfig = useRuntimeConfig()
-const { public: publicConfig } = runtimeConfig
-const { globalTitle } = publicConfig
 const route = useRoute()
 
 const [{ data: res }, { data: info }] = await Promise.all([

@@ -62,7 +62,6 @@ import { useClientRequest } from "~/composables/useClientRequest";
 import { useServerRequest } from "~/composables/useServerRequest";
 
 const route = useRoute()
-const runtimeConfig = useRuntimeConfig()
 const activeName = ref('first')
 const form = reactive<{ keyword: string | undefined }>({
   keyword: undefined

@@ -44,7 +44,6 @@
 <script setup lang="ts">
 import { useClientRequest } from "~/composables/useClientRequest";
 
-const runtimeConfig = useRuntimeConfig()
 const list = ref([])
 const queryParams = reactive({
   pageNum: 1,

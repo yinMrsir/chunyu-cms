@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-20 show">
     <Head>
-      <Title>{{ title }}{{ info?.data?.name }} - {{ globalTitle }}</Title>
+      <Title>{{ $titleRender(`${title}_${info?.data?.name}`) }}</Title>
       <Meta name="description" :content="`最新最全的${title}${info?.data?.name}尽在淳渔影视。`" />
     </Head>
 
@@ -66,7 +66,7 @@
             <el-col :sm="4" :xs="8" v-for="item in movieList?.rows" :key="item.id">
               <div class="video-list__block">
                 <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="img-box">
-                  <el-image class="video-list__block__img" :src="item.poster || runtimeConfig.public.apiBase + '/default.jpg'" fit="cover" />
+                  <el-image class="video-list__block__img" :src="item.poster" fit="cover" />
                   <span v-if="item.movieRate">{{ +item.movieRate.rate === 0 ? '暂无评分' : item.movieRate.rate.toFixed(1) }}</span>
                 </nuxt-link>
                 <div class="video-list__detail">
@@ -112,9 +112,6 @@ definePageMeta({
   key: route => route.fullPath
 })
 
-const runtimeConfig = useRuntimeConfig()
-const { public: publicConfig } = runtimeConfig
-const { globalTitle } = publicConfig
 const route = useRoute()
 const { query, params } = route
 const currentPage = ref<number>((route.query.page && +route.query.page) || 1)

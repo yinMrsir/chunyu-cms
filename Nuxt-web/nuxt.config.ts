@@ -57,6 +57,5 @@ export default defineNuxtConfig({
                 proxy: process.env.BASE_URL || 'http://[::1]:4000' + '/**'
             }
         }
-    },
-    plugins: [ { src:'@/plugins/baidu',mode:'client' }],
+    }
 })

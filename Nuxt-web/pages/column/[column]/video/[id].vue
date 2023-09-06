@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-20">
     <Head>
-      <Title>{{ detail.movie.title }}_{{ detail.title }}在线观看 - {{ globalTitle }}</Title>
+      <Title>{{ $titleRender(`${detail.movie.title}_${detail.title}在线观看`) }}</Title>
       <Meta name="description" :content="detail.movie.summary" />
     </Head>
 
@@ -63,7 +63,7 @@
               <el-col :sm="4" :xs="8" v-for="item in likeRows.rows">
                 <div class="video-list__block">
                   <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`">
-                    <el-image class="video-list__block__img" :src="item.poster || apiBase + '/default.jpg'" fit="cover" />
+                    <el-image class="video-list__block__img" :src="item.poster" fit="cover" />
                   </nuxt-link>
                   <div class="video-list__detail">
                     <h4 class="title text-overflow">{{ item.title }}</h4>
@@ -108,10 +108,6 @@ import PayTip from "~/plugins/xgplayer/payTip";
 
 const token = useToken()
 const loginDialogVisible = useLoginDialogVisible()
-
-const runtimeConfig = useRuntimeConfig()
-const { public: publicConfig } = runtimeConfig
-const { apiBase, globalTitle } = publicConfig
 
 const route = useRoute()
 const id = route.params.id

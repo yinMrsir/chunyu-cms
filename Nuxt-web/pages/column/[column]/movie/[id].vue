@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-20">
     <Head>
-      <Title>{{ detailRes?.data.title }}在线观看 - {{ runtimeConfig.public.globalTitle }}</Title>
+      <Title>{{ $titleRender(`${ detailRes?.data.title }在线观看`) }}</Title>
       <Meta name="description" :content="detailRes?.data.summary"/>
     </Head>
 
@@ -144,8 +144,6 @@ import { useLoginDialogVisible, useToken} from "~/composables/states";
 import { useServerRequest } from "~/composables/useServerRequest";
 import {FetchOptions, useClientRequest} from "~/composables/useClientRequest";
 import {UserMovieBase, UserRate} from "~/types/column/movie";
-
-const runtimeConfig = useRuntimeConfig()
 
 const route = useRoute()
 const token = useToken()
