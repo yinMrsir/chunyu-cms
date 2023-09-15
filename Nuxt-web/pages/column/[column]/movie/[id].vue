@@ -63,7 +63,7 @@
                   {{ isCollect ? '已收藏' : '收藏' }}
                 </el-button>
                 <ClientOnly>
-                  <el-popover v-if="!userRateData" placement="right" trigger="click">
+                  <el-popover v-if="!isUserRate" placement="right" trigger="click">
                     <template #reference>
                       <el-button :icon="ElIconEdit">评分</el-button>
                     </template>
@@ -142,8 +142,8 @@
 import QrcodeVue from 'qrcode.vue'
 import { useLoginDialogVisible, useToken} from "~/composables/states";
 import { useServerRequest } from "~/composables/useServerRequest";
-import {FetchOptions, useClientRequest} from "~/composables/useClientRequest";
-import {UserMovieBase, UserRate} from "~/types/column/movie";
+import { FetchOptions, useClientRequest } from "~/composables/useClientRequest";
+import { UserMovieBase, UserRate } from "~/types/column/movie";
 
 const route = useRoute()
 const token = useToken()
@@ -152,7 +152,7 @@ const loginDialogVisible = useLoginDialogVisible()
 const id = route.params.id
 const qrcodeUrl = ref<string>('')
 const isCollect = ref<boolean>(false)
-const userRateData = ref<boolean>(false)
+const isUserRate = ref<boolean>(false)
 const rate = ref<number>()
 const collectLoading = ref<boolean>(false)
 
@@ -233,12 +233,12 @@ async function handleCollect() {
 getUserRate()
 async function getUserRate() {
   if (!token.value) {
-    userRateData.value = false
+    isUserRate.value = false
   } else {
     const { data: userRate } = await useServerRequest<ResData<UserRate>>('/user-rate', {
       query: { movieId: id },
     })
-    userRateData.value = !!userRate.value?.data
+    isUserRate.value = !!userRate.value?.data
   }
 }
 
@@ -255,7 +255,7 @@ async function onRatechange(value: number) {
     })
     if (code === 200) {
       await refresh()
-      userRateData.value = true
+      isUserRate.value = true
     }
   }
 }

@@ -37,7 +37,7 @@
 
 ## 开发前
 
-如未安装`mysql`数据库和`redis`请先自行安装。可选mysql8，redis7。
+如未安装`mysql`数据库和`redis`请先自行安装。可选mysql8，redis7。[安装教程](#相关链接)
 
 如果没有安装nest-cli，先执行`npm install -g @nestjs/cli`命令全局安装
 
