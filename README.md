@@ -102,7 +102,7 @@ yarn build:prod
 
 win安装Docker: https://zhuanlan.zhihu.com/p/441965046
 
-docker安装redis：https://www.runoob.com/docker/docker-install-redis.html
+docker安装redis：https://www.yinchunyu.com/other/redis.html
 
 docker安装mysql：https://www.runoob.com/docker/docker-install-mysql.html
 
