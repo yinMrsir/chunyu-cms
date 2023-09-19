@@ -20,7 +20,7 @@
               <el-button type="primary" size="small" v-if="form.url" @click="getCurrentTime()">
                 设置当前画面为封面
               </el-button>
-              <el-button type="link" size="small" @click="handleReUpload">重新上传</el-button>
+              <el-button type="" link size="small" @click="handleReUpload">重新上传</el-button>
             </div>
           </div>
           <div class="upload-field" v-else>
@@ -154,6 +154,7 @@ function getCurrentTime() {
   video.setAttribute('width', form.width);
   video.setAttribute('height', form.height);
   video.setAttribute('controls', 'controls');
+  video.setAttribute('crossOrigin','anonymous');
   video.currentTime = currentTime  //截取的时长
   video.addEventListener('loadeddata', function(e) {
     let canvas = document.createElement("canvas"),
@@ -178,14 +179,10 @@ function uploadSuccessHandle(video) {
 }
 
 function replaceUrl(str) {
-  const aliOssUrl = 'https://oss.yinchunyu.com'
-  if (str.indexOf(aliOssUrl) > -1) {
-    return str.replace(aliOssUrl, '/oss')
+  if (import.meta.env.VITE_APP_ENV === 'development') {
+    return str.replace('[::1]:4000', 'localhost:4001/dev-api')
   }
-  if (import.meta.env.VITE_APP_ENV === 'production') {
-    return str.replace('https://cms.yinchunyu.com/server', '/api')
-  }
-  return str.replace('[::1]:4000', 'localhost:4001/dev-api')
+  return str
 }
 
 function posterChangeHandle(posterUrl) {

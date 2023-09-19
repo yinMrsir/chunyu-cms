@@ -198,6 +198,7 @@ function getCurrentTime() {
   video.setAttribute('width', videoInfo.width);
   video.setAttribute('height', videoInfo.height);
   video.setAttribute('controls', 'controls');
+  video.setAttribute('crossOrigin','anonymous');
   video.currentTime = currentTime  //截取的时长
   video.addEventListener('loadeddata', function(e) {
     let canvas = document.createElement("canvas"),
