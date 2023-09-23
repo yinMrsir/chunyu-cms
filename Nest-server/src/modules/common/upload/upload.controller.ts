@@ -35,6 +35,7 @@ export class UploadController {
   constructor(private readonly sysConfigService: SysConfigService) {}
 
   /* 单文件上传 */
+  @Public()
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(

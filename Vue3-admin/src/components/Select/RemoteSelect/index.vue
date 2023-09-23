@@ -22,7 +22,7 @@
     >
       <!-- 影视 -->
       <div v-if="type === 'movie'" class="custom-option movie">
-        <img :src="item.poster" />
+        <img :src="item.poster"  alt=""/>
         <div class="content">
           <span
           >{{ item.title }}
@@ -41,7 +41,7 @@
           v-else-if="type === 'actor' || type === 'role'"
           class="custom-option"
       >
-        <img :src="item.avatar" />
+        <img :src="item.avatar"  alt=""/>
         <div class="content">
           <span>{{ item.name }}</span>
         </div>
@@ -50,7 +50,7 @@
       <!-- 国家/地区 -->
       <div v-else-if="type === 'country'" class="custom-option country">
         <div class="flag">
-          <img :src="item.flag" />
+          <img :src="item.flag"  alt=""/>
         </div>
         <div class="name">
           <span>{{ item.name }}</span>
