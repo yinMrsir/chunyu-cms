@@ -47,7 +47,6 @@
 
 <script setup>
 import useClipboard from "vue-clipboard3";
-const baseUrl = import.meta.env.VITE_APP_BASE_API;
 import VideoUpload from '@/components/VideoUpload'
 import { createVideo, getVideoList, updateVideo, deleteVideo } from './services'
 import request from "@/utils/request";
@@ -130,6 +129,8 @@ const columns = ref([
           form.url = row.url
           form.width = row.width
           form.height = row.height
+          form.duration = row.duration
+          form.size = row.size
           isEdit.value = true
           return row
         }
