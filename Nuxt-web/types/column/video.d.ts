@@ -23,4 +23,3 @@ export interface MovieVideoInfo {
   videoInfo: VideoInfo;
   videos: MovieVideo[];
 }
-

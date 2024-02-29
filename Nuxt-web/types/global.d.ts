@@ -9,9 +9,9 @@ declare global {
     total: number;
   }
 
-  type ResPage<T> = Omit<ResOptions<T>, 'data'>
+  type ResPage<T> = Omit<ResOptions<T>, 'data'>;
 
-  type ResData<T> = Omit<ResOptions<T>, 'rows' | 'total'>
+  type ResData<T> = Omit<ResOptions<T>, 'rows' | 'total'>;
 
   interface ResBase {
     createTime: string;
@@ -30,15 +30,30 @@ declare global {
     status: string;
   }
 
-  interface Item { id: number; name: string }
+  interface Item {
+    id: number;
+    name: string;
+  }
 
-  interface MoviePv { pv: number }
+  interface MoviePv {
+    pv: number;
+  }
 
-  interface Actor { name: string }
+  interface Actor {
+    name: string;
+  }
 
-  interface CastItem { id: number; actor: Actor }
+  interface CastItem {
+    id: number;
+    actor: Actor;
+  }
 
-  interface MovieRate extends ResBase { id: number; movieId: number; rate: number; rateUserCount: number }
+  interface MovieRate extends ResBase {
+    id: number;
+    movieId: number;
+    rate: number;
+    rateUserCount: number;
+  }
 
   interface MovieVideoItem extends ResBase {
     id: number;
@@ -89,9 +104,10 @@ declare global {
     movieRate: MovieRate | null;
     movieVideosCount: number;
     userCollectsCount: number;
-    movieVideos?: MovieVideoItem[]
+    movieVideos?: MovieVideoItem[];
   }
-  interface RankMovieItem extends Pick<MovieItem, 'updateTime' | 'id' | 'title' | 'columnValue' | 'currentEpisode' | 'theEnd' | 'moviePv'> {}
+  interface RankMovieItem
+    extends Pick<MovieItem, 'updateTime' | 'id' | 'title' | 'columnValue' | 'currentEpisode' | 'theEnd' | 'moviePv'> {}
   interface LeaderboardItem {
     weekRank: RankMovieItem[];
     mouthRank: RankMovieItem[];
@@ -114,5 +130,4 @@ declare global {
     ranks: RankMovieItem[];
     rows: Pick<MovieItem, 'id' | 'title' | 'poster' | 'columnValue' | 'casts' | 'movieRate'>[];
   }
-
 }

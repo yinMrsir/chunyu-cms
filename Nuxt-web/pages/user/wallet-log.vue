@@ -11,7 +11,9 @@
               <el-table :data="list">
                 <el-table-column prop="type" label="类型">
                   <template #default="scope">
-                    <el-tag :type="+scope.row.type === 1 ? 'success' : 'danger'">{{ +scope.row.type === 1 ? '新增' : '扣除'}}</el-tag>
+                    <el-tag :type="+scope.row.type === 1 ? 'success' : 'danger'">{{
+                      +scope.row.type === 1 ? '新增' : '扣除'
+                    }}</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column prop="remark" label="说明" />
@@ -24,13 +26,13 @@
               </el-table>
               <div class="wallet-log__pagination">
                 <el-pagination
-                    background
-                    layout="prev, pager, next"
-                    :current-page="currentPage"
-                    :page-size="queryParams.pageSize"
-                    :pager-count="5"
-                    :total="count"
-                    @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next"
+                  :current-page="currentPage"
+                  :page-size="queryParams.pageSize"
+                  :pager-count="5"
+                  :total="count"
+                  @current-change="handleCurrentChange"
                 />
               </div>
             </el-tab-pane>
@@ -42,45 +44,45 @@
 </template>
 
 <script setup lang="ts">
-import { useClientRequest } from "~/composables/useClientRequest";
+  import { useClientRequest } from '~/composables/useClientRequest';
 
-definePageMeta({
-  middleware: ["auth"]
-})
+  definePageMeta({
+    middleware: ['auth']
+  });
 
-const list = ref([])
-const queryParams = reactive({
-  pageNum: 1,
-  pageSize: 10
-})
-const count = ref(0)
-const currentPage = ref<number>(1)
+  const list = ref([]);
+  const queryParams = reactive({
+    pageNum: 1,
+    pageSize: 10
+  });
+  const count = ref(0);
+  const currentPage = ref<number>(1);
 
-onMounted(() => {
-  getList()
-})
+  onMounted(() => {
+    getList();
+  });
 
-async function getList() {
-  const { rows, total } = await useClientRequest<ResPage<any>>('/user-wallet/logs', {
-    query: queryParams
-  })
-  list.value = rows
-  count.value = total
-}
+  async function getList() {
+    const { rows, total } = await useClientRequest<ResPage<any>>('/user-wallet/logs', {
+      query: queryParams
+    });
+    list.value = rows;
+    count.value = total;
+  }
 
-function handleCurrentChange(page: number) {
-  currentPage.value = page
-  queryParams.pageNum = page
-  getList()
-}
+  function handleCurrentChange(page: number) {
+    currentPage.value = page;
+    queryParams.pageNum = page;
+    getList();
+  }
 </script>
 
 <style lang="scss" scoped>
-.wallet-log {
-  &__pagination {
-    padding: 20px;
-    display: flex;
-    justify-content: center;
+  .wallet-log {
+    &__pagination {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
   }
-}
 </style>

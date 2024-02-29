@@ -27,7 +27,7 @@
       <el-col :md="18" :xs="24" class="bg-fff">
         <el-tabs v-model="activeName">
           <el-tab-pane label="我的收藏" name="collect">
-            <collect-data/>
+            <collect-data />
           </el-tab-pane>
         </el-tabs>
       </el-col>
@@ -36,77 +36,71 @@
 </template>
 
 <script setup lang="ts">
-import CollectData from '@/components/user/CollectData.vue'
-import UserInfoData from "~/components/user/UserInfoData.vue";
-import { useToken } from "~/composables/states";
-import { useServerRequest } from "~/composables/useServerRequest";
-import { useClientRequest } from "~/composables/useClientRequest";
+  import CollectData from '@/components/user/CollectData.vue';
+  import UserInfoData from '~/components/user/UserInfoData.vue';
+  import { useServerRequest } from '~/composables/useServerRequest';
+  import { useClientRequest } from '~/composables/useClientRequest';
 
-definePageMeta({
-  middleware: ["auth"]
-})
+  definePageMeta({
+    middleware: ['auth']
+  });
 
-const token = useToken()
-const activeName = ref<string>('collect')
+  const activeName = ref<string>('collect');
 
-const [
-  { data: signData, refresh },
-  { data: goldData, refresh: refreshGold }
-] = await Promise.all([
-  // 获取用户是否签到
-  useServerRequest<{ data: null | number }>('/user-sign/getSign'),
-  // 获取用户金币数量
-  useServerRequest<{ data: { gold: number } }>('/user-wallet/findGold')
-])
+  const [{ data: signData, refresh }, { data: goldData, refresh: refreshGold }] = await Promise.all([
+    // 获取用户是否签到
+    useServerRequest<{ data: null | number }>('/user-sign/getSign'),
+    // 获取用户金币数量
+    useServerRequest<{ data: { gold: number } }>('/user-wallet/findGold')
+  ]);
 
-// 用户签到
-async function handleSign() {
-  if (signData.value?.data) return;
-  const { code, data } = await useClientRequest<{ code: number; msg: string; data: any }>('/user-sign/sign')
-  if (code === 200) {
-    refresh();
-    refreshGold()
-    ElMessage({
-      message: `签到成功, ${data.signReward}`,
-      type: 'success'
-    })
+  // 用户签到
+  async function handleSign() {
+    if (signData.value?.data) return;
+    const { code, data } = await useClientRequest<{ code: number; msg: string; data: any }>('/user-sign/sign');
+    if (code === 200) {
+      refresh();
+      refreshGold();
+      ElMessage({
+        message: `签到成功, ${data.signReward}`,
+        type: 'success'
+      });
+    }
   }
-}
 
-function handleBuy() {
-  ElMessage({
-    message: '支付功能正在开发,敬请期待...',
-    type: 'info'
-  })
-}
+  function handleBuy() {
+    ElMessage({
+      message: '支付功能正在开发,敬请期待...',
+      type: 'info'
+    });
+  }
 
-function handleGoWalletLog() {
-  navigateTo({ path: '/user/wallet-log' })
-}
+  function handleGoWalletLog() {
+    navigateTo({ path: '/user/wallet-log' });
+  }
 </script>
 
 <style lang="scss" scoped>
-.user-index {
-  .integral {
-    margin: 10px 0;
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      span {
-        color: #F66C25;
-        font-weight: bold;
-        font-size: 18px;
+  .user-index {
+    .integral {
+      margin: 10px 0;
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        span {
+          color: #f66c25;
+          font-weight: bold;
+          font-size: 18px;
+        }
       }
     }
   }
-}
-@media (max-width: 768px){
-  .user-index {
-    .integral {
-      margin: 10px -15px;
+  @media (max-width: 768px) {
+    .user-index {
+      .integral {
+        margin: 10px -15px;
+      }
     }
   }
-}
 </style>
-

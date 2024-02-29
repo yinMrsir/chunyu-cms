@@ -17,11 +17,13 @@
             <el-tab-pane label="搜索结果" name="first">
               <div class="video-list">
                 <el-row :gutter="20">
-                  <el-col :sm="4" :xs="8" v-for="item in data.rows">
+                  <el-col v-for="item in data.rows" :key="item.id" :sm="4" :xs="8">
                     <div class="video-list__block">
                       <nuxt-link :to="`/column/${item.columnValue}/movie/${item.id}`" class="img-box">
                         <el-image class="video-list__block__img" :src="item.poster" fit="cover" />
-                        <span v-if="item.movieRate">{{ +item.movieRate.rate === 0 ? '暂无评分' : item.movieRate.rate.toFixed(1) }}</span>
+                        <span v-if="item.movieRate">{{
+                          +item.movieRate.rate === 0 ? '暂无评分' : item.movieRate.rate.toFixed(1)
+                        }}</span>
                       </nuxt-link>
                       <div class="video-list__detail">
                         <h4 class="title text-overflow">{{ item.title }}</h4>
@@ -36,13 +38,13 @@
                 </el-row>
                 <div class="pagination">
                   <el-pagination
-                      background
-                      layout="prev, pager, next"
-                      :current-page="currentPage"
-                      :page-size="30"
-                      :pager-count="5"
-                      :total="data.total"
-                      @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next"
+                    :current-page="currentPage"
+                    :page-size="30"
+                    :pager-count="5"
+                    :total="data.total"
+                    @current-change="handleCurrentChange"
                   />
                 </div>
               </div>
@@ -58,53 +60,50 @@
 </template>
 
 <script setup lang="ts">
-import { useClientRequest } from "~/composables/useClientRequest";
-import { useServerRequest } from "~/composables/useServerRequest";
+  import { useClientRequest } from '~/composables/useClientRequest';
+  import { useServerRequest } from '~/composables/useServerRequest';
 
-const route = useRoute()
-const activeName = ref('first')
-const form = reactive<{ keyword: string | undefined }>({
-  keyword: undefined
-})
-const currentPage = ref<number>(1)
+  const route = useRoute();
+  const activeName = ref('first');
+  const form = reactive<{ keyword: string | undefined }>({
+    keyword: undefined
+  });
+  const currentPage = ref<number>(1);
 
-form.keyword = route.query.keyword as string
-if (route.query.page) {
-  currentPage.value = +route.query.page
-}
+  form.keyword = route.query.keyword as string;
+  if (route.query.page) {
+    currentPage.value = +route.query.page;
+  }
 
-const [{ data, refresh }, { data: newMovie }] = await Promise.all([
-  useAsyncData('data', () => useClientRequest<ResPage<MovieItem[]>>(
-      'movie/list',
-      {
+  const [{ data, refresh }, { data: newMovie }] = await Promise.all([
+    useAsyncData('data', () =>
+      useClientRequest<ResPage<MovieItem[]>>('movie/list', {
         query: {
           keyword: form.keyword,
           pageNum: currentPage.value,
           pageSize: 30
         }
-      }
-  )),
-  useServerRequest<ResPage<MovieItem[]>>('movie/list', { query: { pageSize: 15 } })
-])
+      })
+    ),
+    useServerRequest<ResPage<MovieItem[]>>('movie/list', { query: { pageSize: 15 } })
+  ]);
 
-function handleCurrentChange(page: number) {
-  currentPage.value = page
-  refresh()
-  if (process.client) {
-    window.scrollTo(0, 0)
+  function handleCurrentChange(page: number) {
+    currentPage.value = page;
+    refresh();
+    if (process.client) {
+      window.scrollTo(0, 0);
+    }
   }
-}
-
 </script>
 
 <style lang="scss" scoped>
-.search-form {
-  padding: 20px 0;
-}
-.pagination {
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-}
-
+  .search-form {
+    padding: 20px 0;
+  }
+  .pagination {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
 </style>

@@ -1,20 +1,20 @@
 export default defineNuxtPlugin(() => {
-  const runtimeConfig = useRuntimeConfig()
+  const runtimeConfig = useRuntimeConfig();
   return {
     provide: {
       titleRender: (msg: string) => `${msg} - ${runtimeConfig.public.globalTitle}`
     }
-  }
-})
+  };
+});
 
 declare module '#app' {
   interface NuxtApp {
-    $titleRender: string
+    $titleRender: string;
   }
 }
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $titleRender(msg: string): string
+    $titleRender(msg: string): string;
   }
 }

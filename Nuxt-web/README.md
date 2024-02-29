@@ -42,7 +42,9 @@ npm run preview
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
 ### 常见问题
+
 1、同一个组件query参数改变，页面未刷新数据
+
 ```
 definePageMeta({
   key: route => route.fullPath
