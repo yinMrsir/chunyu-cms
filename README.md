@@ -1,7 +1,7 @@
 ## 项目简介
 淳渔是一款快速搭建影视类网站的系统，它用户端基于[nuxt3](https://nuxt.com/)和 [element-ui](https://element.eleme.cn/#/zh-CN) ,管理端基于 [vue3](https://cn.vuejs.org/) 和 [element-ui](https://element.eleme.cn/#/zh-CN) ，后端基于 node 的后端框架 [nestjs](https://docs.nestjs.cn/8/) ，数据库采用 mysql ，缓存采用 redis。
 
-开发中：V2版本将会把Nestjs功能移到Nuxt中来实现：https://github.com/yinMrsir/chunyu-cms-v2
+**开发中：v2版本将会把Nestjs功能移到Nuxt中来实现：https://gitee.com/chunyu-cms/chunyu-cms-v2**
 
 ## 在线体验
   - [用户端演示地址](http://cms.yinchunyu.com)
