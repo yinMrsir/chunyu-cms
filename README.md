@@ -94,10 +94,6 @@ yarn build:prod
 - [x] [支持图片、视频上传至阿里云oss](#如何使用阿里云oss上传文件)
 
 
-### 待完成
-- [ ] 用户购买金币
-- [ ] 视频发送弹幕
-
 ## 相关链接
 
 win安装Docker: https://zhuanlan.zhihu.com/p/441965046
