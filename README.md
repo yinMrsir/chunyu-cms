@@ -109,7 +109,7 @@ docker安装mysql：https://www.runoob.com/docker/docker-install-mysql.html
 
 ## 有任何疑问可添加微信
 
-<img height="120" src="https://gitee.com/chunyu-cms/chunyu-cms/raw/main/wx.jpg" width="120"/>
+<img src="https://raw.githubusercontent.com/yinMrsir/chunyu-cms-v2/refs/heads/main/wx.png" width="300" height="409" />
 
 ## 如何使用阿里云Oss上传文件
 **第一步** 修改`pm2.config.cjs` 或直接修改 `Nest-server/src/config`目录对应配置文件
