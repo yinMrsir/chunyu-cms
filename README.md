@@ -1,11 +1,13 @@
+# 点击下方链接至v2版本
+v2版本已将Nestjs功能移到Nuxt中来实现：
+https://github.com/yinMrsir/chunyu-cms-v2
+
 ## 项目简介
 淳渔是一款快速搭建影视类网站的系统，它用户端基于[nuxt3](https://nuxt.com/)和 [element-ui](https://element.eleme.cn/#/zh-CN) ,管理端基于 [vue3](https://cn.vuejs.org/) 和 [element-ui](https://element.eleme.cn/#/zh-CN) ，后端基于 node 的后端框架 [nestjs](https://docs.nestjs.cn/8/) ，数据库采用 mysql ，缓存采用 redis。
 
-**开发中：v2版本将会把Nestjs功能移到Nuxt中来实现：https://gitee.com/chunyu-cms/chunyu-cms-v2**
-
 ## 在线体验
-  - [用户端演示地址](http://cms.yinchunyu.com)
-  - [管理端演示地址](http://cms-admin.yinchunyu.com)
+  - [用户端演示地址](http://cms.yinchunyu.com) 体验地址已更换v2版本
+  - [管理端演示地址](http://cms-admin.yinchunyu.com) 体验地址已更换v2版本
   - 源码地址: [GitHub](https://github.com/yinMrsir/chunyu-cms) | [Gitee](https://gitee.com/chunyu-cms/chunyu-cms)
   - [Nuxt3教程文档](https://www.yinchunyu.com)
   - [Nuxt3视频教程](https://www.bilibili.com/video/BV1gu4y1R7Jt/?spm_id_from=333.999.0.0&vd_source=9dbe815ca79d8528e02be1a51583912a)
@@ -98,7 +100,7 @@ docker安装mysql：https://www.runoob.com/docker/docker-install-mysql.html
 
 ## 有任何疑问可添加微信
 
-<img height="120" src="https://gitee.com/chunyu-cms/chunyu-cms/raw/main/wx.jpg" width="120"/>
+<img src="https://raw.githubusercontent.com/yinMrsir/chunyu-cms-v2/refs/heads/main/wx.png" width="300" height="409" />
 
 ## 如何使用阿里云Oss上传文件
 **第一步** 修改`pm2.config.cjs` 或直接修改 `Nest-server/src/config`目录对应配置文件
